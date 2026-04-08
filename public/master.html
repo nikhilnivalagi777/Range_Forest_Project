@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Master Creation</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        .header {
+            background: linear-gradient(90deg,#1b5e20,#2e7d32);
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: white;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 14px 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .tab:hover {
+            background: #e8f5e9;
+        }
+
+        .active {
+            border-bottom: 4px solid #2e7d32;
+            color: #2e7d32;
+        }
+
+        /* CONTENT */
+        .content {
+            display: none;
+            padding: 25px;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* GOVT BOX */
+        .gov-box {
+            background: white;
+            max-width: 900px;
+            margin: auto;
+            padding: 25px;
+            border: 2px solid #2e7d32;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            margin: 10px 0;
+            align-items: center;
+        }
+
+        .form-row label {
+            width: 250px;
+            font-weight: bold;
+        }
+
+        .form-row input {
+            flex: 1;
+            padding: 8px;
+        }
+
+        .form-row.big {
+            align-items: flex-start;
+        }
+
+        .form-row.big textarea {
+            flex: 1;
+            height: 90px;
+            padding: 8px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        /* WELCOME BOX */
+        .welcome-box {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="header">Master Creation</div>
+
+<!-- TABS -->
+<div class="tabs">
+    <div class="tab" onclick="openTab('range', this)">Range Info</div>
+    <div class="tab" onclick="openTab('ssr', this)">SSR Entry</div>
+    <div class="tab" onclick="openTab('hoa', this)">Head Of Account Entry</div> 
+    <div class="tab" onclick="openTab('work', this)">Work Entry</div>
+    <div class="tab" onclick="openTab('section', this)">Section Entry</div>
+    
+</div>
+
+<!-- WELCOME -->
+<div id="welcome" class="content show">
+    <div class="welcome-box">
+        <h2>Welcome</h2>
+        <p>Select a tab to Enter the Data</p>
+    </div>
+</div>
+
+<!-- RANGE INFO -->
+<div id="range" class="content">
+    <div class="gov-box">
+
+        <h2 class="title">Range Information</h2>
+
+        <div class="form-row">
+            <label>Division</label>
+            <input id="division">
+        </div>
+
+        <div class="form-row">
+            <label>Sub Division</label>
+            <input id="sub_division">
+        </div>
+
+        <div class="form-row">
+            <label>Range Name</label>
+            <input id="range_name">
+        </div>
+
+        <div class="form-row">
+            <label>Range ID</label>
+            <input id="range_id">
+        </div>
+
+        <div class="form-row">
+            <label>Name of RFO</label>
+            <input id="rfo_name">
+        </div>
+
+        <div class="form-row">
+            <label>ACF</label>
+            <input id="acf_name">
+        </div>
+        <div class="form-row big">
+            <label>Certificate 1</label>
+            <textarea id="cert1"></textarea>
+        </div>
+
+        <div class="form-row big">
+            <label>Certificate 2</label>
+            <textarea id="cert2"></textarea>
+        </div>
+
+        <div class="form-row big">
+            <label>Certificate 3</label>
+            <textarea id="cert3"></textarea>
+        </div>
+
+        <div class="form-row big">
+            <label>ACF Recommendation</label>
+            <textarea id="acf_recommendation"></textarea>
+        </div>
+
+        <button onclick="saveRange()">💾 Save</button>
+
+    </div>
+</div>
+
+
+<!-- SSR ENTRY -->
+<div id="ssr" class="content">
+    <div class="gov-box">
+        <h2 class="title">SSR Entry</h2>
+
+        <div class="form-row">
+            <label>SR No</label>
+            <input id="sr_no">
+        </div>
+
+        <div class="form-row big">
+            <label>Description</label>
+            <textarea id="description"></textarea>
+        </div>
+
+        <div class="form-row">
+            <label>Unit</label>
+            <input id="unit">
+        </div>
+
+        <div class="form-row">
+            <label>Rate</label>
+            <input id="rate">
+        </div>
+
+        <button onclick="saveSSR()">💾 Save SSR</button>
+    </div>
+</div>
+
+<!-- head of account -->
+<div id="hoa" class="content">
+    <div class="gov-box">
+
+       <h2 class="title">Head of Account Entry</h2>
+
+        <div class="form-row">
+          <label>HOA Name</label>
+               <input id="hoa_name" placeholder="Enter HOA (e.g. Bamboo mission)">
+        </div>
+
+           <button onclick="savehoa()">💾 Save HOA</button>
+        </div>
+</div>
+
+<!-- section entry -->
+<div id="section" class="content">
+    <div class="gov-box">
+
+       <h2 class="title">Section entry</h2>
+
+        <div class="form-row">
+          <label>section Name</label>
+               <input id="section_name" placeholder="Enter section)">
+        </div>
+
+           <button onclick="savesection()">💾 Save Section</button>
+        </div>
+</div>
+
+
+<!-- work -->
+<div id="work" class="content">
+    <div class="gov-box">
+
+        <h2 class="title">Work Entry</h2>
+
+        <div class="form-row">
+            <label>Work Name</label>
+            <input id="work_name" placeholder="Enter work name">
+        </div>
+
+        <button onclick="saveWork()">💾 Save Work</button>
+
+    </div>
+</div>
+
+
+
+<script>
+
+function openTab(tabName, element) {
+    document.querySelectorAll(".content").forEach(c => c.classList.remove("show"));
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+
+    document.getElementById(tabName).classList.add("show");
+    element.classList.add("active");
+}
+
+// SAVE RANGE
+function saveRange() {
+    let data = {
+        division: division.value,
+        sub_division: sub_division.value,
+        range_name: range_name.value,
+        range_id: range_id.value,
+        rfo_name: rfo_name.value,
+        acf_name: acf_name.value,
+        cert1: cert1.value,
+        cert2: cert2.value,
+        cert3: cert3.value,
+        acf_recommendation: acf_recommendation.value
+    };
+
+    fetch("/add-range", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    }).then(() => alert("Saved Successfully"));
+}
+
+// SAVE SSR
+function saveSSR() {
+
+    let data = {
+        sr_no: document.getElementById("sr_no").value,
+        description: document.getElementById("description").value,
+        unit: document.getElementById("unit").value,
+        rate: document.getElementById("rate").value
+    };
+
+    fetch("/add-ssr", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+
+        alert("SSR Saved Successfully");
+
+        // ✅ CLEAR FORM
+        document.getElementById("sr_no").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("unit").value = "";
+        document.getElementById("rate").value = "";
+    });
+}
+
+// SAVE HOA
+function savehoa() {
+
+    let hoa_name = document.getElementById("hoa_name").value;
+
+    if (hoa_name === "") {
+        alert("Enter HOA name");
+        return;
+    }
+
+    let data = {
+        hoa_name: hoa_name,
+       user_id: 1 // temporary
+    };
+
+    fetch("/add-hoa", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert("HOA Saved");
+
+        // clear input
+        document.getElementById("hoa_name").value = "";
+    });
+}
+
+// SAVE section
+function savesection() {
+
+    let section_name = document.getElementById("section_name").value;
+
+    if (section_name === "") {
+        alert("Enter section name");
+        return;
+    }
+
+    let data = {
+        section_name: section_name,
+       user_id: 1 // temporary
+    };
+
+    fetch("/add-section", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert("section Saved");
+
+        // clear input
+        document.getElementById("section_name").value = "";
+    });
+}
+
+function saveWork() {
+
+    let work_name = document.getElementById("work_name").value;
+
+    if (work_name === "") {
+        alert("Enter work name");
+        return;
+    }
+
+    fetch("/add-work", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ work_name: work_name })
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        document.getElementById("work_name").value = "";
+    })
+    .catch(err => {
+        console.log(err);
+        alert("Error saving work");
+    });
+}
+
+function loadRangeData() {
+    fetch("/get-range")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success || !data.data) {
+                document.getElementById("saveRangeBtn").style.display = "inline-block";
+                document.getElementById("updateRangeBtn").style.display = "none";
+                return;
+            }
+
+            const r = data.data;
+
+            document.getElementById("division").value = r.division || "";
+            document.getElementById("sub_division").value = r.sub_division || "";
+            document.getElementById("range_name").value = r.range_name || "";
+            document.getElementById("range_id").value = r.range_id || "";
+            document.getElementById("rfo_name").value = r.rfo_name || "";
+            document.getElementById("acf_name").value = r.acf_name || "";
+            document.getElementById("cert1").value = r.cert1 || "";
+            document.getElementById("cert2").value = r.cert2 || "";
+            document.getElementById("cert3").value = r.cert3 || "";
+            document.getElementById("acf_recommendation").value = r.acf_recommendation || "";
+
+            document.getElementById("saveRangeBtn").style.display = "none";
+            document.getElementById("updateRangeBtn").style.display = "inline-block";
+        })
+        .catch(err => {
+            console.log("LOAD RANGE ERROR:", err);
+        });
+}
+
+function saveRange() {
+    const payload = {
+        division: document.getElementById("division").value,
+        sub_division: document.getElementById("sub_division").value,
+        range_name: document.getElementById("range_name").value,
+        range_id: document.getElementById("range_id").value,
+        rfo_name: document.getElementById("rfo_name").value,
+        acf_name: document.getElementById("acf_name").value,
+        cert1: document.getElementById("cert1").value,
+        cert2: document.getElementById("cert2").value,
+        cert3: document.getElementById("cert3").value,
+        acf_recommendation: document.getElementById("acf_recommendation").value
+    };
+
+    fetch("/add-range", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Range saved successfully");
+            loadRangeData();
+        } else {
+            alert("Save failed");
+        }
+    })
+    .catch(err => {
+        console.log("SAVE RANGE ERROR:", err);
+    });
+}
+
+function updateRange() {
+    const payload = {
+        division: document.getElementById("division").value,
+        sub_division: document.getElementById("sub_division").value,
+        range_name: document.getElementById("range_name").value,
+        range_id: document.getElementById("range_id").value,
+        rfo_name: document.getElementById("rfo_name").value,
+        acf_name: document.getElementById("acf_name").value,
+        cert1: document.getElementById("cert1").value,
+        cert2: document.getElementById("cert2").value,
+        cert3: document.getElementById("cert3").value,
+        acf_recommendation: document.getElementById("acf_recommendation").value
+    };
+
+    fetch("/update-range", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Range updated successfully");
+            loadRangeData();
+        } else {
+            alert("Update failed");
+        }
+    })
+    .catch(err => {
+        console.log("UPDATE RANGE ERROR:", err);
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadRangeData();
+});
+
+</script>
+
+</body>
+</html>

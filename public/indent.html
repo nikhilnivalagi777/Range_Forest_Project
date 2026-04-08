@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indent / DC Bill</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef3f7;
+        }
+
+        .header {
+            background: #1b5e20;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .main {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background: #2e7d32;
+            padding-top: 20px;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+        }
+
+        .sidebar button {
+            width: 90%;
+            margin: 10px;
+            padding: 12px;
+            border: none;
+            background: white;
+            color: #1b5e20;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .sidebar button.active {
+            background: #145a18;
+            color: white;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .box {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #d9e6dc;
+        }
+
+        .box-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 15px;
+            border-left: 5px solid #2e7d32;
+            padding-left: 10px;
+        }
+
+        .welcome-page {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-radius: 12px;
+        }
+
+        .welcome-page.active {
+            display: flex;
+        }
+
+        .welcome-box {
+            background: white;
+            padding: 45px 60px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .welcome-box h1 {
+            color: #1b5e20;
+            margin-bottom: 10px;
+        }
+
+        .welcome-box p {
+            color: #555;
+        }
+
+        .two-box-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-row input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #c8d3cc;
+            border-radius: 6px;
+        }
+
+        .btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #1b5e20;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(to right, #0d4f12, #2e7d32);
+            color: white;
+            padding: 10px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        td {
+            border: 1px solid #d7ded9;
+            padding: 8px;
+            font-size: 13px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .left-text {
+            text-align: left;
+        }
+
+        .sanction-form {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sanction-form input {
+            padding: 10px;
+            border: 1px solid #c8d3cc;
+            border-radius: 6px;
+        }
+
+        .selected-box {
+            margin-top: 10px;
+            background: #f7fbf7;
+            border: 1px solid #d9e6dc;
+            border-radius: 8px;
+            padding: 10px;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">Indent / DC Bill Module</div>
+
+<div class="main">
+    <div class="sidebar">
+    <button onclick="openPage('sanction', this)">Sanction Estimate</button>
+    <button onclick="openPage('updateSono', this)">Update SONO</button>
+</div>
+
+    <div class="content">
+
+        <div id="welcome" class="page active welcome-page">
+            <div class="welcome-box">
+                <h1>Welcome to Indent / DC Bill Module</h1>
+                <p>Select an option from the left side menu</p>
+            </div>
+        </div>
+
+        <div id="sanction" class="page">
+            <div class="box">
+                <div class="box-title">Sanction Estimate</div>
+
+                <div class="two-box-layout">
+                    <!-- LEFT BOX -->
+                    <div class="box">
+                        <div class="box-title" style="font-size:18px;">Estimates</div>
+
+                        <div class="search-row">
+                            <input id="unsanctionedSearch" placeholder="Search Estimate No or Work" oninput="loadUnsanctionedEstimates()">
+                            <button class="btn" onclick="loadUnsanctionedEstimates()">Search</button>
+                        </div>
+
+                        <table id="unsanctionedTable">
+                            <tr>
+                                <th>Est No</th>
+                                <th>Work</th>
+                                <th>Year</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </table>
+
+                        <div id="selectedEstimateBox" class="selected-box" style="display:none;"></div>
+
+                        <div class="sanction-form">
+                            <input id="sanctionNo" placeholder="Sanction No e.g. DSO-203/2024-25">
+                            <input id="sanctionDate" type="date">
+                            <button class="btn" onclick="sanctionEstimate()">Sanction</button>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT BOX -->
+                    <div class="box">
+                        <div class="box-title" style="font-size:18px;">Sanctioned Estimates</div>
+
+                        <div class="search-row">
+                            <input id="sanctionedSearch" placeholder="Search Estimate No / Work / Sanction No" oninput="loadSanctionedEstimates()">
+                            <button class="btn" onclick="loadSanctionedEstimates()">Search</button>
+                        </div>
+
+                        <table id="sanctionedTable">
+                            <tr>
+                                <th>Est No</th>
+                                <th>Work</th>
+                                <th>Sanction No</th>
+                                <th>Date</th>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="updateSono" class="page">
+    <div class="box">
+        <div class="box-title">Update SONO</div>
+
+        <div class="search-row">
+            <input id="updateSonoSearch" placeholder="Search Estimate No / Work / Sanction No" oninput="loadUpdateSonoList()">
+            <button class="btn" onclick="loadUpdateSonoList()">Search</button>
+        </div>
+
+        <table id="updateSonoTable">
+            <tr>
+                <th>Est No</th>
+                <th>Work</th>
+                <th>Sanction No</th>
+                <th>Sanction Date</th>
+                <th>Action</th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="box" id="updateSonoFormBox" style="display:none; margin-top:20px;">
+        <div class="box-title">Modify SONO</div>
+
+        <input type="hidden" id="editSanctionId">
+
+        <div class="sanction-form">
+            <input id="editSanctionNo" placeholder="Sanction No">
+            <input id="editSanctionDate" type="date">
+            <button class="btn" onclick="updateSono()">Update</button>
+            <button class="btn" type="button" onclick="closeUpdateSonoForm()">Close</button>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+
+
+<script>
+let selectedEstimateId = null;
+
+function openPage(page, btn) {
+    let pages = document.querySelectorAll(".page");
+    pages.forEach(p => p.classList.remove("active"));
+
+    document.getElementById(page).classList.add("active");
+
+    let buttons = document.querySelectorAll(".sidebar button");
+    buttons.forEach(b => b.classList.remove("active"));
+
+    if (btn) btn.classList.add("active");
+
+    if (page === "sanction") {
+        loadUnsanctionedEstimates();
+        loadSanctionedEstimates();
+    }
+
+    if (page === "updateSono") {
+        loadUpdateSonoList();
+    }
+}
+
+function loadUnsanctionedEstimates() {
+    const search = document.getElementById("unsanctionedSearch").value.trim();
+
+    fetch("/get-unsanctioned-estimates?search=" + encodeURIComponent(search))
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("unsanctionedTable");
+
+            table.innerHTML = `
+                <tr>
+                    <th>Est No</th>
+                    <th>Work</th>
+                    <th>Year</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            `;
+
+            if (!data.success || !data.data || data.data.length === 0) {
+                const row = table.insertRow();
+                row.innerHTML = `<td colspan="5">No estimates found</td>`;
+                return;
+            }
+
+            data.data.forEach(item => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = item.est_no || "";
+                row.insertCell(1).innerText = item.work || "";
+                row.insertCell(2).innerText = item.year || "";
+                row.insertCell(3).innerText = item.total_amount || "";
+                row.insertCell(4).innerHTML = `
+                    <button class="btn" type="button" onclick="selectEstimateForSanction(${item.id}, '${item.est_no}', '${(item.work || '').replace(/'/g, "\\'")}')">
+                        Select
+                    </button>
+                `;
+            });
+        })
+        .catch(err => {
+            console.log("LOAD UNSANCTIONED ERROR:", err);
+        });
+}
+
+function loadSanctionedEstimates() {
+    const search = document.getElementById("sanctionedSearch").value.trim();
+
+    fetch("/get-sanctioned-estimates?search=" + encodeURIComponent(search))
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("sanctionedTable");
+
+            table.innerHTML = `
+                <tr>
+                    <th>Est No</th>
+                    <th>Work</th>
+                    <th>Sanction No</th>
+                    <th>Date</th>
+                </tr>
+            `;
+
+            if (!data.success || !data.data || data.data.length === 0) {
+                const row = table.insertRow();
+                row.innerHTML = `<td colspan="4">No sanctioned estimates found</td>`;
+                return;
+            }
+
+            data.data.forEach(item => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = item.est_no || "";
+                row.insertCell(1).innerText = item.work || "";
+                row.insertCell(2).innerText = item.sanction_no || "";
+                row.insertCell(3).innerText = item.sanction_date || "";
+            });
+        })
+        .catch(err => {
+            console.log("LOAD SANCTIONED ERROR:", err);
+        });
+}
+
+function selectEstimateForSanction(id, estNo, work) {
+    selectedEstimateId = id;
+    const box = document.getElementById("selectedEstimateBox");
+    box.style.display = "block";
+    box.innerText = `Selected Estimate: ${estNo} - ${work}`;
+}
+
+function sanctionEstimate() {
+    const sanctionNo = document.getElementById("sanctionNo").value.trim();
+    const sanctionDate = document.getElementById("sanctionDate").value;
+
+    if (!selectedEstimateId) {
+        alert("Please select an estimate first");
+        return;
+    }
+
+    if (!sanctionNo) {
+        alert("Please enter sanction number");
+        return;
+    }
+
+    const ok = confirm("Do you want to sanction this estimate?");
+
+    if (!ok) {
+        return;
+    }
+
+    fetch("/sanction-estimate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            estimate_id: selectedEstimateId,
+            sanction_no: sanctionNo,
+            sanction_date: sanctionDate
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Estimate sanctioned successfully");
+
+            selectedEstimateId = null;
+            document.getElementById("selectedEstimateBox").style.display = "none";
+            document.getElementById("selectedEstimateBox").innerText = "";
+            document.getElementById("sanctionNo").value = "";
+            document.getElementById("sanctionDate").value = "";
+
+            loadUnsanctionedEstimates();
+            loadSanctionedEstimates();
+        } else {
+            alert(data.message || "Sanction failed");
+        }
+    })
+    .catch(err => {
+        console.log("SANCTION ERROR:", err);
+        alert("Error sanctioning estimate");
+    });
+}
+
+function loadUpdateSonoList() {
+    const search = document.getElementById("updateSonoSearch").value.trim();
+
+    fetch("/get-sanctioned-estimates?search=" + encodeURIComponent(search))
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("updateSonoTable");
+
+            table.innerHTML = `
+                <tr>
+                    <th>Est No</th>
+                    <th>Work</th>
+                    <th>Sanction No</th>
+                    <th>Sanction Date</th>
+                    <th>Action</th>
+                </tr>
+            `;
+
+            if (!data.success || !data.data || data.data.length === 0) {
+                const row = table.insertRow();
+                row.innerHTML = `<td colspan="5">No sanctioned estimates found</td>`;
+                return;
+            }
+
+            data.data.forEach(item => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = item.est_no || "";
+                row.insertCell(1).innerText = item.work || "";
+                row.insertCell(2).innerText = item.sanction_no || "";
+                row.insertCell(3).innerText = item.sanction_date || "";
+                row.insertCell(4).innerHTML = `
+    <button class="btn" type="button"
+        onclick="editSono(${item.sanction_id},  '${(item.sanction_no || '').replace(/'/g, "\\'")}', '${item.sanction_date || ''}')">
+        Edit
+    </button>
+                `;
+            });
+        })
+        .catch(err => {
+            console.log("LOAD UPDATE SONO ERROR:", err);
+        });
+}
+
+function editSono(id, sanctionNo, sanctionDate) {
+    console.log("EDIT SANCTION ID:", id);
+    document.getElementById("editSanctionId").value = id;
+    document.getElementById("editSanctionNo").value = sanctionNo || "";
+    document.getElementById("editSanctionDate").value = sanctionDate || "";
+
+    document.getElementById("updateSonoFormBox").style.display = "block";
+    document.getElementById("updateSonoFormBox").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+function closeUpdateSonoForm() {
+    document.getElementById("updateSonoFormBox").style.display = "none";
+    document.getElementById("editSanctionId").value = "";
+    document.getElementById("editSanctionNo").value = "";
+    document.getElementById("editSanctionDate").value = "";
+}
+
+function updateSono() {
+    const id = document.getElementById("editSanctionId").value;
+    const sanctionNo = document.getElementById("editSanctionNo").value.trim();
+    const sanctionDate = document.getElementById("editSanctionDate").value;
+
+    if (!id) {
+        alert("Please select a sanctioned estimate first");
+        return;
+    }
+
+    if (!sanctionNo) {
+        alert("Please enter sanction number");
+        return;
+    }
+
+    const ok = confirm("Do you want to update this SONO?");
+
+    if (!ok) return;
+
+    fetch("/update-sanction/" + id, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            sanction_no: sanctionNo,
+            sanction_date: sanctionDate
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("SONO updated successfully");
+            closeUpdateSonoForm();
+            loadUpdateSonoList();
+            loadSanctionedEstimates();
+        } else {
+            alert(data.message || "Update failed");
+        }
+    })
+    .catch(err => {
+        console.log("UPDATE SONO ERROR:", err);
+        alert("Error updating SONO");
+    });
+}
+
+</script>
+
+</body>
+</html>

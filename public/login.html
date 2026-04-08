@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+
+<style>
+body {
+    margin:0;
+    font-family: "Segoe UI", Arial;
+    background: linear-gradient(135deg, #e8f5e9, #f1f8e9); /* light theme */
+}
+
+/* main container */
+.container {
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* card */
+.login-card {
+    display:flex;
+    width:750px;
+    height:420px;
+    background:white;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* left side image */
+.left {
+    flex:1;
+    background:linear-gradient(135deg, hsl(0, 0%, 99%), #ffffff);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.left img {
+    width:80%;
+}
+
+/* right side login */
+.right {
+    flex:1;
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* title */
+.title {
+    font-size:22px;
+    font-weight:bold;
+    color:#2e7d32;
+    margin-bottom:20px;
+}
+
+/* inputs */
+input {
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-bottom:2px solid #ccc;
+    outline:none;
+    font-size:14px;
+}
+
+input:focus {
+    border-bottom:2px solid #2e7d32;
+}
+
+/* button */
+button {
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#2e7d32;
+    color:white;
+    border:none;
+    border-radius:25px;
+    font-size:15px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover {
+    background:#1b5e20;
+}
+
+/* footer */
+.footer {
+    margin-top:15px;
+    font-size:12px;
+    color:#777;
+    text-align:center;
+}
+.left img {
+    width: 100%;
+    height: 180%;
+    object-fit: contain;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="login-card">
+
+    <!-- LEFT IMAGE -->
+    <div class="left">
+        <!-- 🔥 Replace this image with your own -->
+        <img src="images/photo">
+    </div>
+
+    <!-- RIGHT LOGIN -->
+    <div class="right">
+
+    
+    <div class="title">Karnataka Forest Department</div>
+    <div class="title">Range Accounting System</div>
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+
+        <button onclick="login()">Login</button>
+
+        <div class="footer">Authorized Access Only</div>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+document.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        login();
+    }
+});
+
+function login(){
+    let u = document.getElementById("username").value;
+    let p = document.getElementById("password").value;
+
+    if(u==="admin" && p==="admin"){
+        window.location.href="dashboard.html";
+    } else {
+        alert("Invalid login");
+    }
+}
+</script>
+
+</body>
+</html>
