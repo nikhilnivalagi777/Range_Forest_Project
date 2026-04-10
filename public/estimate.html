@@ -1027,7 +1027,42 @@ background: #eef7ef;
 .content {
     height: 100vh;
 }
+#modifyEstimateFormBox {
+    display: none;
+    max-width: 1100px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    max-height: 80vh;
+    overflow: auto;
+}
 
+#modifyEstimateFormBox input,
+#modifyEstimateFormBox select,
+#modifyEstimateFormBox textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#editSsrTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#editSsrTable th,
+#editSsrTable td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+}
+
+#editSsrTable input {
+    width: 100%;
+    min-width: 80px;
+}
 </style>
 </head>
 <body>
@@ -1062,7 +1097,7 @@ background: #eef7ef;
 </div>
 <div class="field" style="grid-column: span 3;">
 <label>Estimate Type</label>
-<select id="estimateType"></select>
+<select id="estimate_type"></select>
 </div>
 <div class="field" style="grid-column: span 3;">
 <label>Constituency</label>
@@ -1086,7 +1121,9 @@ background: #eef7ef;
 </div>
 <div class="field" style="grid-column: span 3;">
 <label>Range</label>
-<input id="range">
+<select id="range_dropdown">
+    <option value="">Select Range</option>
+</select>
 </div>
 <div class="field" style="grid-column: span 3;">
 <label>Taluk</label>
@@ -1098,7 +1135,7 @@ background: #eef7ef;
 </div>
 <div class="field" style="grid-column: span 12;">
 <label>Head of Account</label>
-<select id="headOfAccount"></select>
+<select id="head_of_account"></select>
 </div>
 <div class="field" style="grid-column: span 3;">
 <label>Location:</label>
@@ -1315,7 +1352,7 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
     <div class="box" id="modifyEstimateFormBox" style="display:none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <div class="box-title" style="margin-bottom:0;">Edit Estimate</div>
-            <button class="btn" type="button" onclick="closeModifyEstimate()">Close</button>
+            <button class="btn" type="button" onclick="closeModifyEstimateForm()">Close</button>
         </div>
 
         <input type="hidden" id="editEstimateId">
@@ -1543,38 +1580,104 @@ function openPage(page, btn) {
 let ssrItems = [];
 let rowCount = 1;
 let usedAmount = 0;
-function fillSelect(id, arr, key) {
-let html = `<option value="">-- Select --</option>`;
-arr.forEach(item => {
-html += `<option value="${item[key]}">${item[key]}</option>`;
-});
-document.getElementById(id).innerHTML = html;
+
+function deleteEstimate(id) {
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    const ok = confirm("Do you want to delete this estimate?");
+    if (!ok) return;
+
+    fetch("/delete-estimate/" + id, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_id: user_id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Estimate deleted successfully");
+            loadDeleteEstimateList();
+            loadEstimateList();
+            loadModifyEstimateList();
+        } else {
+            alert(data.message || "Delete failed");
+        }
+    })
+    .catch(err => {
+        console.log("DELETE ESTIMATE ERROR:", err);
+        alert("Error deleting estimate");
+    });
 }
+
+function fillSelect(id, items, key, label = "Select") {
+    const select = document.getElementById(id);
+
+    if (!select) {
+        console.log(id + " dropdown not found");
+        return;
+    }
+
+    select.innerHTML = `<option value="">${label}</option>`;
+
+    if (!Array.isArray(items)) {
+        console.log("Invalid items for " + id, items);
+        return;
+    }
+
+    items.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item[key] || "";
+        option.textContent = item[key] || "";
+        select.appendChild(option);
+    });
+}
+
+
 function loadMasters() {
-fetch("/get-masters")
-.then(res => res.json())
-.then(data => {
-if (!data.success) return;
-fillSelect("year", data.data.year, "year");
-fillSelect("estimateType", data.data.type, "estimate_type");
-fillSelect("work", data.data.work, "work_name");
-fillSelect("headOfAccount", data.data.hoa, "hoa_name");
-fillSelect("section", data.data.section, "section_name");
-})
-.catch(err => console.log("MASTER LOAD ERROR:", err));
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-masters?user_id=${user_id}`)
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) return;
+
+        fillSelect("year", data.data.year, "year");
+        fillSelect("estimate_type", data.data.type, "estimate_type");
+        fillSelect("work", data.data.work, "work_name");
+        fillSelect("head_of_account", data.data.hoa, "hoa_name");
+        fillSelect("section", data.data.section, "section_name");
+    })
+    .catch(err => console.log("MASTER LOAD ERROR:", err));
 }
 
 
 function loadNextEstNo() {
-fetch("/next-est-no")
-.then(res => res.json())
-.then(data => {
-if (data.success) {
-document.getElementById("estNo").value = data.est_no;
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    fetch("/next-est-no?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("estNo").value = data.est_no || 1;
+        })
+        .catch(err => {
+            console.log("NEXT EST NO ERROR:", err);
+        });
 }
-})
-.catch(err => console.log("EST NO ERROR:", err));
-}
+
+
+
 function addTrenchRow() {
 const container = document.getElementById("trenchContainer"
 );
@@ -1795,6 +1898,128 @@ function loadRangeIntoEstimate() {
         });
 }
 
+function loadRangeDropdown() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-ranges?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            let dropdown = document.getElementById("range_dropdown");
+
+            if (!dropdown) {
+                console.log("range_dropdown not found");
+                return;
+            }
+
+            dropdown.innerHTML = '<option value="">Select Range</option>';
+
+            data.data.forEach(r => {
+                let option = document.createElement("option");
+                option.value = r.range_name;
+                option.text = r.range_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.log("LOAD RANGE DROPDOWN ERROR:", err);
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadRangeDropdown();
+});
+
+function loadSectionDropdown() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-sections?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            let dropdown = document.getElementById("section");
+
+            if (!dropdown) {
+                console.log("section dropdown not found");
+                return;
+            }
+
+            dropdown.innerHTML = '<option value="">Select Section</option>';
+
+            if (!data.success || !data.data) {
+                return;
+            }
+
+            data.data.forEach(item => {
+                let option = document.createElement("option");
+                option.value = item.section_name;
+                option.text = item.section_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.log("LOAD SECTION ERROR:", err);
+        });
+}
+
+function loadWorkDropdown() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-works?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            let dropdown = document.getElementById("work");
+
+            if (!dropdown) {
+                console.log("work dropdown not found");
+                return;
+            }
+
+            dropdown.innerHTML = '<option value="">Select Work</option>';
+
+            data.data.forEach(item => {
+                let option = document.createElement("option");
+                option.value = item.work_name;
+                option.text = item.work_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.log("LOAD WORK ERROR:", err);
+        });
+}
+
+function loadHoaDropdown() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            let dropdown = document.getElementById("head_of_account");
+
+            if (!dropdown) {
+                console.log("head_of_account dropdown not found");
+                return;
+            }
+
+            dropdown.innerHTML = '<option value="">Select Head of Account</option>';
+
+            data.data.forEach(item => {
+                let option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.text = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.log("LOAD HOA ERROR:", err);
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadSectionDropdown();
+   loadWorkDropdown();
+    loadHoaDropdown();
+});
+
 function getTrenches() {
     let arr = [];
     document.querySelectorAll("#trenchContainer .multi-row").forEach(row => {
@@ -1820,7 +2045,9 @@ function getSeedlings() {
 }
 
 function saveEstimate() {
+    const user_id = localStorage.getItem("user_id");
     const payload = {
+        user_id: user_id,
         est_no: document.getElementById("estNo")?.value || "",
         year: document.getElementById("year")?.value || "",
         estimate_type: document.getElementById("estimateType")?.value || "",
@@ -1955,8 +2182,8 @@ function loadEstimateList() {
     const search = document.getElementById("estimateSearch")
         ? document.getElementById("estimateSearch").value.trim()
         : "";
-
-    fetch("/get-estimates?search=" + encodeURIComponent(search))
+    const user_id = localStorage.getItem("user_id");
+    fetch("/get-estimates?user_id=" + user_id + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("openEstimateTable");
@@ -2529,7 +2756,14 @@ function loadModifyEstimateList() {
         ? document.getElementById("modifyEstimateSearch").value.trim()
         : "";
 
-    fetch("/get-estimates?search=" + encodeURIComponent(search))
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    fetch("/get-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("modifyEstimateTable");
@@ -2572,16 +2806,23 @@ function loadModifyEstimateList() {
 }
 
 function editEstimate(id) {
-    fetch("/get-estimate-for-edit/" + id)
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    fetch("/get-estimate-for-edit/" + id + "?user_id=" + encodeURIComponent(user_id))
         .then(res => res.json())
         .then(data => {
             if (!data.success) {
-                alert("Estimate not found");
+                alert(data.message || "Estimate not found");
                 return;
             }
 
             const est = data.estimate;
-            const ssrItems = data.ssrItems || [];
+            const items = data.ssrItems || [];
 
             document.getElementById("editEstimateId").value = est.id || "";
             document.getElementById("editEstNo").value = est.est_no || "";
@@ -2592,7 +2833,7 @@ function editEstimate(id) {
             document.getElementById("editCircle").value = est.circle || "";
             document.getElementById("editDivision").value = est.division || "";
             document.getElementById("editSubdivision").value = est.subdivision || "";
-            document.getElementById("editRange").value = est.range_name || est.range || "";
+            document.getElementById("editRange").value = est.range_name || "";
             document.getElementById("editTaluk").value = est.taluk || "";
             document.getElementById("editWork").value = est.work || "";
             document.getElementById("editHOA").value = est.head_of_account || "";
@@ -2613,8 +2854,8 @@ function editEstimate(id) {
             document.getElementById("editTotalAmount").value = est.total_amount || "";
             document.getElementById("editBalanceAmount").value = est.balance_amount || "";
 
-            const ssrTable = document.getElementById("editSsrTable");
-            ssrTable.innerHTML = `
+            const table = document.getElementById("editSsrTable");
+            table.innerHTML = `
                 <tr>
                     <th>Sl.No</th>
                     <th>SSR No</th>
@@ -2628,8 +2869,8 @@ function editEstimate(id) {
                 </tr>
             `;
 
-            ssrItems.forEach((item, index) => {
-                const row = ssrTable.insertRow();
+            items.forEach((item, index) => {
+                const row = table.insertRow();
                 row.innerHTML = `
                     <td>${index + 1}</td>
                     <td><input value="${item.sr_no || ""}"></td>
@@ -2643,49 +2884,35 @@ function editEstimate(id) {
                 `;
             });
 
-            document.getElementById("modifyEstimateFormBox").style.display = "block";
-            document.getElementById("modifyEstimateFormBox").scrollIntoView({
-                behavior: "smooth"
-            });
+            const box = document.getElementById("modifyEstimateFormBox");
+            if (box) {
+                box.style.display = "block";
+                box.scrollIntoView({ behavior: "smooth" });
+            }
         })
         .catch(err => {
             console.log("EDIT ESTIMATE ERROR:", err);
+            alert("Error opening estimate");
         });
 }
 
-function closeModifyEstimate() {
-    document.getElementById("modifyEstimateFormBox").style.display = "none";
-}
-
 function updateEstimate() {
-    const id = document.getElementById("editEstimateId").value;
+    const user_id = localStorage.getItem("user_id");
 
-    if (!confirm("Do you want to modify this estimate?")) {
+    if (!user_id) {
+        alert("User not logged in");
         return;
     }
 
-    const ssrRows = document.querySelectorAll("#editSsrTable tr");
-    let ssrItems = [];
+    const estimateId = document.getElementById("editEstimateId").value;
 
-    ssrRows.forEach((row, index) => {
-        if (index === 0) return;
-
-        const inputs = row.querySelectorAll("input");
-        if (inputs.length === 8) {
-            ssrItems.push({
-                sr_no: inputs[0].value,
-                description: inputs[1].value,
-                qty: inputs[2].value,
-                unit: inputs[3].value,
-                rate: inputs[4].value,
-                rate_per: inputs[5].value,
-                days: inputs[6].value,
-                amount: inputs[7].value
-            });
-        }
-    });
+    if (!estimateId) {
+        alert("Estimate ID missing");
+        return;
+    }
 
     const payload = {
+        user_id: user_id,
         est_no: document.getElementById("editEstNo").value,
         year: document.getElementById("editYear").value,
         estimate_type: document.getElementById("editEstimateType").value,
@@ -2716,10 +2943,10 @@ function updateEstimate() {
         balance_amount: document.getElementById("editBalanceAmount").value,
         trenches: [],
         seedlings: [],
-        ssrItems: ssrItems
+        ssrItems: []
     };
 
-    fetch("/update-estimate/" + id, {
+    fetch("/update-estimate/" + estimateId, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -2729,10 +2956,11 @@ function updateEstimate() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert("Estimate modified successfully");
-            closeModifyEstimate();
+            alert("Estimate updated successfully");
+            closeModifyEstimateForm();
             loadModifyEstimateList();
             loadEstimateList();
+            loadDeleteEstimateList();
         } else {
             alert(data.message || "Update failed");
         }
@@ -2743,12 +2971,34 @@ function updateEstimate() {
     });
 }
 
+function closeModifyEstimateForm() {
+    const box = document.getElementById("modifyEstimateFormBox");
+    if (box) {
+        box.style.display = "none";
+    }
+
+    const table = document.getElementById("editSsrTable");
+    if (table) {
+        table.innerHTML = "";
+    }
+
+    const idBox = document.getElementById("editEstimateId");
+    if (idBox) idBox.value = "";
+}
+
 function loadDeleteEstimateList() {
     const search = document.getElementById("deleteEstimateSearch")
         ? document.getElementById("deleteEstimateSearch").value.trim()
         : "";
 
-    fetch("/get-estimates?search=" + encodeURIComponent(search))
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    fetch("/get-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("deleteEstimateTable");
@@ -2788,31 +3038,6 @@ function loadDeleteEstimateList() {
         .catch(err => {
             console.log("LOAD DELETE LIST ERROR:", err);
         });
-}
-
-function deleteEstimate(id) {
-    const ok = confirm("Do you want to delete this estimate?");
-
-    if (!ok) return;
-
-    fetch("/delete-estimate/" + id, {
-        method: "POST"
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("Estimate deleted successfully");
-            loadDeleteEstimateList();
-            loadEstimateList();
-            loadModifyEstimateList();
-        } else {
-            alert(data.message || "Delete failed");
-        }
-    })
-    .catch(err => {
-        console.log("DELETE ESTIMATE ERROR:", err);
-        alert("Error deleting estimate");
-    });
 }
 
 </script>

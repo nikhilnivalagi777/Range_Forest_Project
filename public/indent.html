@@ -329,8 +329,9 @@ function openPage(page, btn) {
 
 function loadUnsanctionedEstimates() {
     const search = document.getElementById("unsanctionedSearch").value.trim();
+    const user_id = localStorage.getItem("user_id");
 
-    fetch("/get-unsanctioned-estimates?search=" + encodeURIComponent(search))
+    fetch("/get-unsanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("unsanctionedTable");
@@ -371,8 +372,9 @@ function loadUnsanctionedEstimates() {
 
 function loadSanctionedEstimates() {
     const search = document.getElementById("sanctionedSearch").value.trim();
+    const user_id = localStorage.getItem("user_id");
 
-    fetch("/get-sanctioned-estimates?search=" + encodeURIComponent(search))
+    fetch("/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("sanctionedTable");
@@ -415,6 +417,7 @@ function selectEstimateForSanction(id, estNo, work) {
 function sanctionEstimate() {
     const sanctionNo = document.getElementById("sanctionNo").value.trim();
     const sanctionDate = document.getElementById("sanctionDate").value;
+    const user_id = localStorage.getItem("user_id");
 
     if (!selectedEstimateId) {
         alert("Please select an estimate first");
@@ -427,10 +430,7 @@ function sanctionEstimate() {
     }
 
     const ok = confirm("Do you want to sanction this estimate?");
-
-    if (!ok) {
-        return;
-    }
+    if (!ok) return;
 
     fetch("/sanction-estimate", {
         method: "POST",
@@ -440,7 +440,8 @@ function sanctionEstimate() {
         body: JSON.stringify({
             estimate_id: selectedEstimateId,
             sanction_no: sanctionNo,
-            sanction_date: sanctionDate
+            sanction_date: sanctionDate,
+            user_id: user_id
         })
     })
     .then(res => res.json())
@@ -468,8 +469,9 @@ function sanctionEstimate() {
 
 function loadUpdateSonoList() {
     const search = document.getElementById("updateSonoSearch").value.trim();
+    const user_id = localStorage.getItem("user_id");
 
-    fetch("/get-sanctioned-estimates?search=" + encodeURIComponent(search))
+    fetch("/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("updateSonoTable");
@@ -497,10 +499,10 @@ function loadUpdateSonoList() {
                 row.insertCell(2).innerText = item.sanction_no || "";
                 row.insertCell(3).innerText = item.sanction_date || "";
                 row.insertCell(4).innerHTML = `
-    <button class="btn" type="button"
-        onclick="editSono(${item.sanction_id},  '${(item.sanction_no || '').replace(/'/g, "\\'")}', '${item.sanction_date || ''}')">
-        Edit
-    </button>
+                    <button class="btn" type="button"
+                        onclick="editSono(${item.estimate_id}, '${(item.sanction_no || '').replace(/'/g, "\\'")}', '${item.sanction_date || ''}')">
+                        Edit
+                    </button>
                 `;
             });
         })
@@ -508,16 +510,51 @@ function loadUpdateSonoList() {
             console.log("LOAD UPDATE SONO ERROR:", err);
         });
 }
+function updateSono() {
+    const user_id = localStorage.getItem("user_id");
 
-function editSono(id, sanctionNo, sanctionDate) {
-    console.log("EDIT SANCTION ID:", id);
-    document.getElementById("editSanctionId").value = id;
-    document.getElementById("editSanctionNo").value = sanctionNo || "";
-    document.getElementById("editSanctionDate").value = sanctionDate || "";
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
 
-    document.getElementById("updateSonoFormBox").style.display = "block";
-    document.getElementById("updateSonoFormBox").scrollIntoView({
-        behavior: "smooth"
+    const id = document.getElementById("editSanctionId").value;
+    const sanction_no = document.getElementById("editSanctionNo").value;
+    const sanction_date = document.getElementById("editSanctionDate").value;
+
+    if (!id) {
+        alert("Estimate ID missing");
+        return;
+    }
+
+    if (!sanction_no) {
+        alert("Enter sanction number");
+        return;
+    }
+
+    fetch("/update-sanction/" + id, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            sanction_no: sanction_no,
+            sanction_date: sanction_date,
+            user_id: user_id
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Updated successfully");
+            loadUpdateSonoList();
+            closeUpdateSonoForm();
+        } else {
+            alert(data.message || "Update failed");
+        }
+    })
+    .catch(err => {
+        console.log("UPDATE SONO ERROR:", err);
     });
 }
 
@@ -529,49 +566,86 @@ function closeUpdateSonoForm() {
 }
 
 function updateSono() {
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
     const id = document.getElementById("editSanctionId").value;
-    const sanctionNo = document.getElementById("editSanctionNo").value.trim();
-    const sanctionDate = document.getElementById("editSanctionDate").value;
+    const sanction_no = document.getElementById("editSanctionNo").value;
+    const sanction_date = document.getElementById("editSanctionDate").value;
 
     if (!id) {
-        alert("Please select a sanctioned estimate first");
+        alert("Estimate ID missing");
         return;
     }
 
-    if (!sanctionNo) {
-        alert("Please enter sanction number");
+    if (!sanction_no) {
+        alert("Enter sanction number");
         return;
     }
 
-    const ok = confirm("Do you want to update this SONO?");
-
-    if (!ok) return;
-
-    fetch("/update-sanction/" + id, {
+    fetch("/update-sanction/" + id, {   // ✅ FIXED STRUCTURE
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            sanction_no: sanctionNo,
-            sanction_date: sanctionDate
+            sanction_no: sanction_no,
+            sanction_date: sanction_date,
+            user_id: user_id
         })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert("SONO updated successfully");
-            closeUpdateSonoForm();
+            alert("Updated successfully");
             loadUpdateSonoList();
-            loadSanctionedEstimates();
+            closeUpdateSonoForm();
         } else {
             alert(data.message || "Update failed");
         }
     })
     .catch(err => {
         console.log("UPDATE SONO ERROR:", err);
-        alert("Error updating SONO");
     });
+}
+
+function editSono(id, sanctionNo, sanctionDate) {
+    console.log("EDIT SONO CLICKED:", id, sanctionNo, sanctionDate);
+
+    const idBox = document.getElementById("editSanctionId");
+    const noBox = document.getElementById("editSanctionNo");
+    const dateBox = document.getElementById("editSanctionDate");
+    const formBox = document.getElementById("updateSonoFormBox");
+
+    if (!idBox || !noBox || !dateBox || !formBox) {
+        console.log("Update SONO form elements missing", {
+            idBox, noBox, dateBox, formBox
+        });
+        alert("Update SONO form not found");
+        return;
+    }
+
+    idBox.value = id || "";
+    noBox.value = sanctionNo || "";
+    dateBox.value = sanctionDate || "";
+
+    formBox.style.display = "block";
+    formBox.scrollIntoView({ behavior: "smooth" });
+}
+function closeUpdateSonoForm() {
+    const formBox = document.getElementById("updateSonoFormBox");
+    const idBox = document.getElementById("editSanctionId");
+    const noBox = document.getElementById("editSanctionNo");
+    const dateBox = document.getElementById("editSanctionDate");
+
+    if (formBox) formBox.style.display = "none";
+    if (idBox) idBox.value = "";
+    if (noBox) noBox.value = "";
+    if (dateBox) dateBox.value = "";
 }
 
 </script>

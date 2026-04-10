@@ -132,7 +132,7 @@
 <!-- TABS -->
 <div class="tabs">
     <div class="tab" onclick="openTab('range', this)">Range Info</div>
-    <div class="tab" onclick="openTab('ssr', this)">SSR Entry</div>
+    
     <div class="tab" onclick="openTab('hoa', this)">Head Of Account Entry</div> 
     <div class="tab" onclick="openTab('work', this)">Work Entry</div>
     <div class="tab" onclick="openTab('section', this)">Section Entry</div>
@@ -298,24 +298,91 @@ function openTab(tabName, element) {
 
 // SAVE RANGE
 function saveRange() {
+    console.log("NEW saveRange FUNCTION RUNNING");
+
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    const divisionEl = document.getElementById("division");
+    const subDivisionEl = document.getElementById("sub_division");
+    const rangeNameEl = document.getElementById("range_name");
+    const rangeIdEl = document.getElementById("range_id");
+    const rfoNameEl = document.getElementById("rfo_name");
+    const acfNameEl = document.getElementById("acf_name");
+    const cert1El = document.getElementById("cert1");
+    const cert2El = document.getElementById("cert2");
+    const cert3El = document.getElementById("cert3");
+    const acfRecommendationEl = document.getElementById("acf_recommendation");
+
+    if (!divisionEl || !subDivisionEl || !rangeNameEl || !rangeIdEl ||
+        !rfoNameEl || !acfNameEl || !cert1El || !cert2El || !cert3El || !acfRecommendationEl) {
+        alert("Some range fields are missing in HTML");
+        console.log("RANGE FIELD CHECK:", {
+            divisionEl,
+            subDivisionEl,
+            rangeNameEl,
+            rangeIdEl,
+            rfoNameEl,
+            acfNameEl,
+            cert1El,
+            cert2El,
+            cert3El,
+            acfRecommendationEl
+        });
+        return;
+    }
+
+    let division = divisionEl.value;
+    let sub_division = subDivisionEl.value;
+    let range_name = rangeNameEl.value;
+    let range_id = rangeIdEl.value;
+    let rfo_name = rfoNameEl.value;
+    let acf_name = acfNameEl.value;
+    let cert1 = cert1El.value;
+    let cert2 = cert2El.value;
+    let cert3 = cert3El.value;
+    let acf_recommendation = acfRecommendationEl.value;
+
+    if (range_name.trim() === "") {
+        alert("Enter range name");
+        return;
+    }
+
     let data = {
-        division: division.value,
-        sub_division: sub_division.value,
-        range_name: range_name.value,
-        range_id: range_id.value,
-        rfo_name: rfo_name.value,
-        acf_name: acf_name.value,
-        cert1: cert1.value,
-        cert2: cert2.value,
-        cert3: cert3.value,
-        acf_recommendation: acf_recommendation.value
+        user_id: user_id,
+        division: division,
+        sub_division: sub_division,
+        range_name: range_name,
+        range_id: range_id,
+        rfo_name: rfo_name,
+        acf_name: acf_name,
+        cert1: cert1,
+        cert2: cert2,
+        cert3: cert3,
+        acf_recommendation: acf_recommendation
     };
 
-    fetch("/add-range", {
+    console.log("SAVE RANGE DATA:", data);
+
+    fetch("/save-range", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify(data)
-    }).then(() => alert("Saved Successfully"));
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+    })
+    .catch(err => {
+        console.log("SAVE RANGE ERROR:", err);
+        alert("Error saving range");
+    });
 }
 
 // SAVE SSR
@@ -349,6 +416,13 @@ function saveSSR() {
 // SAVE HOA
 function savehoa() {
 
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
     let hoa_name = document.getElementById("hoa_name").value;
 
     if (hoa_name === "") {
@@ -357,8 +431,8 @@ function savehoa() {
     }
 
     let data = {
-        hoa_name: hoa_name,
-       user_id: 1 // temporary
+        user_id: user_id,
+        hoa_name: hoa_name
     };
 
     fetch("/add-hoa", {
@@ -369,14 +443,23 @@ function savehoa() {
     .then(res => res.text())
     .then(msg => {
         alert("HOA Saved");
-
-        // clear input
         document.getElementById("hoa_name").value = "";
+    })
+    .catch(err => {
+        console.log("SAVE HOA ERROR:", err);
+        alert("Error saving HOA");
     });
 }
 
 // SAVE section
 function savesection() {
+
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
 
     let section_name = document.getElementById("section_name").value;
 
@@ -386,25 +469,34 @@ function savesection() {
     }
 
     let data = {
-        section_name: section_name,
-       user_id: 1 // temporary
+        user_id: user_id,
+        section_name: section_name
     };
 
     fetch("/add-section", {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     })
     .then(res => res.text())
     .then(msg => {
-        alert("section Saved");
-
-        // clear input
+        alert(msg);
         document.getElementById("section_name").value = "";
+    })
+    .catch(err => {
+        console.log(err);
+        alert("Error saving section");
     });
 }
 
 function saveWork() {
+
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
 
     let work_name = document.getElementById("work_name").value;
 
@@ -418,7 +510,10 @@ function saveWork() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ work_name: work_name })
+        body: JSON.stringify({
+            user_id: user_id,
+            work_name: work_name
+        })
     })
     .then(res => res.text())
     .then(msg => {
@@ -432,14 +527,17 @@ function saveWork() {
 }
 
 function loadRangeData() {
-    fetch("/get-range")
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        console.log("User not logged in");
+        return;
+    }
+
+    fetch(`/get-range?user_id=${user_id}`)
         .then(res => res.json())
         .then(data => {
-            if (!data.success || !data.data) {
-                document.getElementById("saveRangeBtn").style.display = "inline-block";
-                document.getElementById("updateRangeBtn").style.display = "none";
-                return;
-            }
+            if (!data.success || !data.data) return;
 
             const r = data.data;
 
@@ -453,52 +551,15 @@ function loadRangeData() {
             document.getElementById("cert2").value = r.cert2 || "";
             document.getElementById("cert3").value = r.cert3 || "";
             document.getElementById("acf_recommendation").value = r.acf_recommendation || "";
-
-            document.getElementById("saveRangeBtn").style.display = "none";
-            document.getElementById("updateRangeBtn").style.display = "inline-block";
         })
         .catch(err => {
             console.log("LOAD RANGE ERROR:", err);
         });
 }
 
-function saveRange() {
-    const payload = {
-        division: document.getElementById("division").value,
-        sub_division: document.getElementById("sub_division").value,
-        range_name: document.getElementById("range_name").value,
-        range_id: document.getElementById("range_id").value,
-        rfo_name: document.getElementById("rfo_name").value,
-        acf_name: document.getElementById("acf_name").value,
-        cert1: document.getElementById("cert1").value,
-        cert2: document.getElementById("cert2").value,
-        cert3: document.getElementById("cert3").value,
-        acf_recommendation: document.getElementById("acf_recommendation").value
-    };
-
-    fetch("/add-range", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert("Range saved successfully");
-            loadRangeData();
-        } else {
-            alert("Save failed");
-        }
-    })
-    .catch(err => {
-        console.log("SAVE RANGE ERROR:", err);
-    });
-}
-
 function updateRange() {
     const payload = {
+        user_id: localStorage.getItem("user_id"),
         division: document.getElementById("division").value,
         sub_division: document.getElementById("sub_division").value,
         range_name: document.getElementById("range_name").value,
@@ -524,17 +585,13 @@ function updateRange() {
             alert("Range updated successfully");
             loadRangeData();
         } else {
-            alert("Update failed");
+            alert(data.message || "Update failed");
         }
     })
     .catch(err => {
         console.log("UPDATE RANGE ERROR:", err);
     });
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    loadRangeData();
-});
 
 </script>
 

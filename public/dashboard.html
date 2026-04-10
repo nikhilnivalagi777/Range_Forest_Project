@@ -56,7 +56,48 @@
         .card h3 {
             color: #1b5e20;
             margin-top: 10px;
-        }
+      .header {
+    position: relative;
+}
+
+.logout-btn {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    padding: 8px 14px;
+    background: white;
+    color: #1b5e20;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background: #c8e6c9;
+}  }
+
+.logout-btn {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    padding: 8px 14px;
+    background: white;
+    color: #1b5e20;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.logout-btn:hover {
+    background: #c8e6c9;
+}
+
+/* important for positioning */
+.header {
+    position: relative;
+}
     </style>
 </head>
 
@@ -66,6 +107,7 @@
     <h2>Karnataka Forest Department</h2>
    <h2>ಕರ್ನಾಟಕ ಅರಣ್ಯ ಇಲಾಖೆ</h2> 
     <h3>Forest Work Management System</h3>
+    <button onclick="logout()" class="logout-btn">Logout</button>
 </div>
 
 <div class="container">
@@ -108,7 +150,14 @@ function openEstimate(){
 function openindent(){
     window.location.href = "/indent.html";
 }
-</script>
+
+
+function logout() {
+    const ok = confirm("Do you want to logout?");
+    if (ok) {
+        window.location.href = "login.html";
+    }
+}
 </script>
 
 </body>
