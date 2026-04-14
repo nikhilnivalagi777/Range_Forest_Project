@@ -122,6 +122,57 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
+
+        .master-box {
+    background: #fff;
+    width: 90%;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border: 1px solid #dfe8df;
+}
+
+.master-box h3 {
+    margin: 0 0 20px 0;
+    color: #1b5e20;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.ssr-upload-row {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ssr-upload-row input[type="file"] {
+    flex: 1;
+    min-width: 260px;
+    padding: 10px;
+    border: 1px solid #cfd8cf;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.upload-btn {
+    background: linear-gradient(90deg, #1b5e20, #2e7d32);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    min-width: 160px;
+}
+
+.upload-btn:hover {
+    opacity: 0.92;
+}
+
     </style>
 </head>
 
@@ -136,6 +187,7 @@
     <div class="tab" onclick="openTab('hoa', this)">Head Of Account Entry</div> 
     <div class="tab" onclick="openTab('work', this)">Work Entry</div>
     <div class="tab" onclick="openTab('section', this)">Section Entry</div>
+    <div class="tab" onclick="openTab('ssr', this)">SSR Master</div>
     
 </div>
 
@@ -209,7 +261,7 @@
 
 
 <!-- SSR ENTRY -->
-<div id="ssr" class="content">
+<div id="ssradmin" class="content">
     <div class="gov-box">
         <h2 class="title">SSR Entry</h2>
 
@@ -268,6 +320,18 @@
 </div>
 
 
+<!-- ssr entry for admin only -->
+ <div id="ssr" class="content">
+    <div id="adminSsrUploadBox" class="master-box" style="display:block;">
+        <h3>SSR Master Upload</h3>
+
+        <div class="ssr-upload-row">
+            <input type="file" id="ssrExcelFile" accept=".xlsx,.xls">
+            <button class="upload-btn" type="button" onclick="uploadSsrExcel()">Upload Excel</button>
+        </div>
+    </div>
+</div>
+
 <!-- work -->
 <div id="work" class="content">
     <div class="gov-box">
@@ -286,7 +350,60 @@
 
 
 
+
 <script>
+//ssr for admin only
+function checkAdminSsrAccess() {
+    const role = localStorage.getItem("role");
+    const box = document.getElementById("adminSsrUploadBox");
+
+    if (!box) return;
+
+    if (role === "admin") {
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    checkAdminSsrAccess();
+});
+
+function uploadSsrExcel() {
+    const fileInput = document.getElementById("ssrExcelFile");
+    const user_id = localStorage.getItem("user_id");
+
+    if (!fileInput.files.length) {
+        alert("Please select Excel file");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("ssr_file", fileInput.files[0]);
+    formData.append("user_id", user_id);
+
+    fetch("/upload-ssr-master-excel", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || "Upload successful");
+            fileInput.value = "";
+        } else {
+            alert(data.message || "Upload failed");
+        }
+    })
+    .catch(err => {
+        console.log("UPLOAD SSR EXCEL ERROR:", err);
+        alert("Error uploading file");
+    });
+}
+
+
+
 
 function openTab(tabName, element) {
     document.querySelectorAll(".content").forEach(c => c.classList.remove("show"));
@@ -294,96 +411,51 @@ function openTab(tabName, element) {
 
     document.getElementById(tabName).classList.add("show");
     element.classList.add("active");
+
+    if (tabName === "ssr") {
+    checkAdminSsrAccess();
+    }
 }
 
 // SAVE RANGE
-function saveRange() {
-    console.log("NEW saveRange FUNCTION RUNNING");
-
+function saveRangeInfo() {
     const user_id = localStorage.getItem("user_id");
 
-    if (!user_id) {
-        alert("User not logged in");
-        return;
-    }
-
-    const divisionEl = document.getElementById("division");
-    const subDivisionEl = document.getElementById("sub_division");
-    const rangeNameEl = document.getElementById("range_name");
-    const rangeIdEl = document.getElementById("range_id");
-    const rfoNameEl = document.getElementById("rfo_name");
-    const acfNameEl = document.getElementById("acf_name");
-    const cert1El = document.getElementById("cert1");
-    const cert2El = document.getElementById("cert2");
-    const cert3El = document.getElementById("cert3");
-    const acfRecommendationEl = document.getElementById("acf_recommendation");
-
-    if (!divisionEl || !subDivisionEl || !rangeNameEl || !rangeIdEl ||
-        !rfoNameEl || !acfNameEl || !cert1El || !cert2El || !cert3El || !acfRecommendationEl) {
-        alert("Some range fields are missing in HTML");
-        console.log("RANGE FIELD CHECK:", {
-            divisionEl,
-            subDivisionEl,
-            rangeNameEl,
-            rangeIdEl,
-            rfoNameEl,
-            acfNameEl,
-            cert1El,
-            cert2El,
-            cert3El,
-            acfRecommendationEl
-        });
-        return;
-    }
-
-    let division = divisionEl.value;
-    let sub_division = subDivisionEl.value;
-    let range_name = rangeNameEl.value;
-    let range_id = rangeIdEl.value;
-    let rfo_name = rfoNameEl.value;
-    let acf_name = acfNameEl.value;
-    let cert1 = cert1El.value;
-    let cert2 = cert2El.value;
-    let cert3 = cert3El.value;
-    let acf_recommendation = acfRecommendationEl.value;
-
-    if (range_name.trim() === "") {
-        alert("Enter range name");
-        return;
-    }
-
-    let data = {
-        user_id: user_id,
-        division: division,
-        sub_division: sub_division,
-        range_name: range_name,
-        range_id: range_id,
-        rfo_name: rfo_name,
-        acf_name: acf_name,
-        cert1: cert1,
-        cert2: cert2,
-        cert3: cert3,
-        acf_recommendation: acf_recommendation
+    const payload = {
+        user_id,
+        division: document.getElementById("division").value,
+        sub_division: document.getElementById("sub_division").value,
+        range_name: document.getElementById("range_name").value,
+        range_id: document.getElementById("range_id").value,
+        rfo_name: document.getElementById("rfo_name").value,
+        acf_name: document.getElementById("acf_name").value,
+        cert1: document.getElementById("cert1").value,
+        cert2: document.getElementById("cert2").value,
+        cert3: document.getElementById("cert3").value,
+        acf_recommendation: document.getElementById("acf_recommendation").value
     };
 
-    console.log("SAVE RANGE DATA:", data);
-
-    fetch("/save-range", {
+    fetch("/save-range-info", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(payload)
     })
-    .then(res => res.text())
-    .then(msg => {
-        alert(msg);
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || "Range info saved successfully");
+            loadRangeInfo();
+        } else {
+            alert(data.message || "Save failed");
+        }
     })
-    .catch(err => {
-        console.log("SAVE RANGE ERROR:", err);
-        alert("Error saving range");
-    });
+    .catch(err => console.log("SAVE RANGE INFO ERROR:", err));
 }
+document.addEventListener("DOMContentLoaded", function () {
+    loadRangeInfo();
+});
 
 // SAVE SSR
 function saveSSR() {
@@ -526,35 +598,38 @@ function saveWork() {
     });
 }
 
-function loadRangeData() {
+function loadRangeInfo() {
     const user_id = localStorage.getItem("user_id");
 
     if (!user_id) {
-        console.log("User not logged in");
+        alert("User not logged in");
         return;
     }
 
-    fetch(`/get-range?user_id=${user_id}`)
+    fetch("/get-range-info?user_id=" + encodeURIComponent(user_id))
         .then(res => res.json())
         .then(data => {
-            if (!data.success || !data.data) return;
+            if (!data.success) {
+                alert(data.message || "Failed to load range info");
+                return;
+            }
 
-            const r = data.data;
+            if (!data.data) return;
 
-            document.getElementById("division").value = r.division || "";
-            document.getElementById("sub_division").value = r.sub_division || "";
-            document.getElementById("range_name").value = r.range_name || "";
-            document.getElementById("range_id").value = r.range_id || "";
-            document.getElementById("rfo_name").value = r.rfo_name || "";
-            document.getElementById("acf_name").value = r.acf_name || "";
-            document.getElementById("cert1").value = r.cert1 || "";
-            document.getElementById("cert2").value = r.cert2 || "";
-            document.getElementById("cert3").value = r.cert3 || "";
-            document.getElementById("acf_recommendation").value = r.acf_recommendation || "";
+            const d = data.data;
+
+            document.getElementById("division").value = d.division || "";
+            document.getElementById("sub_division").value = d.sub_division || "";
+            document.getElementById("range_name").value = d.range_name || "";
+            document.getElementById("range_id").value = d.range_id || "";
+            document.getElementById("rfo_name").value = d.rfo_name || "";
+            document.getElementById("acf_name").value = d.acf_name || "";
+            document.getElementById("cert1").value = d.cert1 || "";
+            document.getElementById("cert2").value = d.cert2 || "";
+            document.getElementById("cert3").value = d.cert3 || "";
+            document.getElementById("acf_recommendation").value = d.acf_recommendation || "";
         })
-        .catch(err => {
-            console.log("LOAD RANGE ERROR:", err);
-        });
+        .catch(err => console.log("LOAD RANGE INFO ERROR:", err));
 }
 
 function updateRange() {

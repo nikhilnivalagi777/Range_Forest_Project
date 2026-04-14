@@ -3,6 +3,7 @@
 <head>
     <title>Indent / DC Bill</title>
     <style>
+        
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -61,23 +62,7 @@
             display: block;
         }
 
-        .box {
-            background: white;
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #d9e6dc;
-        }
-
-        .box-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: #1b5e20;
-            margin-bottom: 15px;
-            border-left: 5px solid #2e7d32;
-            padding-left: 10px;
-        }
-
+       
         .welcome-page {
             display: none;
             justify-content: center;
@@ -189,40 +174,827 @@
             color: #1b5e20;
             font-weight: bold;
         }
-    </style>
+       * {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #eef4ef;
+    color: #1f2d1f;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.sidebar {
+    width: 170px;
+    background: linear-gradient(180deg, #0f5d2f, #1b7a3d);
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    box-shadow: 3px 0 12px rgba(0,0,0,0.12);
+}
+
+.sidebar button {
+    border: none;
+    background: rgba(255,255,255,0.14);
+    color: #fff;
+    padding: 14px 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    background: #ffffff;
+    color: #14532d;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px 24px;
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(90deg, #0f5d2f, #1b7a3d);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 22px;
+    box-shadow: 0 6px 16px rgba(15, 93, 47, 0.18);
+}
+
+.page {
+    width: 100%;
+    height: calc(100vh - 110px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+.box {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid #e2ece3;
+}
+
+.box-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #14532d;
+    margin-bottom: 22px;
+    position: relative;
+    padding-left: 16px;
+}
+
+.box-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 5px;
+    height: 32px;
+    background: #2e7d32;
+    border-radius: 10px;
+}
+
+.summary-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    background: linear-gradient(180deg, #f7fcf7, #edf7ee);
+    border: 1px solid #d8e7da;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.summary-card .title {
+    font-size: 14px;
+    color: #557055;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.summary-card .value {
+    font-size: 24px;
+    font-weight: 800;
+    color: #14532d;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 180px 520px;
+    gap: 12px 18px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-grid label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #284128;
+}
+
+.form-grid input,
+.form-grid select {
+    width: 520px;
+    max-width: 520px;
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #cfdccd;
+    border-radius: 10px;
+    background: #f9fcf9;
+    font-size: 14px;
+    color: #1f2d1f;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+    border-color: #2e7d32;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.10);
+}
+
+.readonly-field {
+    background: #eef7ef !important;
+    font-weight: 600;
+}
+
+.ssr-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    max-height: 360px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border: 1px solid #d6e3d7;
+    border-radius: 12px;
+    background: #fbfdfb;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+    scrollbar-gutter: stable;
+}
+
+.ssr-table-wrapper::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+}
+
+.ssr-table-wrapper::-webkit-scrollbar-track {
+    background: #e6f2e6;
+    border-radius: 10px;
+}
+
+.ssr-table-wrapper::-webkit-scrollbar-thumb {
+    background: #2e7d32;
+    border-radius: 10px;
+}
+
+.ssr-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #1b5e20;
+}
+
+#indentSsrTable {
+    width: max-content;
+    min-width: 2300px;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+#indentSsrTable th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(90deg, #1f6b33, #2f8a43);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 8px;
+    border: 1px solid #dbe7dc;
+    text-align: center;
+    white-space: nowrap;
+    z-index: 2;
+}
+
+#indentSsrTable td {
+    border: 1px solid #e0e9e1;
+    padding: 6px;
+    background: #fff;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#indentSsrTable tr:nth-child(even) td {
+    background: #f7fbf7;
+}
+
+#indentSsrTable input {
+    width: 100%;
+    min-width: 90px;
+    height: 34px;
+    padding: 6px 8px;
+    border: 1px solid #c8d6c9;
+    border-radius: 8px;
+    background: #fcfffc;
+    font-size: 13px;
+    color: #1f2d1f;
+    outline: none;
+}
+
+#indentSsrTable input:focus {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.08);
+}
+
+.small-box {
+    min-width: 75px !important;
+    max-width: 75px;
+}
+
+.medium-box {
+    min-width: 110px !important;
+    max-width: 110px;
+}
+
+.large-box {
+    min-width: 260px !important;
+}
+
+.action-bar {
+    margin-top: 22px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.btn {
+    border: none;
+    background: linear-gradient(90deg, #1b7a3d, #2e9449);
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(27,122,61,0.20);
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(27,122,61,0.26);
+}
+
+@media (max-width: 1100px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid input,
+    .form-grid select {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .summary-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        width: 130px;
+    }
+
+    .sidebar button {
+        font-size: 13px;
+        padding: 12px 8px;
+    }
+
+    .header {
+        font-size: 24px;
+    }
+}
+
+.indent-form {
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.indent-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: center;
+    gap: 16px;
+}
+
+.indent-row label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #284128;
+}
+
+.indent-row input,
+.indent-row select {
+    width: 100%;
+    height: 42px;
+    padding: 8px 12px;
+    border: 1px solid #cfdccd;
+    border-radius: 10px;
+    background: #f9fcf9;
+    font-size: 15px;
+    color: #1f2d1f;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.indent-row input:focus,
+.indent-row select:focus {
+    border-color: #2e7d32;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.10);
+}
+
+.readonly-field {
+    background: #eef7ef !important;
+    font-weight: 600;
+}
+
+.print-container {
+    background: white;
+    padding: 12px 16px;
+    margin-top: 20px;
+    color: #000;
+    font-family: "Times New Roman", serif;
+}
+
+.print-header-center {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.print-logo-wrap {
+    margin-bottom: 4px;
+}
+
+.print-logo {
+    height: 60px;
+    object-fit: contain;
+}
+
+.print-dept {
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+.print-division {
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.print-title {
+    font-size: 18px;
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+.print-meta-left {
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.35;
+    margin-bottom: 8px;
+}
+
+.print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+}
+
+.print-table th,
+.print-table td {
+    border: 1px solid #000;
+    padding: 5px;
+    font-size: 13px;
+    vertical-align: top;
+}
+
+.print-table th {
+    text-align: center;
+    font-weight: bold;
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.particulars-col {
+    line-height: 1.35;
+}
+
+.pow-line {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.fnb-col {
+    line-height: 1.35;
+}
+
+.print-total-line {
+    margin-top: 6px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.print-footer-note {
+    width: 80%;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.3;
+}
+
+
+.print-footer {
+    margin-top: 100%;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    line-height: 1.2;
+    text-align: right;
+    word-break: break-word;
+}
+
+
+.item-no-col {
+    width: 70px;
+}
+
+.qty-col {
+    width: 80px;
+}
+
+.amount-col {
+    width: 110px;
+    text-align: center !important;
+}
+
+.fnb-col {
+    width: 180px;
+    line-height: 1.3;
+}
+
+.particulars-col {
+    width: auto;
+    line-height: 1.3;
+}
+</style>
 </head>
 <body>
 
-<div class="header">Indent / DC Bill Module</div>
+<div class="header">Indent Module</div>
 
-<div class="main">
+<div class="container">
     <div class="sidebar">
     <button onclick="openPage('sanction', this)">Sanction Estimate</button>
     <button onclick="openPage('updateSono', this)">Update SONO</button>
+    <button onclick="openPage('fundIndent', this)">Fund Indent </button>
+    <button onclick="openPage('modifyIndent', this)">Modify Indent</button>
+    <button onclick="openPage('deleteIndent', this)">Delete Indent</button>
+    <button onclick="openPage('viewIndent', this)">View / Print Indent</button>
 </div>
 
-    <div class="content">
+    <div class="main-content">
+
+        
 
         <div id="welcome" class="page active welcome-page">
             <div class="welcome-box">
-                <h1>Welcome to Indent / DC Bill Module</h1>
+                <h1>Welcome to Indent Module</h1>
                 <p>Select an option from the left side menu</p>
             </div>
         </div>
 
-        <div id="sanction" class="page">
-            <div class="box">
-                <div class="box-title">Sanction Estimate</div>
+            <div id="fundIndent" class="page" style="display:none;">
+    <div class="box">
+    <div class="box-title">Create Indent</div>
 
-                <div class="two-box-layout">
+    <div class="indent-form">
+        <div class="indent-row">
+            <label>Indent No</label>
+            <input id="indentNo" class="readonly-field" readonly>
+        </div>
+
+        <div class="indent-row">
+            <label>Work Type</label>
+            <select id="indentWorkType">
+            <option value="">Select Work Type</option>
+            <option value="PCP & FAC-63">PCP & FAC-63</option>
+            <option value="CAMPA - PCP & FAC-63">CAMPA - PCP & FAC-63</option>
+            <option value="FDA - PCP & FAC-63">FDA - PCP & FAC-63</option>
+            <option value="BAMBOO - PCP & FAC-63">BAMBOO - PCP & FAC-63</option>
+            <option value="CONTRACT OTHERS - CONTRACT BILL">CONTRACT OTHERS - CONTRACT BILL</option>
+            <option value="CONTRACT CAMPA - CONTRACT BILL">CONTRACT CAMPA - CONTRACT BILL</option>
+            <option value="CONTRACT FDA - CONTRACT BILL">CONTRACT FDA - CONTRACT BILL</option>
+            <option value="CONTRACT BAMBOO - CONTRACT BILL">CONTRACT BAMBOO - CONTRACT BILL</option>
+        </select>
+        </div>
+
+        <div class="indent-row">
+            <label>Month</label>
+            <select id="indentMonth" onchange="loadFilteredIndentSono()"></select>
+        </div>
+
+        <div class="indent-row">
+            <label>Head of Account</label>
+            <select id="indentHoa" onchange="loadFilteredIndentSono(); loadIndentGrandTotal();"></select>
+        </div>
+
+        <div class="indent-row">
+            <label>SONO</label>
+            <select id="indentSono" onchange="loadIndentEstimateDetails()"></select>
+        </div>
+
+        <div class="indent-row">
+            <label>Estimate Total</label>
+            <input id="indentEstimateTotal" class="readonly-field" readonly>
+        </div>
+
+        <div class="indent-row">
+            <label>Indent Entry Total</label>
+            <input id="indentEntryTotal" class="readonly-field" readonly>
+        </div>
+
+        <div class="indent-row">
+            <label>Grand Total</label>
+            <input id="indentGrandTotal" class="readonly-field" readonly>
+        </div>
+    </div>
+
+    <input type="hidden" id="indentEstimateId">
+    <input type="hidden" id="indentEstNo">
+    <input type="hidden" id="indentSanctionNo">
+
+    <div class="ssr-table-wrapper">
+        <table id="indentSsrTable">
+            <tr>
+                <th>SSR No</th>
+                <th>Particulars</th>
+                <th>Qty</th>
+                <th>Times/Days</th>
+                <th>Unit</th>
+                <th>Rate</th>
+                <th>Rate Per</th>
+                <th>Total</th>
+                <th>ACF Date</th>
+                <th>FNB.No</th>
+                <th>Page No</th>
+                <th>POW</th>
+                <th>RFO Date</th>
+                <th>Wages From</th>
+                <th>Wages</th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn" type="button" onclick="saveIndent()">Create Indent</button>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<div id="modifyIndent" class="page" style="display:none;">
+    <div class="box">
+        <div class="box-title">Modify Indent</div>
+
+        <div class="indent-form">
+            <div class="indent-row">
+                <label>Month</label>
+                <select id="modifyIndentMonth" onchange="loadModifyIndentList()"></select>
+            </div>
+
+            <div class="indent-row">
+                <label>Head of Account</label>
+                <select id="modifyIndentHoa" onchange="loadModifyIndentList()"></select>
+            </div>
+
+            <div class="indent-row">
+                <label>Select Indent</label>
+                <select id="modifyIndentSelect" onchange="loadIndentForEdit()">
+                    <option value="">Select Indent</option>
+                </select>
+            </div>
+        </div>
+
+        <hr style="margin:20px 0; border:none; border-top:1px solid #d8e3d8;">
+
+        <div class="indent-form">
+            <div class="indent-row">
+                <label>Indent No</label>
+                <input id="editIndentNo" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>Work Type</label>
+                <select id="editIndentWorkType">
+                    <option value="">Select Work Type</option>
+                    <option value="PCP & FAC-63">PCP & FAC-63</option>
+                    <option value="CAMPA - PCP & FAC-63">CAMPA - PCP & FAC-63</option>
+                    <option value="FDA - PCP & FAC-63">FDA - PCP & FAC-63</option>
+                    <option value="BAMBOO - PCP & FAC-63">BAMBOO - PCP & FAC-63</option>
+                    <option value="CONTRACT OTHERS - CONTRACT BILL">CONTRACT OTHERS - CONTRACT BILL</option>
+                    <option value="CONTRACT CAMPA - CONTRACT BILL">CONTRACT CAMPA - CONTRACT BILL</option>
+                    <option value="CONTRACT FDA - CONTRACT BILL">CONTRACT FDA - CONTRACT BILL</option>
+                    <option value="CONTRACT BAMBOO - CONTRACT BILL">CONTRACT BAMBOO - CONTRACT BILL</option>
+                </select>
+            </div>
+
+            <div class="indent-row">
+                <label>Month</label>
+                <input id="editIndentMonth" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>Head of Account</label>
+                <input id="editIndentHoa" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>SONO</label>
+                <input id="editIndentSono" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>Estimate Total</label>
+                <input id="editIndentEstimateTotal" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>Indent Entry Total</label>
+                <input id="editIndentEntryTotal" readonly>
+            </div>
+
+            <div class="indent-row">
+                <label>Grand Total</label>
+                <input id="editIndentGrandTotal" readonly>
+            </div>
+        </div>
+
+        <input type="hidden" id="editIndentId">
+        <input type="hidden" id="editIndentEstimateId">
+        <input type="hidden" id="editIndentEstNo">
+
+        <div class="ssr-table-wrapper">
+            <table id="modifyIndentSsrTable">
+                <tr>
+                    <th>SSR No</th>
+                    <th>Particulars</th>
+                    <th>Qty</th>
+                    <th>Times/Days</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Rate Per</th>
+                    <th>Total</th>
+                    <th>ACF Date</th>
+                    <th>NB.No</th>
+                    <th>Page No</th>
+                    <th>POW</th>
+                    <th>RFO Date</th>
+                    <th>Wages From</th>
+                    <th>Wages</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn" type="button" onclick="updateIndent()">Update Indent</button>
+        </div>
+    </div>
+</div>
+
+<div id="deleteIndent" class="page" style="display:none;">
+    <div class="box">
+        <div class="box-title">Delete Indent</div>
+
+        <div class="indent-form">
+            <div class="indent-row">
+                <label>Month</label>
+                <select id="deleteIndentMonth" onchange="loadDeleteIndentList()">
+                    <option value="">Select Month</option>
+                </select>
+            </div>
+
+            <div class="indent-row">
+                <label>Head of Account</label>
+                <select id="deleteIndentHoa" onchange="loadDeleteIndentList()">
+                    <option value="">Select Head of Account</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="ssr-table-wrapper" style="max-height:420px;">
+            <table id="deleteIndentTable">
+                <tr>
+                    <th>Indent No</th>
+                    <th>SONO</th>
+                    <th>Month</th>
+                    <th>Head of Account</th>
+                    <th>Total Amount</th>
+                    <th>Action</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="viewIndent" class="page" style="display:none;">
+    <div class="box">
+        <div class="box-title">View / Print Indent</div>
+
+        <div class="indent-form">
+            <div class="indent-row">
+                <label>Month</label>
+                <select id="viewIndentMonth" onchange="loadViewIndentList()"></select>
+            </div>
+
+            <div class="indent-row">
+                <label>Head of Account</label>
+                <select id="viewIndentHoa" onchange="loadViewIndentList()"></select>
+            </div>
+
+            <div class="indent-row">
+                <label>Select Indent</label>
+                <select id="viewIndentSelect"></select>
+            </div>
+
+            <div class="action-bar">
+    <button class="btn" onclick="viewIndent()">View</button>
+    <button class="btn" onclick="printIndent()">Print</button>
+    <button class="btn" type="button" onclick="closeIndentPreview()">Close</button>
+</div>
+        </div>
+
+        <div id="printArea" class="print-area"></div>
+    </div>
+</div>
+
+
+            <div id="sanction" class="page">
+              <div class="box">
+                 <div class="box-title">Sanction Estimate</div>
+
+                 <div class="two-box-layout">
                     <!-- LEFT BOX -->
                     <div class="box">
-                        <div class="box-title" style="font-size:18px;">Estimates</div>
+                    <div class="box-title" style="font-size:18px;">Estimates</div>
 
-                        <div class="search-row">
-                            <input id="unsanctionedSearch" placeholder="Search Estimate No or Work" oninput="loadUnsanctionedEstimates()">
-                            <button class="btn" onclick="loadUnsanctionedEstimates()">Search</button>
-                        </div>
+                    <div class="search-row">
+                    <input id="unsanctionedSearch" placeholder="Search Estimate No or Work" oninput="loadUnsanctionedEstimates()">
+                      <button class="btn" onclick="loadUnsanctionedEstimates()">Search</button>
+                    </div>
 
                         <table id="unsanctionedTable">
                             <tr>
@@ -261,8 +1033,8 @@
                             </tr>
                         </table>
                     </div>
-                </div>
-            </div>
+                      </div>
+                  </div>  
         </div>
 
         <div id="updateSono" class="page">
@@ -295,27 +1067,30 @@
             <input id="editSanctionDate" type="date">
             <button class="btn" onclick="updateSono()">Update</button>
             <button class="btn" type="button" onclick="closeUpdateSonoForm()">Close</button>
+             </div>
+            </div>
         </div>
     </div>
 </div>
-    </div>
-</div>
 
-
+   
 
 <script>
 let selectedEstimateId = null;
 
-function openPage(page, btn) {
-    let pages = document.querySelectorAll(".page");
-    pages.forEach(p => p.classList.remove("active"));
+function openPage(page, el) {
+    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
 
-    document.getElementById(page).classList.add("active");
+    const pageEl = document.getElementById(page);
+    if (!pageEl) {
+        console.log("PAGE NOT FOUND:", page);
+        return;
+    }
 
-    let buttons = document.querySelectorAll(".sidebar button");
-    buttons.forEach(b => b.classList.remove("active"));
+    pageEl.style.display = "block";
 
-    if (btn) btn.classList.add("active");
+    document.querySelectorAll(".sidebar button").forEach(btn => btn.classList.remove("active"));
+    if (el) el.classList.add("active");
 
     if (page === "sanction") {
         loadUnsanctionedEstimates();
@@ -324,6 +1099,26 @@ function openPage(page, btn) {
 
     if (page === "updateSono") {
         loadUpdateSonoList();
+    }
+
+    if (page === "fundIndent") {
+        console.log("Opening fundIndent");
+        loadIndentMonths();
+        loadIndentInitData();
+    }
+
+    if (page === "modifyIndent") {
+    loadModifyIndentMonths();
+    loadModifyIndentHoa();
+    }
+
+    if (page === "deleteIndent") {
+    loadDeleteIndentMonths();
+    loadDeleteIndentHoa();
+    }
+    if (page === "viewIndent") {
+    loadViewIndentMonths();
+    loadViewIndentHoa();
     }
 }
 
@@ -646,6 +1441,1195 @@ function closeUpdateSonoForm() {
     if (idBox) idBox.value = "";
     if (noBox) noBox.value = "";
     if (dateBox) dateBox.value = "";
+}
+
+// CREATE INDENT
+function loadIndentMonths() {
+    const year = new Date().getFullYear();
+    const months = [
+        "January - " + year,
+        "February - " + year,
+        "March - " + year,
+        "April - " + year,
+        "May - " + year,
+        "June - " + year,
+        "July - " + year,
+        "August - " + year,
+        "September - " + year,
+        "October - " + year,
+        "November - " + year,
+        "December - " + year
+    ];
+
+    const dropdown = document.getElementById("indentMonth");
+    dropdown.innerHTML = '<option value="">Select Month</option>';
+
+    months.forEach(month => {
+        const option = document.createElement("option");
+        option.value = month;
+        option.textContent = month;
+        dropdown.appendChild(option);
+    });
+}
+
+function getMonthYearFromText(monthText) {
+    if (!monthText) return null;
+
+    const parts = monthText.split(" - ");
+    if (parts.length !== 2) return null;
+
+    const monthName = parts[0].trim().toLowerCase();
+    const year = parts[1].trim();
+
+    const monthMap = {
+        january: 1,
+        february: 2,
+        march: 3,
+        april: 4,
+        may: 5,
+        june: 6,
+        july: 7,
+        august: 8,
+        september: 9,
+        october: 10,
+        november: 11,
+        december: 12
+    };
+
+    return { month: monthMap[monthName], year: year };
+}
+
+function loadIndentInitData() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-indent-init-data?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("indentNo").value = data.next_indent_no || 1;
+                document.getElementById("indentGrandTotal").value = data.grand_total || 0;
+            }
+        });
+
+    fetch("/get-indent-hoa?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            const dropdown = document.getElementById("indentHoa");
+            dropdown.innerHTML = '<option value="">Select Head of Account</option>';
+
+            (data.data || []).forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.textContent = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        });
+}
+
+function loadFilteredIndentSono() {
+    const user_id = localStorage.getItem("user_id");
+    const monthText = document.getElementById("indentMonth").value;
+    const hoa_name = document.getElementById("indentHoa").value;
+
+    console.log("MONTH:", monthText);
+    console.log("HOA:", hoa_name);
+
+    const dropdown = document.getElementById("indentSono");
+    dropdown.innerHTML = '<option value="">Select SONO</option>';
+
+    document.getElementById("indentEstimateId").value = "";
+    document.getElementById("indentEstNo").value = "";
+    document.getElementById("indentSanctionNo").value = "";
+    document.getElementById("indentEstimateTotal").value = "";
+    document.getElementById("indentEntryTotal").value = "0.00";
+
+    const table = document.getElementById("indentSsrTable");
+    table.innerHTML = `
+        <tr>
+            <th>SSR No</th>
+            <th>Particulars</th>
+            <th>Qty</th>
+            <th>Times/Days</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Rate Per</th>
+            <th>Total</th>
+            <th>ACF Date</th>
+            <th>NB.No</th>
+            <th>Page No</th>
+            <th>POW</th>
+            <th>RFO Date</th>
+            <th>Wages From</th>
+            <th>Wages</th>
+        </tr>
+    `;
+
+    if (!monthText || !hoa_name) {
+        console.log("Month or HOA missing");
+        return;
+    }
+
+    const parsed = getMonthYearFromText(monthText);
+    if (!parsed) {
+        console.log("Invalid month format:", monthText);
+        return;
+    }
+
+    fetch(
+        "/get-indent-sono-list?user_id=" + encodeURIComponent(user_id) +
+        "&month=" + encodeURIComponent(parsed.month) +
+        "&year=" + encodeURIComponent(parsed.year) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
+    .then(res => res.json())
+    .then(data => {
+        console.log("SONO RESPONSE:", data);
+
+        if (!data.success || !data.data) return;
+
+        data.data.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.sanction_no;
+            option.textContent = item.sanction_no + " (" + item.est_no + ")";
+            option.dataset.estimateId = item.estimate_id;
+            option.dataset.estNo = item.est_no;
+            option.dataset.totalAmount = item.total_amount || 0;
+            dropdown.appendChild(option);
+        });
+    })
+    .catch(err => console.log("LOAD FILTERED INDENT SONO ERROR:", err));
+}
+
+function loadIndentEstimateDetails() {
+    const user_id = localStorage.getItem("user_id");
+    const dropdown = document.getElementById("indentSono");
+    const selected = dropdown.options[dropdown.selectedIndex];
+
+    const estimateId = selected?.dataset?.estimateId || "";
+    const estNo = selected?.dataset?.estNo || "";
+    const sanctionNo = selected?.value || "";
+    const estimateTotal = parseFloat(selected?.dataset?.totalAmount || 0);
+
+    document.getElementById("indentEstimateId").value = estimateId;
+    document.getElementById("indentEstNo").value = estNo;
+    document.getElementById("indentSanctionNo").value = sanctionNo;
+    document.getElementById("indentEstimateTotal").value = estimateTotal.toFixed(2);
+    document.getElementById("indentEntryTotal").value = "0.00";
+
+    if (!estimateId) return;
+
+    fetch("/get-indent-estimate-details/" + estimateId + "?user_id=" + encodeURIComponent(user_id))
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Estimate details not found");
+                return;
+            }
+
+            const table = document.getElementById("indentSsrTable");
+            table.innerHTML = `
+                <tr>
+                    <th>SSR No</th>
+                    <th>Particulars</th>
+                    <th>Qty</th>
+                    <th>Times/Days</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Rate Per</th>
+                    <th>Total</th>
+                    <th>ACF Date</th>
+                    <th>NB.No</th>
+                    <th>Page No</th>
+                    <th>POW</th>
+                    <th>RFO Date</th>
+                    <th>Wages From</th>
+                    <th>Wages</th>
+                </tr>
+            `;
+
+            (data.ssrItems || []).forEach(item => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td><input class="small-box sr_no" value="${item.sr_no || ""}" readonly></td>
+                    <td><input class="large-box particulars" value="${item.description || ""}" readonly></td>
+                    <td><input class="small-box qty" data-maxqty="${item.remaining_qty || item.qty || 0}" value="${item.remaining_qty || item.qty || ""}" oninput="validateIndentQty(this); recalculateIndentRow(this)"></td>
+                    <td><input class="small-box times_days" value="${item.days || ""}" oninput="recalculateIndentRow(this)"></td>
+                    <td><input class="small-box unit" value="${item.unit || ""}" readonly></td>
+                    <td><input class="small-box rate" value="${item.rate || ""}" readonly></td>
+                    <td><input class="small-box rate_per" value="${item.rate_per || 1}" readonly></td>
+                    <td><input class="medium-box total" value="0.00" readonly></td>
+                    <td><input class="medium-box acf_date" type="date"></td>
+                    <td><input class="medium-box nb_no"></td>
+                    <td><input class="small-box page_no"></td>
+                    <td><input class="medium-box pow"></td>
+                    <td><input class="medium-box rfo_date" type="date"></td>
+                    <td><input class="small-box wages_from"></td>
+                    <td><input class="medium-box wages"></td>
+                `;
+                recalculateIndentRow(row.querySelector(".qty"));
+            });
+
+            recalculateIndentTotals();
+        })
+        .catch(err => console.log("LOAD INDENT ESTIMATE DETAILS ERROR:", err));
+}
+
+function recalculateIndentRow(input) {
+    const row = input.closest("tr");
+
+    const qty = parseFloat(row.querySelector(".qty")?.value || 0);
+    const time = parseFloat(row.querySelector(".times_days")?.value || 0);
+    const rate = parseFloat(row.querySelector(".rate")?.value || 0);
+    const ratePer = parseFloat(row.querySelector(".rate_per")?.value || 1);
+
+    let total = 0;
+    if (ratePer > 0) {
+        total = (time * qty * rate) / ratePer;
+    }
+
+    row.querySelector(".total").value = total.toFixed(2);
+    recalculateIndentTotals();
+}
+
+function recalculateIndentTotals() {
+    const totalInputs = document.querySelectorAll("#indentSsrTable .total");
+    let currentIndentTotal = 0;
+
+    totalInputs.forEach(input => {
+        currentIndentTotal += parseFloat(input.value || 0);
+    });
+
+    document.getElementById("indentEntryTotal").value = currentIndentTotal.toFixed(2);
+
+    const previousGrand = parseFloat(document.getElementById("indentGrandTotal").dataset.previous || 0);
+    const newGrand = previousGrand + currentIndentTotal;
+    document.getElementById("indentGrandTotal").value = newGrand.toFixed(2);
+}
+
+function validateIndentQty(input) {
+    const maxQty = parseFloat(input.dataset.maxqty || 0);
+    const val = parseFloat(input.value || 0);
+
+    if (val > maxQty) {
+        alert("Quantity cannot exceed remaining quantity: " + maxQty);
+        input.value = maxQty;
+    }
+
+    if (val < 0) {
+        input.value = 0;
+    }
+}
+
+function saveIndent() {
+    const user_id = localStorage.getItem("user_id");
+
+    const estimate_id = document.getElementById("indentEstimateId").value;
+    const est_no = document.getElementById("indentEstNo").value;
+    const sanction_no = document.getElementById("indentSanctionNo").value;
+    const indent_no = document.getElementById("indentNo").value;
+    const work_type = document.getElementById("indentWorkType").value;
+    const indent_month = document.getElementById("indentMonth").value;
+    const hoa_name = document.getElementById("indentHoa").value;
+
+    const total_amount = parseFloat(document.getElementById("indentEntryTotal").value || 0);
+    const grand_total = parseFloat(document.getElementById("indentGrandTotal").value || 0);
+
+    if (!work_type || !indent_month || !hoa_name || !sanction_no) {
+        alert("Please fill all required fields");
+        return;
+    }
+
+    const rows = document.querySelectorAll("#indentSsrTable tr");
+    const ssrItems = [];
+
+    rows.forEach((row, index) => {
+        if (index === 0) return;
+
+        const qty = parseFloat(row.querySelector(".qty")?.value || 0);
+        const total = parseFloat(row.querySelector(".total")?.value || 0);
+
+        if (qty <= 0 || total <= 0) return;
+
+        ssrItems.push({
+            sr_no: row.querySelector(".sr_no")?.value || "",
+            particulars: row.querySelector(".particulars")?.value || "",
+            qty: qty,
+            times_days: row.querySelector(".times_days")?.value || "",
+            unit: row.querySelector(".unit")?.value || "",
+            rate: row.querySelector(".rate")?.value || "",
+            rate_per: row.querySelector(".rate_per")?.value || "",
+            total: total,
+            acf_date: row.querySelector(".acf_date")?.value || "",
+            nb_no: row.querySelector(".nb_no")?.value || "",
+            page_no: row.querySelector(".page_no")?.value || "",
+            pow: row.querySelector(".pow")?.value || "",
+            rfo_date: row.querySelector(".rfo_date")?.value || "",
+            wages_from: row.querySelector(".wages_from")?.value || "",
+            wages: row.querySelector(".wages")?.value || ""
+        });
+    });
+
+    const payload = {
+        indent_no,
+        estimate_id,
+        est_no,
+        sanction_no,
+        work_type,
+        indent_month,
+        hoa_name,
+        total_amount,
+        grand_total,
+        user_id,
+        ssrItems
+    };
+
+    fetch("/save-indent-entry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Indent saved successfully");
+            loadIndentInitData();
+            loadIndentGrandTotal();
+
+            document.getElementById("indentWorkType").value = "";
+            document.getElementById("indentMonth").value = "";
+            document.getElementById("indentHoa").value = "";
+            document.getElementById("indentSono").innerHTML = '<option value="">Select SONO</option>';
+            document.getElementById("indentEstimateTotal").value = "";
+            document.getElementById("indentEntryTotal").value = "0.00";
+            document.getElementById("indentGrandTotal").value = "0.00";
+            document.getElementById("indentGrandTotal").dataset.previous = "0";
+            document.getElementById("indentEstimateId").value = "";
+            document.getElementById("indentEstNo").value = "";
+            document.getElementById("indentSanctionNo").value = "";
+
+            document.getElementById("indentSsrTable").innerHTML = `
+                <tr>
+                    <th>SSR No</th>
+                    <th>Particulars</th>
+                    <th>Qty</th>
+                    <th>Times/Days</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Rate Per</th>
+                    <th>Total</th>
+                    <th>ACF Date</th>
+                    <th>NB.No</th>
+                    <th>Page No</th>
+                    <th>POW</th>
+                    <th>RFO Date</th>
+                    <th>Wages From</th>
+                    <th>Wages</th>
+                </tr>
+            `;
+        } else {
+            alert(data.message || "Save failed");
+        }
+    })
+    .catch(err => console.log("SAVE INDENT ERROR:", err));
+}
+
+function loadIndentGrandTotal() {
+    const user_id = localStorage.getItem("user_id");
+    const hoa_name = document.getElementById("indentHoa").value;
+
+    if (!hoa_name) {
+        document.getElementById("indentGrandTotal").value = "0.00";
+        document.getElementById("indentGrandTotal").dataset.previous = "0";
+        return;
+    }
+
+    fetch("/get-indent-grand-total?user_id=" + encodeURIComponent(user_id) + "&hoa_name=" + encodeURIComponent(hoa_name))
+        .then(res => res.json())
+        .then(data => {
+            const previous = parseFloat(data.grand_total || 0);
+            document.getElementById("indentGrandTotal").dataset.previous = previous;
+            const current = parseFloat(document.getElementById("indentEntryTotal").value || 0);
+            document.getElementById("indentGrandTotal").value = (previous + current).toFixed(2);
+        })
+        .catch(err => console.log("LOAD INDENT GRAND TOTAL ERROR:", err));
+}
+
+                
+function loadModifyIndentMonths() {
+    const year = new Date().getFullYear();
+    const months = [
+        "January - " + year,
+        "February - " + year,
+        "March - " + year,
+        "April - " + year,
+        "May - " + year,
+        "June - " + year,
+        "July - " + year,
+        "August - " + year,
+        "September - " + year,
+        "October - " + year,
+        "November - " + year,
+        "December - " + year
+    ];
+
+    const dropdown = document.getElementById("modifyIndentMonth");
+    dropdown.innerHTML = '<option value="">Select Month</option>';
+
+    months.forEach(month => {
+        const option = document.createElement("option");
+        option.value = month;
+        option.textContent = month;
+        dropdown.appendChild(option);
+    });
+}
+
+function loadModifyIndentHoa() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-indent-hoa?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            const dropdown = document.getElementById("modifyIndentHoa");
+            dropdown.innerHTML = '<option value="">Select Head of Account</option>';
+
+            (data.data || []).forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.textContent = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => console.log("LOAD MODIFY HOA ERROR:", err));
+}
+
+function loadModifyIndentList() {
+    const user_id = localStorage.getItem("user_id");
+    const indent_month = document.getElementById("modifyIndentMonth").value;
+    const hoa_name = document.getElementById("modifyIndentHoa").value;
+
+    const dropdown = document.getElementById("modifyIndentSelect");
+    dropdown.innerHTML = '<option value="">Select Indent</option>';
+
+    if (!indent_month || !hoa_name) return;
+
+    fetch(
+        "/get-indent-list-for-modify?user_id=" + encodeURIComponent(user_id) +
+        "&indent_month=" + encodeURIComponent(indent_month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
+    .then(res => res.json())
+    .then(data => {
+        (data.data || []).forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.sanction_no + " / INDENT " + item.indent_no;
+            dropdown.appendChild(option);
+        });
+    })
+    .catch(err => console.log("LOAD MODIFY INDENT LIST ERROR:", err));
+}
+
+function loadIndentForEdit() {
+    const user_id = localStorage.getItem("user_id");
+    const indentId = document.getElementById("modifyIndentSelect").value;
+
+    if (!indentId) return;
+
+    fetch("/get-indent-for-edit/" + indentId + "?user_id=" + encodeURIComponent(user_id))
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Indent not found");
+                return;
+            }
+
+            const d = data.indent;
+
+            document.getElementById("editIndentId").value = d.id || "";
+            document.getElementById("editIndentEstimateId").value = d.estimate_id || "";
+            document.getElementById("editIndentEstNo").value = d.est_no || "";
+            document.getElementById("editIndentNo").value = d.indent_no || "";
+            document.getElementById("editIndentWorkType").value = d.work_type || "";
+            document.getElementById("editIndentMonth").value = d.indent_month || "";
+            document.getElementById("editIndentHoa").value = d.hoa_name || "";
+            document.getElementById("editIndentSono").value = d.sanction_no || "";
+            document.getElementById("editIndentEstimateTotal").value = d.total_amount || 0;
+            document.getElementById("editIndentEntryTotal").value = d.total_amount || 0;
+            document.getElementById("editIndentGrandTotal").value = d.grand_total || 0;
+
+            const table = document.getElementById("modifyIndentSsrTable");
+            table.innerHTML = `
+                <tr>
+                    <th>SSR No</th>
+                    <th>Particulars</th>
+                    <th>Qty</th>
+                    <th>Times/Days</th>
+                    <th>Unit</th>
+                    <th>Rate</th>
+                    <th>Rate Per</th>
+                    <th>Total</th>
+                    <th>ACF Date</th>
+                    <th>NB.No</th>
+                    <th>Page No</th>
+                    <th>POW</th>
+                    <th>RFO Date</th>
+                    <th>Wages From</th>
+                    <th>Wages</th>
+                </tr>
+            `;
+
+            (data.ssrItems || []).forEach(item => {
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td><input class="small-box sr_no" value="${item.sr_no || ""}" readonly></td>
+                    <td><input class="large-box particulars" value="${item.particulars || ""}" readonly></td>
+                    <td><input class="small-box qty" value="${item.qty || ""}" oninput="recalculateModifyIndentRow(this)"></td>
+                    <td><input class="small-box times_days" value="${item.times_days || ""}" oninput="recalculateModifyIndentRow(this)"></td>
+                    <td><input class="small-box unit" value="${item.unit || ""}" readonly></td>
+                    <td><input class="small-box rate" value="${item.rate || ""}" readonly></td>
+                    <td><input class="small-box rate_per" value="${item.rate_per || 1}" readonly></td>
+                    <td><input class="medium-box total" value="${item.total || 0}" readonly></td>
+                    <td><input class="medium-box acf_date" type="date" value="${item.acf_date ? item.acf_date.split('T')[0] : ''}"></td>
+                    <td><input class="medium-box nb_no" value="${item.nb_no || ""}"></td>
+                    <td><input class="small-box page_no" value="${item.page_no || ""}"></td>
+                    <td><input class="medium-box pow" value="${item.pow || ""}"></td>
+                    <td><input class="medium-box rfo_date" type="date" value="${item.rfo_date ? item.rfo_date.split('T')[0] : ''}"></td>
+                    <td><input class="small-box wages_from" value="${item.wages_from || ""}"></td>
+                    <td><input class="medium-box wages" value="${item.wages || ""}"></td>
+                `;
+            });
+        })
+        .catch(err => console.log("LOAD INDENT FOR EDIT ERROR:", err));
+}
+
+function recalculateModifyIndentRow(input) {
+    const row = input.closest("tr");
+
+    const qty = parseFloat(row.querySelector(".qty")?.value || 0);
+    const time = parseFloat(row.querySelector(".times_days")?.value || 0);
+    const rate = parseFloat(row.querySelector(".rate")?.value || 0);
+    const ratePer = parseFloat(row.querySelector(".rate_per")?.value || 1);
+
+    let total = 0;
+    if (ratePer > 0) {
+        total = (time * qty * rate) / ratePer;
+    }
+
+    row.querySelector(".total").value = total.toFixed(2);
+    recalculateModifyIndentTotals();
+}
+
+function recalculateModifyIndentTotals() {
+    const totalInputs = document.querySelectorAll("#modifyIndentSsrTable .total");
+    let sum = 0;
+
+    totalInputs.forEach(input => {
+        sum += parseFloat(input.value || 0);
+    });
+
+    document.getElementById("editIndentEntryTotal").value = sum.toFixed(2);
+}
+
+function updateIndent() {
+    const user_id = localStorage.getItem("user_id");
+    const indentId = document.getElementById("editIndentId").value;
+
+    if (!indentId) {
+        alert("Select indent first");
+        return;
+    }
+
+    const ok = confirm("Do you want to update this indent?");
+    if (!ok) return;
+
+    const rows = document.querySelectorAll("#modifyIndentSsrTable tr");
+    const ssrItems = [];
+
+    rows.forEach((row, index) => {
+        if (index === 0) return;
+
+        ssrItems.push({
+            sr_no: row.querySelector(".sr_no")?.value || "",
+            particulars: row.querySelector(".particulars")?.value || "",
+            qty: row.querySelector(".qty")?.value || "",
+            times_days: row.querySelector(".times_days")?.value || "",
+            unit: row.querySelector(".unit")?.value || "",
+            rate: row.querySelector(".rate")?.value || "",
+            rate_per: row.querySelector(".rate_per")?.value || "",
+            total: row.querySelector(".total")?.value || "",
+            acf_date: row.querySelector(".acf_date")?.value || "",
+            nb_no: row.querySelector(".nb_no")?.value || "",
+            page_no: row.querySelector(".page_no")?.value || "",
+            pow: row.querySelector(".pow")?.value || "",
+            rfo_date: row.querySelector(".rfo_date")?.value || "",
+            wages_from: row.querySelector(".wages_from")?.value || "",
+            wages: row.querySelector(".wages")?.value || ""
+        });
+    });
+
+    const payload = {
+        user_id: user_id,
+        work_type: document.getElementById("editIndentWorkType").value,
+        total_amount: document.getElementById("editIndentEntryTotal").value,
+        grand_total: document.getElementById("editIndentGrandTotal").value,
+        ssrItems: ssrItems
+    };
+
+    fetch("/update-indent/" + indentId, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Indent updated successfully");
+            loadModifyIndentList();
+        } else {
+            alert(data.message || "Update failed");
+        }
+    })
+    .catch(err => console.log("UPDATE INDENT ERROR:", err));
+}
+
+function loadDeleteIndentMonths() {
+    const year = new Date().getFullYear();
+    const months = [
+        "January - " + year,
+        "February - " + year,
+        "March - " + year,
+        "April - " + year,
+        "May - " + year,
+        "June - " + year,
+        "July - " + year,
+        "August - " + year,
+        "September - " + year,
+        "October - " + year,
+        "November - " + year,
+        "December - " + year
+    ];
+
+    const dropdown = document.getElementById("deleteIndentMonth");
+    dropdown.innerHTML = '<option value="">Select Month</option>';
+
+    months.forEach(month => {
+        const option = document.createElement("option");
+        option.value = month;
+        option.textContent = month;
+        dropdown.appendChild(option);
+    });
+}
+
+function loadDeleteIndentHoa() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-indent-hoa?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            const dropdown = document.getElementById("deleteIndentHoa");
+            dropdown.innerHTML = '<option value="">Select Head of Account</option>';
+
+            (data.data || []).forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.textContent = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => console.log("LOAD DELETE HOA ERROR:", err));
+}
+
+function loadDeleteIndentList() {
+    const user_id = localStorage.getItem("user_id");
+    const indent_month = document.getElementById("deleteIndentMonth").value;
+    const hoa_name = document.getElementById("deleteIndentHoa").value;
+
+    const table = document.getElementById("deleteIndentTable");
+    table.innerHTML = `
+        <tr>
+            <th>Indent No</th>
+            <th>SONO</th>
+            <th>Month</th>
+            <th>Head of Account</th>
+            <th>Total Amount</th>
+            <th>Action</th>
+        </tr>
+    `;
+
+    if (!indent_month || !hoa_name) return;
+
+    fetch(
+        "/get-indent-list-for-delete?user_id=" + encodeURIComponent(user_id) +
+        "&indent_month=" + encodeURIComponent(indent_month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
+    .then(res => res.json())
+    .then(data => {
+        (data.data || []).forEach(item => {
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>${item.indent_no || ""}</td>
+                <td>${item.sanction_no || ""}</td>
+                <td>${item.indent_month || ""}</td>
+                <td>${item.hoa_name || ""}</td>
+                <td>${item.total_amount || 0}</td>
+                <td>
+                    <button class="btn" type="button" onclick="deleteIndent(${item.id})">Delete</button>
+                </td>
+            `;
+        });
+    })
+    .catch(err => console.log("LOAD DELETE INDENT LIST ERROR:", err));
+}
+
+function deleteIndent(id) {
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    const ok = confirm("Do you want to delete this indent?");
+    if (!ok) return;
+
+    fetch("/delete-indent/" + id, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ user_id: user_id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Indent deleted successfully");
+            loadDeleteIndentList();
+        } else {
+            alert(data.message || "Delete failed");
+        }
+    })
+    .catch(err => {
+        console.log("DELETE INDENT ERROR:", err);
+        alert("Error deleting indent");
+    });
+}
+
+
+function loadViewIndentMonths() {
+    const year = new Date().getFullYear();
+    const months = [
+        "January - " + year,
+        "February - " + year,
+        "March - " + year,
+        "April - " + year,
+        "May - " + year,
+        "June - " + year,
+        "July - " + year,
+        "August - " + year,
+        "September - " + year,
+        "October - " + year,
+        "November - " + year,
+        "December - " + year
+    ];
+
+    const dropdown = document.getElementById("viewIndentMonth");
+    if (!dropdown) return;
+
+    dropdown.innerHTML = '<option value="">Select Month</option>';
+
+    months.forEach(month => {
+        const option = document.createElement("option");
+        option.value = month;
+        option.textContent = month;
+        dropdown.appendChild(option);
+    });
+}
+
+function loadViewIndentHoa() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-indent-hoa?user_id=" + user_id)
+        .then(res => res.json())
+        .then(data => {
+            const dropdown = document.getElementById("viewIndentHoa");
+            if (!dropdown) return;
+
+            dropdown.innerHTML = '<option value="">Select Head of Account</option>';
+
+            (data.data || []).forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.textContent = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => console.log("LOAD VIEW HOA ERROR:", err));
+}
+
+function loadViewIndentList() {
+    const user_id = localStorage.getItem("user_id");
+    const indent_month = document.getElementById("viewIndentMonth").value;
+    const hoa_name = document.getElementById("viewIndentHoa").value;
+
+    const dropdown = document.getElementById("viewIndentSelect");
+    dropdown.innerHTML = '<option value="">Select Indent</option>';
+
+    if (!indent_month || !hoa_name) return;
+
+    fetch(
+        "/get-indent-list-for-modify?user_id=" + user_id +
+        "&indent_month=" + encodeURIComponent(indent_month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
+    .then(res => res.json())
+    .then(data => {
+        (data.data || []).forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = item.sanction_no + " / INDENT " + item.indent_no;
+            dropdown.appendChild(option);
+        });
+    });
+}
+
+function formatRupees(value) {
+    const num = parseFloat(value || 0);
+    return num.toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatDateOnly(value) {
+    if (!value) return "";
+    return String(value).split("T")[0];
+}
+
+function viewIndent() {
+    const user_id = localStorage.getItem("user_id");
+    const id = document.getElementById("viewIndentSelect").value;
+
+    if (!id) {
+        alert("Select indent");
+        return;
+    }
+
+    fetch("/get-indent-for-edit/" + id + "?user_id=" + encodeURIComponent(user_id))
+        .then(res => res.json())
+        .then(data => {
+
+                if (!data.success) {
+                alert("Error loading indent");
+                return;
+            }
+
+            const d = data.indent;
+            const items = data.ssrItems || [];
+
+            let rows = "";
+            let slNo = 1;
+
+            items.forEach((item) => {
+                const qty = parseFloat(item.qty || 0);
+                const total = parseFloat(item.total || 0);
+
+                if (qty <= 0 || total <= 0) return;
+
+               rows += `
+<tr>
+    <td class="center">${slNo++}</td>
+    <td class="center item-no-col">${item.sr_no || ""}</td>
+    <td class="left particulars-col">
+        <div>${item.particulars || ""}</div>
+        <div class="pow-line"><b>Period of Work:</b> ${item.pow || ""}</div>
+    </td>
+    <td class="center qty-col">${qty}</td>
+    <td class="center">${item.unit || ""}</td>
+    <td class="center amount-col">${formatRupees(item.total)}</td>
+    <td class="left fnb-col">
+        <div><b>FNB No:</b> ${item.nb_no || ""}</div>
+        <div><b>Page No:</b> ${item.page_no || ""}</div>
+        <div><b>ACF Date:</b> ${formatDateOnly(item.acf_date)}</div>
+    </td>
+</tr>`;
+            });
+
+            document.getElementById("printArea").innerHTML = `
+                <div class="print-container">
+                    <div class="print-header-center">
+                        <div class="print-logo-wrap">
+                            <img src="/logo.png" alt="Logo" class="print-logo">
+                        </div>
+                        <div class="print-dept">KARNATAKA FOREST DEPARTMENT</div>
+                        <div class="print-division">${d.division || ""} Division, Belagavi</div>
+                        <div class="print-title">
+                            Fund indent of Sri ${d.rfo_name || ""} Range Forest Officer for the month of ${d.indent_month || ""}
+                        </div>
+                        <div class="print-title">
+                            Amount required in ${d.range_name || ""} Range Under other Heads
+                        </div>
+                    </div>
+
+                    <div class="print-meta-left">
+                        <div><b>Budget Head :</b> ${d.hoa_name || ""}</div>
+                        <div><b>DSO NO. :</b> ${d.sanction_no || ""}</div>
+                        <div><b>Work :</b> ${d.work_name || ""}</div>
+                    </div>
+<table class="print-table">
+    <tr>
+        <th style="width:5%;">Sl No</th>
+        <th style="width:5%;">Item No</th>
+        <th style="width:25%;">Particular</th>
+        <th style="width:6%;">Quantity</th>
+        <th style="width:6%;">Unit</th>
+        <th style="width:5%;">Amount</th>
+        <th style="width:10%;">FNB / PAGE.NO / ACF DATE</th>
+    </tr>
+    ${rows}
+</table>
+
+                    <div class="print-total-wrap">
+    <div class="print-total-box">
+        <div class="print-total-line"><b>Indent Total :- ${formatRupees(d.total_amount)}</b></div>
+        <div class="print-total-line"><b>SONO Total :- ${formatRupees(d.estimate_total_amount)}</b></div>
+    </div>
+</div>
+
+<div class="print-footer-note">
+    Submitted to Deputy Conservator of Forests, ${d.division || "Belagavi"} Division, Belagavi for kind issue of funds.
+</div>
+
+
+<div class="print-footer">
+    <div class="footer-left">Through Assistant Conservator Of Forests,
+        ${d.division || "Belagavi"} Division,<br>
+        ${d.sub_division || ""}
+    </div>
+    <div class="footer-right">
+        Range Forest Officer<br>
+        ${d.range_name || ""}
+    </div>
+</div>
+                </div>
+            `;
+        })
+        .catch(err => {
+            console.log("VIEW INDENT ERROR:", err);
+            alert("Error loading indent");
+        });
+}
+
+
+function printIndent() {
+    const content = document.getElementById("printArea").innerHTML;
+
+    if (!content.trim()) {
+        alert("Please view indent first");
+        return;
+    }
+
+    const win = window.open("", "", "width=1400,height=900");
+
+    win.document.write(`
+        <html>
+        <head>
+            <title>Print Indent</title>
+            <style>
+                @page {
+                    size: A4 landscape;
+                    margin: 10mm;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                body {
+                    font-family: "Times New Roman", serif;
+                    color: #000;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .print-container {
+                    width: 100%;
+                    max-width: 100%;
+                    padding: 4px 6px;
+                    overflow: hidden;
+                }
+
+                .print-header-center {
+                    text-align: center;
+                    margin-bottom: 6px;
+                }
+
+                .print-logo-wrap {
+                    margin-bottom: 2px;
+                }
+
+                .print-logo {
+                    height: 48px;
+                    object-fit: contain;
+                }
+
+                .print-dept {
+                    font-size: 18px;
+                    font-weight: bold;
+                    line-height: 1.15;
+                }
+
+                .print-division {
+                    font-size: 15px;
+                    line-height: 1.15;
+                }
+
+                .print-title {
+                    font-size: 15px;
+                    margin-top: 2px;
+                    line-height: 1.2;
+                }
+
+                .print-meta-left {
+                    width: 100%;
+                    text-align: left;
+                    font-size: 13px;
+                    line-height: 1.2;
+                    margin-bottom: 6px;
+                }
+
+                .print-table {
+                    width: 100%;
+                    max-width: 100%;
+                    border-collapse: collapse;
+                    table-layout: fixed;
+                    margin-top: 4px;
+                }
+
+                .print-table th,
+                .print-table td {
+                    border: 1px solid #000;
+                    padding: 4px;
+                    font-size: 18px;
+                    vertical-align: top;
+                    word-break: break-word;
+                    overflow-wrap: break-word;
+                }
+
+                .print-table th {
+                    text-align: center;
+                    font-weight: bold;
+                }
+
+                .left {
+                    text-align: left;
+                }
+
+                .center {
+                    text-align: center;
+                }
+
+                .right {
+                    text-align: right;
+                }
+
+                .particulars-col {
+                    line-height: 1.2;
+                }
+
+                .pow-line {
+                    margin-top: 4px;
+                    font-size: 10px;
+                    line-height: 1.15;
+                }
+
+                .fnb-col {
+                    line-height: 1.2;
+                    font-size: 10px;
+                }
+
+                .print-total-wrap {
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                    margin-top: 6px;
+                }
+
+                .print-total-box {
+                    width: 260px;
+                    max-width: 260px;
+                    text-align: right;
+                }
+
+                .print-total-line {
+                    margin-top: 3px;
+                    font-size: 15px;
+                    font-weight: bold;
+                    line-height: 1.2;
+                    white-space: nowrap;
+                }
+
+                .print-footer-note {
+                    margin-top: 8px;
+                    font-size: 13px;
+                    line-height: 1.2;
+                    word-break: break-word;
+                    overflow-wrap: break-word;
+                }
+
+                .print-through {
+                    margin-top: 6px;
+                    text-align: center;
+                    font-size: 13px;
+                    line-height: 1.1;
+                }
+
+                .print-footer {
+                    margin-top: 6px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 12px;
+                    overflow: hidden;
+                }
+
+                .footer-left {
+                    width: 48%;
+                    text-align: left;
+                    font-size: 13px;
+                    line-height: 1.2;
+                    word-break: break-word;
+                    overflow-wrap: break-word;
+                }
+
+                .footer-right {
+                    width: 28%;
+                    text-align: right;
+                    font-size: 13px;
+                    line-height: 1.2;
+                    word-break: break-word;
+                    overflow-wrap: break-word;
+                    white-space: normal;
+                }
+            </style>
+        </head>
+        <body>
+            ${content}
+        </body>
+        </html>
+    `);
+
+    win.document.close();
+    win.focus();
+    win.print();
+}
+
+function closeIndentPreview() {
+    document.getElementById("printArea").innerHTML = "";
+    document.getElementById("viewIndentSelect").value = "";
 }
 
 </script>
