@@ -187,6 +187,7 @@
     <div class="tab" onclick="openTab('hoa', this)">Head Of Account Entry</div> 
     <div class="tab" onclick="openTab('work', this)">Work Entry</div>
     <div class="tab" onclick="openTab('section', this)">Section Entry</div>
+    <div class="tab" onclick="openTab('contractor', this)">Contractor Entry</div>
     <div class="tab" onclick="openTab('ssr', this)">SSR Master</div>
     
 </div>
@@ -254,7 +255,7 @@
             <textarea id="acf_recommendation"></textarea>
         </div>
 
-        <button onclick="saveRange()">💾 Save</button>
+        <button onclick="saveRange()">Update</button>
 
     </div>
 </div>
@@ -288,6 +289,20 @@
         <button onclick="saveSSR()">💾 Save SSR</button>
     </div>
 </div>
+<!-- contractor entry -->
+<div id="contractor" class="content">
+    <div class="gov-box">
+
+       <h2 class="title">Contractor Entry</h2>
+
+        <div class="form-row">
+          <label>Contractor Name</label>
+               <input id="contractor_name" placeholder="Enter Contractor name">
+        </div>
+
+           <button onclick="savecontractor()">💾 Save Contractor</button>
+        </div>
+</div>
 
 <!-- head of account -->
 <div id="hoa" class="content">
@@ -312,7 +327,7 @@
 
         <div class="form-row">
           <label>section Name</label>
-               <input id="section_name" placeholder="Enter section)">
+               <input id="section_name" placeholder="Enter section">
         </div>
 
            <button onclick="savesection()">💾 Save Section</button>
@@ -418,7 +433,7 @@ function openTab(tabName, element) {
 }
 
 // SAVE RANGE
-function saveRangeInfo() {
+function saveRange() {
     const user_id = localStorage.getItem("user_id");
 
     const payload = {
@@ -484,6 +499,44 @@ function saveSSR() {
         document.getElementById("rate").value = "";
     });
 }
+// save contractor
+function savecontractor() {
+
+    const user_id = localStorage.getItem("user_id");
+
+    if (!user_id) {
+        alert("User not logged in");
+        return;
+    }
+
+    let contractor_name = document.getElementById("contractor_name").value;
+
+    if (contractor_name === "") {
+        alert("Enter Contractor name");
+        return;
+    }
+
+    let data = {
+        user_id: user_id,
+        contractor_name: contractor_name
+    };
+
+    fetch("/add-contractor", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert("Contractor Saved");
+        document.getElementById("contractor_name").value = "";
+    })
+    .catch(err => {
+        console.log("SAVE Contractor ERROR:", err);
+        alert("Error saving Contractor");
+    });
+}
+
 
 // SAVE HOA
 function savehoa() {

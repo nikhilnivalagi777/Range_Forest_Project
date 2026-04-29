@@ -775,11 +775,17 @@ background: #eef7ef;
 }
 
 @media print {
+    @page {
+        size: A4;
+        margin: 8mm;
+    }
+
     body * {
         visibility: hidden;
     }
 
-    #printEstimateBox, #printEstimateBox * {
+    #printEstimateBox,
+    #printEstimateBox * {
         visibility: visible;
     }
 
@@ -788,29 +794,166 @@ background: #eef7ef;
         left: 0;
         top: 0;
         width: 100%;
-        box-shadow: none !important;
-        border: none !important;
-        background: white;
         margin: 0;
         padding: 0;
-    }
-
-    #printEstimatePreview {
-        width: 100%;
-        border: none !important;
-        margin: 0;
-        padding: 0;
-    }
-
-    .sidebar, .header, .btn, .box-title {
-        display: none !important;
-    }
-
-    @page {
-        size: A4;
-        margin: 8mm;
     }
 }
+
+.estimate-print-sheet {
+    width: 100%;
+    background: #fff;
+    color: #000;
+    font-family: "Times New Roman", serif;
+    font-size: 13px;
+    line-height: 1.25;
+    padding: 4px 6px;
+    box-sizing: border-box;
+}
+
+.estimate-top-right {
+    width: 100%;
+    text-align: right;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+.estimate-header {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.estimate-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 4px auto;
+}
+
+.estimate-dept {
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.estimate-division,
+.estimate-subdivision {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.estimate-main-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 6px 0 8px 0;
+}
+
+.estimate-head-account {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.estimate-info-table,
+.estimate-work-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-bottom: 8px;
+}
+
+.estimate-info-table td {
+    padding: 3px 4px;
+    vertical-align: top;
+    border: none;
+}
+
+.estimate-info-table .label {
+    width: 18%;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.estimate-work-table th,
+.estimate-work-table td {
+    border: 1px solid #000;
+    padding: 4px 4px;
+    vertical-align: middle;
+}
+
+.estimate-work-table th {
+    text-align: center;
+    font-weight: 700;
+}
+
+.est-center {
+    text-align: center;
+}
+
+.est-left {
+    text-align: left;
+}
+
+.est-right {
+    text-align: right;
+}
+
+.est-total-label {
+    text-align: right;
+    padding-right: 8px !important;
+}
+
+.est-total-value {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.estimate-cert-title {
+    margin-top: 6px;
+    margin-bottom: 2px;
+}
+
+.estimate-cert-line {
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.estimate-tech-line {
+    margin-top: 6px;
+}
+
+.estimate-sanction-line {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.estimate-sign-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.estimate-sign-row.second {
+    justify-content: flex-start;
+    margin-top: 10px;
+}
+
+.estimate-sign-box {
+    width: 38%;
+    text-align: center;
+}
+
+.estimate-sign-box.left {
+    text-align: center;
+}
+
+.estimate-sign-box.right {
+    text-align: center;
+}
+
+.sign-gap {
+    height: 28px;
+}
+
 .doc-table {
     width: 100%;
     border-collapse: collapse;
@@ -1063,6 +1206,67 @@ background: #eef7ef;
     width: 100%;
     min-width: 80px;
 }
+.duplicate-box {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    max-width: 500px;
+}
+
+.duplicate-box h3 {
+    color: #2e7d32;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.duplicate-form {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+}
+
+.input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.input-group input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #2e7d32;
+    box-shadow: 0 0 5px rgba(46,125,50,0.3);
+}
+
+.duplicate-form button {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.duplicate-form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
 </style>
 </head>
 <body>
@@ -1073,6 +1277,7 @@ background: #eef7ef;
 <button onclick="openPage('open', this)">Open Estimate</button>
 <button onclick="openPage('modify', this)">Modify Estimate</button>
 <button onclick="openPage('delete', this)">Delete Estimate</button>
+<button onclick="openPage('duplicateEstimate', this)">Duplicate Estimate</button>
 </div>
 
 <div id="welcome" class="page active welcome-page">
@@ -1095,6 +1300,11 @@ background: #eef7ef;
 <label>Year</label>
 <select id="year"></select>
 </div>
+<label> scheme</label>
+ <select id="scheme_name">
+    <option value="GENERAL">GENERAL</option>
+    <option value="CAMPA">CAMPA</option>
+</select>
 <div class="field" style="grid-column: span 3;">
 <label>Estimate Type</label>
 <select id="estimate_type"></select>
@@ -1191,8 +1401,7 @@ background: #eef7ef;
 </div>
 <div class="field" style="grid-column: span 2;">
 <label>Balance</label>
-<input id="balanceAmount" class="highlight" readonly
->
+<input id="balanceAmount" class="highlight" readonly>
 </div>
 </div>
 <div style="margin-top:18px; border-top:1px solid
@@ -1288,12 +1497,26 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
     <div class="box">
         <div class="box-title">Open Estimate</div>
 
-        <div style="margin-bottom:15px; display:flex; gap:10px;">
-            <input id="estimateSearch" type="text" placeholder="Search by Estimate No or Work Name"
-                   style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
-                   oninput="loadEstimateList()">
-            <button class="btn" type="button" onclick="loadEstimateList()">Search</button>
-        </div>
+        <div style="margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap;">
+    <input id="estimateSearch" type="text" placeholder="Search by Estimate No or Work Name"
+           style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
+           oninput="loadEstimateList()">
+
+    <select id="openSchemeFilter" onchange="loadEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Scheme</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+
+    <input id="openMonthFilter" type="month" onchange="loadEstimateList()"
+           style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+
+    <select id="openHoaFilter" onchange="loadEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Head of Account</option>
+    </select>
+
+    <button class="btn" type="button" onclick="loadEstimateList()">Search</button>
+</div>
 
         <table id="openEstimateTable">
             <tr>
@@ -1329,13 +1552,27 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
     <div class="box">
         <div class="box-title">Modify Estimate</div>
 
-        <div style="margin-bottom:15px; display:flex; gap:10px;">
-            <input id="modifyEstimateSearch" type="text"
-                   placeholder="Search by Estimate No or Work Name"
-                   style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
-                   oninput="loadModifyEstimateList()">
-            <button class="btn" type="button" onclick="loadModifyEstimateList()">Search</button>
-        </div>
+        <div style="margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap;">
+    <input id="modifyEstimateSearch" type="text"
+           placeholder="Search by Estimate No or Work Name"
+           style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
+           oninput="loadModifyEstimateList()">
+
+    <select id="modifySchemeFilter" onchange="loadModifyEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Scheme</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+
+    <input id="modifyMonthFilter" type="month" onchange="loadModifyEstimateList()"
+           style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+
+    <select id="modifyHoaFilter" onchange="loadModifyEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Head of Account</option>
+    </select>
+
+    <button class="btn" type="button" onclick="loadModifyEstimateList()">Search</button>
+</div>
 
         <table id="modifyEstimateTable">
             <tr>
@@ -1363,6 +1600,9 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
                 <input id="editEstNo">
             </div>
 
+
+           
+            
             <div class="field" style="grid-column: span 2;">
                 <label>Year</label>
                 <input id="editYear">
@@ -1488,6 +1728,7 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
                 <input id="editWorkingCircle">
             </div>
 
+            
             <div class="field" style="grid-column: span 2;">
                 <label>Total Amount</label>
                 <input id="editTotalAmount">
@@ -1498,6 +1739,22 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
                 <input id="editBalanceAmount">
             </div>
         </div>
+
+        <div style="margin-top:18px; border-top:1px solid #d9e6dc; padding-top:15px;">
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:280px;">
+            <h4 style="color:#1b5e20; margin-bottom:8px;">Pits / Trenches</h4>
+            <div id="editTrenchContainer"></div>
+            <button class="btn" type="button" onclick="addEditTrenchRow()" style="margin-top:5px;">+ Add</button>
+        </div>
+
+        <div style="flex:1; min-width:280px;">
+            <h4 style="color:#1b5e20; margin-bottom:8px;">Seedlings</h4>
+            <div id="editSeedlingContainer"></div>
+            <button class="btn" type="button" onclick="addEditSeedlingRow()" style="margin-top:5px;">+ Add</button>
+        </div>
+    </div>
+</div>
 
         <div style="margin-top:20px;">
             <h3>SSR Items</h3>
@@ -1526,13 +1783,27 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
     <div class="box">
         <div class="box-title">Delete Estimate</div>
 
-        <div style="margin-bottom:15px; display:flex; gap:10px;">
-            <input id="deleteEstimateSearch" type="text"
-                   placeholder="Search by Estimate No or Work Name"
-                   style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
-                   oninput="loadDeleteEstimateList()">
-            <button class="btn" type="button" onclick="loadDeleteEstimateList()">Search</button>
-        </div>
+        <div style="margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap;">
+    <input id="deleteEstimateSearch" type="text"
+           placeholder="Search by Estimate No or Work Name"
+           style="flex:1; padding:10px; border:1px solid #c8d3cc; border-radius:6px;"
+           oninput="loadDeleteEstimateList()">
+
+    <select id="deleteSchemeFilter" onchange="loadDeleteEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Scheme</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+
+    <input id="deleteMonthFilter" type="month" onchange="loadDeleteEstimateList()"
+           style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+
+    <select id="deleteHoaFilter" onchange="loadDeleteEstimateList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Head of Account</option>
+    </select>
+
+    <button class="btn" type="button" onclick="loadDeleteEstimateList()">Search</button>
+</div>
 
         <table id="deleteEstimateTable">
             <tr>
@@ -1549,6 +1820,34 @@ onclick="addSeedlingRow()" style="margin-top:5px;">+ Add</button>
 
 <div id="print" class="page">
 <div class="placeholder-page">Print Estimate Page</div>
+</div>
+
+<div id="duplicateEstimate" class="page" style="display:none;">
+    <div class="duplicate-box">
+    <h3>Duplicate Estimate</h3>
+
+    <div class="duplicate-form">
+        <div class="input-group">
+    <label>Scheme</label>
+    <select id="duplicate_scheme">
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+</div>
+        <div class="input-group">
+            <label>Estimate Number</label>
+            <input 
+                type="number" 
+                id="duplicate_est_no" 
+                placeholder="Enter Estimate No (Eg: 12)" 
+            >
+        </div>
+
+        <button onclick="loadEstimateForDuplicate()">
+            <span>Load Estimate</span>
+        </button>
+    </div>
+</div>
 </div>
 
 </div>
@@ -1576,10 +1875,79 @@ function openPage(page, btn) {
     if (page === "delete") {
         loadDeleteEstimateList();
     }
+
 }
 let ssrItems = [];
 let rowCount = 1;
 let usedAmount = 0;
+
+function openPage(pageId) {
+    document.querySelectorAll(".page").forEach(p => {
+        p.style.display = "none";
+    });
+
+    const page = document.getElementById(pageId);
+    if (page) {
+        page.style.display = "block";
+    }
+}
+
+function loadDeleteEstimateList() {
+    const search = document.getElementById("deleteEstimateSearch")?.value.trim() || "";
+    const scheme_name = document.getElementById("deleteSchemeFilter")?.value || "";
+    const month = document.getElementById("deleteMonthFilter")?.value || "";
+    const hoa_name = document.getElementById("deleteHoaFilter")?.value || "";
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(
+        "/get-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&search=" + encodeURIComponent(search) +
+        "&scheme_name=" + encodeURIComponent(scheme_name) +
+        "&month=" + encodeURIComponent(month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
+        .then(res => res.json())
+        .then(data => {
+            const table = document.getElementById("deleteEstimateTable");
+
+            table.innerHTML = `
+                <tr>
+                    <th>Est No</th>
+                    <th>Work Name</th>
+                    <th>Year</th>
+                    <th>Estimate Type</th>
+                    <th>Scheme</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            `;
+
+            if (!data.success || !data.data || data.data.length === 0) {
+                const row = table.insertRow();
+                row.innerHTML = `<td colspan="7">No estimates found</td>`;
+                return;
+            }
+
+            data.data.forEach(item => {
+                const row = table.insertRow();
+                row.insertCell(0).innerText = item.est_no || "";
+                row.insertCell(1).innerText = item.work || "";
+                row.insertCell(2).innerText = item.year || "";
+                row.insertCell(3).innerText = item.estimate_type || "";
+                row.insertCell(4).innerText = item.scheme_name || "";
+                row.insertCell(5).innerText = item.created_at
+                    ? new Date(item.created_at).toLocaleDateString()
+                    : "";
+
+                row.insertCell(6).innerHTML = `
+                    <button class="btn" type="button" onclick="deleteEstimate(${item.id})">Delete</button>
+                `;
+            });
+        })
+        .catch(err => {
+            console.log("LOAD DELETE LIST ERROR:", err);
+        });
+}
 
 function deleteEstimate(id) {
     const user_id = localStorage.getItem("user_id");
@@ -1666,16 +2034,23 @@ function loadNextEstNo() {
         return;
     }
 
-    fetch("/next-est-no?user_id=" + user_id)
+    const schemeElement = document.getElementById("scheme_name");
+    const scheme_name = schemeElement ? schemeElement.value : "GENERAL";
+
+    fetch(`/next-est-no?user_id=${user_id}&scheme_name=${encodeURIComponent(scheme_name)}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("estNo").value = data.est_no || 1;
+            if (data.success) {
+                document.getElementById("estNo").value = data.est_no || 1;
+            } else {
+                document.getElementById("estNo").value = 1;
+            }
         })
         .catch(err => {
             console.log("NEXT EST NO ERROR:", err);
+            document.getElementById("estNo").value = 1;
         });
 }
-
 
 
 function addTrenchRow() {
@@ -1855,6 +2230,11 @@ document.addEventListener("DOMContentLoaded", function () {
             box.style.display = "none";
         }
     });
+const schemeEl = document.getElementById("scheme_name");
+if (schemeEl) {
+    schemeEl.addEventListener("change", loadNextEstNo);
+}
+
 loadMasters();
 loadNextEstNo();
 });
@@ -1927,6 +2307,10 @@ function loadRangeDropdown() {
 
 document.addEventListener("DOMContentLoaded", function () {
     loadRangeDropdown();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    loadEstimateHoaFilters();
 });
 
 function loadSectionDropdown() {
@@ -2078,6 +2462,7 @@ function saveEstimate() {
         balance_amount: document.getElementById("balanceAmount")?.value || 0,
         trenches: getTrenches(),
         seedlings: getSeedlings(),
+          scheme_name: document.getElementById("scheme_name")?.value || "GENERAL",
         ssrItems: Array.isArray(ssrItems) ? ssrItems : []
     };
 
@@ -2178,6 +2563,39 @@ function clearEstimateForm() {
     const seed = document.getElementById("seedlingContainer");
     if (seed) seed.innerHTML = "";
 }
+
+function loadEstimateHoaFilters() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-hoa?user_id=" + encodeURIComponent(user_id))
+        .then(res => res.json())
+        .then(data => {
+            const ids = [
+                "openHoaFilter",
+                "modifyHoaFilter",
+                "deleteHoaFilter",
+                "duplicateHoaFilter"
+            ];
+
+            ids.forEach(id => {
+                const dropdown = document.getElementById(id);
+                if (!dropdown) return;
+
+                dropdown.innerHTML = '<option value="">All Head of Account</option>';
+
+                (data.data || []).forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.hoa_name;
+                    option.textContent = item.hoa_name;
+                    dropdown.appendChild(option);
+                });
+            });
+        })
+        .catch(err => {
+            console.log("LOAD ESTIMATE HOA FILTERS ERROR:", err);
+        });
+}
+
 function loadEstimateList() {
     const search = document.getElementById("estimateSearch")
         ? document.getElementById("estimateSearch").value.trim()
@@ -2249,17 +2667,19 @@ function printEstimate(id) {
                 return;
             }
 
-            renderPrintEstimate(data.estimate, data.ssrItems);
+            const html = getEstimatePrintHtml(data.estimate, data.ssrItems || []);
+            const printWin = window.open("", "_blank", "width=1000,height=900");
 
-            document.getElementById("printEstimateBox").style.display = "block";
+            printWin.document.open();
+            printWin.document.write(html);
+            printWin.document.close();
 
-            document.getElementById("printEstimateBox").scrollIntoView({
-                behavior: "smooth"
-            });
-
-            setTimeout(() => {
-                window.print();
-            }, 300);
+            printWin.onload = function () {
+                setTimeout(() => {
+                    printWin.focus();
+                    printWin.print();
+                }, 1200);
+            };
         })
         .catch(err => {
             console.log("PRINT ESTIMATE ERROR:", err);
@@ -2267,17 +2687,561 @@ function printEstimate(id) {
         });
 }
 
-function closeEstimateView() {
-    document.getElementById("openEstimateViewBox").style.display = "none";
-    document.getElementById("openEstimatePreview").innerHTML = "";
+function getTrenchCount(est) {
+    try {
+        const trenches = parseJsonSafe(est.trenches);
+        if (trenches && trenches.length > 0) {
+            return trenches.map(t => t.count || "").filter(Boolean).join(", ") || "--";
+        }
+    } catch {}
+    return est.trenches_count || est.no_of_pits_trenches || "--";
 }
 
-function parseJsonSafe(value) {
+function getTrenchSize(est) {
     try {
-        return value ? JSON.parse(value) : [];
-    } catch {
-        return [];
+        const trenches = parseJsonSafe(est.trenches);
+        if (trenches && trenches.length > 0) {
+            return trenches.map(t => t.size || "").filter(Boolean).join(", ") || "--";
+        }
+    } catch {}
+    return est.trench_size || est.pit_size || "--";
+}
+
+function getSeedlingCount(est) {
+    try {
+        const seedlings = parseJsonSafe(est.seedlings);
+        if (seedlings && seedlings.length > 0) {
+            return seedlings.map(s => s.count || "").filter(Boolean).join(", ") || "--";
+        }
+    } catch {}
+    return est.seedlings_count || est.no_of_pits_seedlings || "--";
+}
+
+function getSeedlingSize(est) {
+    try {
+        const seedlings = parseJsonSafe(est.seedlings);
+        if (seedlings && seedlings.length > 0) {
+            return seedlings.map(s => s.size || "").filter(Boolean).join(", ") || "--";
+        }
+    } catch {}
+    return est.seedling_size || "--";
+}
+
+function getEstimatePrintHtml(est, ssrItems) {
+    const trenches = parseJsonSafe(est.trenches);
+    const seedlings = parseJsonSafe(est.seedlings);
+
+    function getCountAndSize(arr) {
+        if (!arr || !arr.length) return { count: "--", size: "--" };
+        return {
+            count: arr.map(x => x.count || "").filter(Boolean).join(", ") || "--",
+            size: arr.map(x => x.size || "").filter(Boolean).join(", ") || "--"
+        };
     }
+
+    const trenchData = getCountAndSize(trenches);
+    const seedlingData = getCountAndSize(seedlings);
+    const amountWords = numberToWordsIndian(est.total_amount || 0);
+
+    let ssrRows = "";
+    ssrItems.forEach((item, index) => {
+        ssrRows += `
+            <tr>
+                <td class="center">${index + 1}</td>
+                <td class="center">${item.sr_no || ""}</td>
+                <td class="left">${item.description || ""}</td>
+                <td class="center">${item.days || ""}</td>
+                <td class="center qtyunit">
+                    <div>${item.qty || ""}</div>
+                    <div>${item.unit || ""}</div>
+                </td>
+                <td class="right">${formatCurrency(item.rate)}</td>
+                <td class="center">${item.rate_per || ""}</td>
+                <td class="right">${formatCurrency(item.amount)}</td>
+            </tr>
+        `;
+    });
+
+    return `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Estimate Print</title>
+<style>
+    @page {
+        size: A4;
+        margin: 6mm;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        color: #000;
+        font-family: "Times New Roman", serif;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 6mm 8mm 8mm 8mm;
+        box-sizing: border-box;
+        font-size: 12px;
+        line-height: 1.12;
+    }
+
+    .topblock {
+        margin-bottom: 4mm;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 3mm;
+    }
+
+    .logo {
+        width: 68px;
+        height: 68px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto 2px auto;
+    }
+
+    .dept {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1.1;
+    }
+
+    .deptsub {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1.1;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+        margin: 4px 0 6px 0;
+    }
+
+    .detailsbox {
+        width: 100%;
+        border: 1px solid #000;
+        padding: 6px 8px;
+        box-sizing: border-box;
+        margin-bottom: 8px;
+    }
+
+    .hoa {
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 1px;
+    }
+
+    .col {
+        width: 48.5%;
+    }
+
+    .line {
+        display: flex;
+        width: 100%;
+        margin-bottom: 1px;
+    }
+
+    .label {
+        width: 36%;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .colon {
+        width: 3%;
+        text-align: center;
+    }
+
+    .value {
+        width: 61%;
+    }
+
+    .ssr {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border: 1px solid #000;
+        margin-top: 4px;
+        margin-bottom: 8px;
+    }
+
+    .ssr th, .ssr td {
+        border: 1px solid #000;
+        padding: 4px 4px;
+        vertical-align: top;
+        font-size: 11.5px;
+    }
+
+    .ssr th {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .center { text-align: center; }
+    .left { text-align: left; }
+    .right { text-align: right; white-space: nowrap; }
+
+    .qtyunit div {
+        line-height: 1.1;
+    }
+
+    .totalrow td {
+        font-weight: bold;
+    }
+
+    .totallabel {
+        text-align: right;
+        padding-right: 6px !important;
+    }
+
+    .certtitle {
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .certline {
+        margin-bottom: 1px;
+    }
+
+    .tech {
+        margin-top: 8px;
+        margin-bottom: 14px;
+    }
+
+    .signrow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 18px;
+}
+
+.signleft,
+.signright {
+    width: 38%;
+    text-align: center;
+}
+
+.signname {
+    font-weight: bold;
+    margin-top: 38px;
+}
+
+    .sanction {
+        margin-top: 12px;
+        font-weight: bold;
+    }
+    
+    .detailsbox {
+    width: 100%;
+    border: 1px solid #000;
+    padding: 6px 8px;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.hoa {
+    font-weight: bold;
+    margin-bottom: 4px;
+    text-align: left;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1px;
+    text-align: left;
+}
+
+.col {
+    width: 48.5%;
+    text-align: left;
+}
+
+.line {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1px;
+    text-align: left;
+}
+
+.label {
+    width: 36%;
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.colon {
+    width: 3%;
+    text-align: center;
+}
+
+.value {
+    width: 61%;
+    text-align: left;
+}
+
+.certtitle {
+    font-weight: bold;
+    margin-bottom: 2px;
+    text-align: left;
+}
+
+.certline {
+    margin-bottom: 1px;
+    text-align: left;
+}
+
+.tech {
+    margin-top: 8px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+.cert-section {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 12px;
+}
+
+.cert-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.cert-line {
+    margin-bottom: 2px;
+}
+
+.rfo-section {
+    text-align: right;
+    margin-right: 40px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.tech-section {
+    text-align: left;
+    font-size: 12px;
+}
+
+.acf-section {
+    text-align: left;
+    margin-left: 60px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.sanction-section {
+    text-align: left;
+    font-size: 13px;
+    
+}
+
+/* SPACING CONTROLS */
+.gap-large {
+    height: 25px;
+}
+
+.gap-medium {
+    height: 18px;
+}
+
+.gap-seal {
+    height: 45px; /* space for stamp/seal */
+}
+
+/* Head of Account */
+.head-account {
+    font-size: 14px;
+    margin: 8px 0 5px 0;
+    text-align: left;
+    font-weight: bold;
+
+}
+
+/* Box */
+.top-box {
+    display: flex;                 /* 🔥 CHANGE GRID → FLEX */
+    border: 1px solid #000;        /* same as SSR */
+    font-size: 13px;
+}
+
+/* LEFT + RIGHT */
+.box-left,
+.box-right {
+    width: 50%;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: left;
+}
+
+/* PERFECT DIVIDER */
+.box-divider {
+    width: 1px;
+    background: #000;
+    align-self: stretch;           /* 🔥 THIS MAKES FULL HEIGHT */
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+    <div class="topblock">
+        <div>Est No: ${est.est_no || ""} / ${est.year || ""}/${est.scheme_name ||"GENERAL"}</div>
+        <div>SONO / DSO No: ${est.sono_no || est.sanction_no || "--"}</div>
+    </div>
+
+    <div class="header">
+        <img src="${window.location.origin}/logo.png" class="logo" onerror="this.style.display='none'">
+        <div class="dept">KARNATAKA FOREST DEPARTMENT</div>
+        <div class="deptsub">
+    ${est.division || ""} Division, ${est.subdivision || ""} 
+</div>
+
+    <div class="title">
+        Estimate for ${est.work || ""} During ${est.year || ""}
+    </div>
+
+    <div class="head-account">
+    Head of Account : ${est.head_of_account || ""}
+</div>
+
+<div class="top-box">
+
+    <div class="box-left">
+        <div>Circle : ${est.circle || ""}</div>
+        <div>Division : ${est.division || ""}</div>
+        <div>Subdivision : ${est.subdivision || ""}</div>
+        <div>Range : ${est.range_name || ""}</div>
+        <div>Taluk : ${est.taluk || ""}</div>
+        <div>Constituency : ${est.constituency || ""}</div>
+        <div>Location : ${est.location || ""}</div>
+        <div>Extent km/Ha : ${est.extent || ""}</div>
+        <div>Working circle : ${est.working_circle || ""}</div>
+        <div>Location & Survey : ${est.location || ""}</div>
+         <div>APO Sanctioned by : ${est.sanction_authority || ""}</div>
+       
+    </div>
+
+    <div class="box-divider"></div>
+
+    <div class="box-right">
+       
+        <div>No of pits/Trenches : ${getTrenchCount(est)}</div>
+        <div>Size : ${getTrenchSize(est)}</div>
+        <div>No of pits/Seedlings : ${getSeedlingCount(est)}</div>
+        <div>Size : ${getSeedlingSize(est)}</div>
+        <div>Protection : ${est.brush_wood_fence || "--"}</div>
+        <div>CPT : ${est.cpt_length || "--"}</div>
+        <div>Asset ID : ${est.asset_id || "--"}</div>
+        <div>SW (mtr) : ${est.sw || "--"}</div>
+        <div>Species : ${est.species || "--"}</div>
+         <div>Total Amount : ${formatCurrency(est.total_amount || 0)}</div>
+    </div>
+
+</div>
+
+    <table class="ssr">
+        <colgroup>
+            <col style="width:7%">
+            <col style="width:8%">
+            <col style="width:42%">
+            <col style="width:9%">
+            <col style="width:9%">
+            <col style="width:10%">
+            <col style="width:7%">
+            <col style="width:12%">
+        </colgroup>
+        <tr>
+            <th>Sl No.</th>
+            <th>SSR No.</th>
+            <th>Particulars of Works</th>
+            <th>Times / days</th>
+            <th>Quantity<br>Unit</th>
+            <th>Rate</th>
+            <th>Rate per</th>
+            <th>Amount</th>
+        </tr>
+        ${ssrRows}
+        <tr class="totalrow">
+            <td colspan="7" class="totallabel">Total Amount</td>
+            <td class="right">${formatCurrency(est.total_amount)}</td>
+        </tr>
+    </table>
+
+    <div class="cert-section">
+
+    <div class="cert-title">Certificates :-</div>
+
+    <div class="cert-line">(1) Certified that the rate adopted in this estimate are as per the Common SSR for the Year ${est.year || ""}</div>
+    <div class="cert-line">(2) Certified that the above estimate of work in not included in any previous estimate sanctioned.</div>
+    <div class="cert-line">(3) Certified that the above estimate of works has been included in the Sanctioned APO of the Year ${est.year || ""}</div>
+
+</div>
+
+<!-- GAP BEFORE RFO -->
+<div class="gap-large"></div>
+
+<!-- RIGHT SIDE RFO -->
+<div class="rfo-section">
+    <div>Range Forest Officer</div>
+    <div>${est.range_name || ""}</div>
+</div>
+
+<!-- GAP AFTER RFO -->
+<div class="gap-medium"></div>
+
+<!-- TECH LINE LEFT -->
+<div class="tech-section">
+    The above estimate is technically scrutinised & all the operations provided in the above estimate are Counter signed for.
+</div>
+
+<!-- GAP FOR SEAL -->
+<div class="gap-seal"></div>
+
+<!-- ACF LEFT -->
+<div class="acf-section">
+   <div>Assistant, Conservator of Forests</div>
+    <div>${est.division || ""} ${est.subdivision || ""}</div>
+</div>
+
+<!-- GAP BEFORE SANCTION -->
+<div class="gap-medium"></div>
+
+<!-- SANCTION LINE LEFT -->
+<div class="sanction-section">
+    Sanctioned for Rs. ${formatCurrency(est.total_amount)} (${numberToWordsIndian(est.total_amount || 0)})
+</div>
+
+</div>
+</body>
+</html>
+`;
 }
 
 function openEstimateView(id) {
@@ -2301,6 +3265,14 @@ function openEstimateView(id) {
             console.log("OPEN ESTIMATE VIEW ERROR:", err);
             alert("Error opening estimate");
         });
+}
+
+function parseJsonSafe(value) {
+    try {
+        return value ? JSON.parse(value) : [];
+    } catch {
+        return [];
+    }
 }
 
 function renderOpenEstimate(est, ssrItems) {
@@ -2520,37 +3492,24 @@ function renderOpenEstimate(est, ssrItems) {
     `;
 }
 
+function closeEstimateView() {
+    const box = document.getElementById("openEstimateViewBox");
+    const preview = document.getElementById("openEstimatePreview");
+
+    if (box) {
+        box.style.display = "none";
+    }
+
+    if (preview) {
+        preview.innerHTML = "";
+    }
+}
+
 function closePrintEstimate() {
     document.getElementById("printEstimateBox").style.display = "none";
     document.getElementById("printEstimatePreview").innerHTML = "";
 }
 
-function printEstimate(id) {
-    fetch("/get-estimate/" + id)
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) {
-                alert("Estimate not found");
-                return;
-            }
-
-            renderPrintEstimate(data.estimate, data.ssrItems);
-
-            document.getElementById("printEstimateBox").style.display = "block";
-
-            document.getElementById("printEstimateBox").scrollIntoView({
-                behavior: "smooth"
-            });
-
-            setTimeout(() => {
-                window.print();
-            }, 300);
-        })
-        .catch(err => {
-            console.log("PRINT ESTIMATE ERROR:", err);
-            alert("Error printing estimate");
-        });
-}
 
 function renderPrintEstimate(est, ssrItems) {
     const preview = document.getElementById("printEstimatePreview");
@@ -2558,147 +3517,363 @@ function renderPrintEstimate(est, ssrItems) {
     const trenches = parseJsonSafe(est.trenches);
     const seedlings = parseJsonSafe(est.seedlings);
 
-    let trenchHtml = "--";
-    if (trenches.length > 0) {
-        trenchHtml = trenches.map(t => `${t.count || ""} ${t.size || ""}`).join("<br>");
+    function getCountAndSize(arr) {
+        if (!arr || !arr.length) return { count: "--", size: "--" };
+        return {
+            count: arr.map(x => x.count || "").filter(Boolean).join(", ") || "--",
+            size: arr.map(x => x.size || "").filter(Boolean).join(", ") || "--"
+        };
     }
 
-    let seedlingHtml = "--";
-    if (seedlings.length > 0) {
-        seedlingHtml = seedlings.map(s => `${s.count || ""} ${s.size || ""}`).join("<br>");
-    }
+    const trenchData = getCountAndSize(trenches);
+    const seedlingData = getCountAndSize(seedlings);
+    const amountWords = numberToWordsIndian(est.total_amount || 0);
 
     let ssrRows = "";
-    ssrItems.forEach((item, index) => {
+    (ssrItems || []).forEach((item, index) => {
         ssrRows += `
             <tr>
-                <td>${index + 1}</td>
-                <td>${item.sr_no || ""}</td>
-                <td class="doc-left">${item.description || ""}</td>
-                <td>${item.qty || ""}</td>
-                <td>${item.unit || ""}</td>
-                <td>${formatCurrency(item.rate)}</td>
-                <td>${item.rate_per || ""}</td>
-                <td>${item.days || ""}</td>
-                <td>${formatCurrency(item.amount)}</td>
+                <td class="center">${index + 1}</td>
+                <td class="center">${item.sr_no || ""}</td>
+                <td class="left">${item.description || ""}</td>
+                <td class="center">${item.days || ""}</td>
+                <td class="center">
+                    <div>${item.qty || ""}</div>
+                    <div>${item.unit || ""}</div>
+                </td>
+                <td class="right">${formatCurrency(item.rate)}</td>
+                <td class="center">${item.rate_per || ""}</td>
+                <td class="right">${formatCurrency(item.amount)}</td>
             </tr>
         `;
     });
 
-    const amountWords = numberToWordsIndian(est.total_amount || 0);
-
     preview.innerHTML = `
-        <div class="doc-top-row">
-            <div><b>Com, ENo:</b> ${est.est_no || ""} / ${est.year || ""}</div>
-            <div><b>SONO / DSO No:</b> --</div>
+<style>
+    #printEstimatePreview,
+    #printEstimatePreview * {
+        color: #000 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        font-family: "Times New Roman", serif !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .estimate-print-page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 8mm 10mm 8mm 10mm;
+        box-sizing: border-box;
+        background: #fff;
+        font-size: 12px;
+        line-height: 1.15;
+    }
+
+    .top-meta {
+        width: 100%;
+        font-size: 12px;
+        margin-bottom: 4mm;
+    }
+
+    .top-meta-line {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 3mm;
+    }
+
+    .header-logo {
+        width: 62px;
+        height: 62px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto 2px auto;
+    }
+
+    .dept-name {
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1.1;
+    }
+
+    .dept-sub {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1.1;
+    }
+
+    .main-title {
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+        margin: 3mm 0 4mm 0;
+    }
+
+    .details-box {
+        width: 100%;
+        border: 1px solid #000;
+        padding: 5px 8px;
+        box-sizing: border-box;
+        margin-bottom: 4mm;
+    }
+
+    .hoa-line {
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1px;
+    }
+
+    .detail-col {
+        width: 48%;
+    }
+
+    .detail-line {
+        display: flex;
+        width: 100%;
+    }
+
+    .label {
+        width: 37%;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    .colon {
+        width: 3%;
+        text-align: center;
+    }
+
+    .value {
+        width: 60%;
+    }
+
+    .ssr-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        border: 1px solid #000;
+        margin-bottom: 4mm;
+    }
+
+    .ssr-table th,
+    .ssr-table td {
+        border: 1px solid #000;
+        padding: 4px 4px;
+        font-size: 11.5px;
+        vertical-align: top;
+    }
+
+    .ssr-table th {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .center { text-align: center; }
+    .left { text-align: left; }
+    .right { text-align: right; white-space: nowrap; }
+
+    .total-row td {
+        font-weight: bold;
+    }
+
+    .total-label {
+        text-align: right;
+        padding-right: 6px !important;
+    }
+
+    .cert-title {
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .cert-line {
+        margin-bottom: 1px;
+    }
+
+    .tech-line {
+        margin-top: 4mm;
+        margin-bottom: 6mm;
+    }
+
+    .sign-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10mm;
+    }
+
+    .sign-box {
+        width: 38%;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .sign-box.left {
+        text-align: center;
+    }
+
+    .sign-box.right {
+        text-align: center;
+    }
+
+    .sanction-line {
+        margin-top: 6mm;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    @media print {
+        @page {
+            size: A4;
+            margin: 6mm;
+        }
+
+        body * {
+            visibility: hidden;
+        }
+
+        #printEstimateBox,
+        #printEstimateBox * {
+            visibility: visible;
+        }
+
+        #printEstimateBox {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .estimate-print-page {
+            margin: 0;
+            padding-top: 4mm;
+        }
+    }
+</style>
+
+<div class="estimate-print-page">
+
+    <div class="top-meta">
+        <div class="top-meta-line">
+            <div><b>Est No:</b> ${est.est_no || ""}</div>
+            <div></div>
         </div>
-
-        <div class="doc-header">
-            <img src="logo.png" class="doc-logo" onerror="this.style.display='none'">
-            <h2>KARNATAKA FOREST DEPARTMENT</h2>
-            <h3>${est.division || ""} Division, ${est.division || ""}</h3>
+        <div class="top-meta-line">
+            <div><b>SONO / DSO No:</b> ${est.sono_no || est.sanction_no || "--"}</div>
+            <div></div>
         </div>
-
-        <div class="doc-main-title">
-            ${est.estimate_type || "Estimate"}
-        </div>
-
-        
-
-        <div class="doc-detail-box-clean">
-
-    <div class="doc-line doc-line-bold">
-        <span class="doc-label-fixed">Head of Account</span>
-        <span class="doc-colon">:</span>
-        <span>${est.head_of_account || est.headOfAccount || ""}</span>
     </div>
 
-    <div class="doc-line doc-line-bold doc-line-sep">
-        <span class="doc-label-fixed">Work</span>
-        <span class="doc-colon">:</span>
-        <span>${est.work || ""}</span>
+    <div class="header">
+        <img src="/logo.png" class="header-logo" onerror="this.style.display='none'">
+        <div class="dept-name">KARNATAKA FOREST DEPARTMENT</div>
+        <div class="dept-sub">${est.division || ""}</div>
+        <div class="dept-sub">${est.subdivision || ""}</div>
     </div>
 
-    <div class="doc-two-col">
-        <div class="doc-col-left">
-            <div class="doc-line"><span class="doc-label-fixed">Circle</span><span class="doc-colon">:</span><span>${est.circle || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Division</span><span class="doc-colon">:</span><span>${est.division || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Subdivision</span><span class="doc-colon">:</span><span>${est.subdivision || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Range</span><span class="doc-colon">:</span><span>${est.range_name || est.range || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Taluk</span><span class="doc-colon">:</span><span>${est.taluk || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Constituency</span><span class="doc-colon">:</span><span>${est.constituency || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Location</span><span class="doc-colon">:</span><span>${est.location || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Extent km/Ha</span><span class="doc-colon">:</span><span>${est.extent || ""}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Working circle</span><span class="doc-colon">:</span><span>${est.working_circle || ""}</span></div>
-        </div>
+    <div class="main-title">
+        Estimate for ${est.work || ""} During ${est.year || ""}
+    </div>
 
-        <div class="doc-col-right">
-            <div class="doc-line"><span class="doc-label-fixed">No of pits / trenches</span><span class="doc-colon">:</span><span>${trenchHtml}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">No of seedlings</span><span class="doc-colon">:</span><span>${seedlingHtml}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Protection</span><span class="doc-colon">:</span><span>${est.brush_wood_fence || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">BW</span><span class="doc-colon">:</span><span>${est.bw || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">BBW</span><span class="doc-colon">:</span><span>${est.vfc || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">CPT</span><span class="doc-colon">:</span><span>${est.cpt_length || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">SW</span><span class="doc-colon">:</span><span>${est.sw || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Asset ID</span><span class="doc-colon">:</span><span>${est.asset_id || "--"}</span></div>
-            <div class="doc-line"><span class="doc-label-fixed">Species</span><span class="doc-colon">:</span><span>${est.species || "--"}</span></div>
-            <div class="doc-line doc-line-bold"><span class="doc-label-fixed">Total Amount</span><span class="doc-colon">:</span><span>${formatCurrency(est.total_amount)}</span></div>
+    <div class="details-box">
+        <div class="hoa-line">Head of Account: ${est.head_of_account || ""}</div>
+
+        <div class="detail-row">
+            <div class="detail-col">
+                <div class="detail-line"><div class="label">Circle</div><div class="colon">:</div><div class="value">${est.circle || ""}</div></div>
+                <div class="detail-line"><div class="label">Division</div><div class="colon">:</div><div class="value">${est.division || ""}</div></div>
+                <div class="detail-line"><div class="label">Subdivision</div><div class="colon">:</div><div class="value">${est.subdivision || ""}</div></div>
+                <div class="detail-line"><div class="label">Range</div><div class="colon">:</div><div class="value">${est.range_name || est.range || ""}</div></div>
+                <div class="detail-line"><div class="label">Taluk</div><div class="colon">:</div><div class="value">${est.taluk || ""}</div></div>
+                <div class="detail-line"><div class="label">Constituency</div><div class="colon">:</div><div class="value">${est.constituency || ""}</div></div>
+                <div class="detail-line"><div class="label">Location</div><div class="colon">:</div><div class="value">${est.location || ""}</div></div>
+                <div class="detail-line"><div class="label">Extent km/Ha</div><div class="colon">:</div><div class="value">${est.extent || ""}</div></div>
+                <div class="detail-line"><div class="label">Working circle</div><div class="colon">:</div><div class="value">${est.working_circle || ""}</div></div>
+                <div class="detail-line"><div class="label">Location & Survey</div><div class="colon">:</div><div class="value">${est.location || ""}</div></div>
+            </div>
+
+            <div class="detail-col">
+                <div class="detail-line"><div class="label">APO Sanctioned by</div><div class="colon">:</div><div class="value">${est.sanction_authority || ""}</div></div>
+                <div class="detail-line"><div class="label">No of pits/Trenches</div><div class="colon">:</div><div class="value">${trenchData.count}</div></div>
+                <div class="detail-line"><div class="label">Size</div><div class="colon">:</div><div class="value">${trenchData.size}</div></div>
+                <div class="detail-line"><div class="label">No of pits/Seedlings</div><div class="colon">:</div><div class="value">${seedlingData.count}</div></div>
+                <div class="detail-line"><div class="label">Size</div><div class="colon">:</div><div class="value">${seedlingData.size}</div></div>
+                <div class="detail-line"><div class="label">Protection</div><div class="colon">:</div><div class="value">BW(rmtr): ${est.bw || "--"} &nbsp;&nbsp; BBW(rmtr): ${est.brush_wood_fence || "--"}</div></div>
+                <div class="detail-line"><div class="label">CPT</div><div class="colon">:</div><div class="value">${est.cpt_length || "--"}</div></div>
+                <div class="detail-line"><div class="label">Asset ID</div><div class="colon">:</div><div class="value">${est.asset_id || "--"}</div></div>
+                <div class="detail-line"><div class="label">SW(rmtr)</div><div class="colon">:</div><div class="value">${est.sw || "--"}</div></div>
+                <div class="detail-line"><div class="label">Species</div><div class="colon">:</div><div class="value">${est.species || "--"}</div></div>
+            </div>
         </div>
+    </div>
+
+    <table class="ssr-table">
+        <colgroup>
+            <col style="width:7%">
+            <col style="width:8%">
+            <col style="width:42%">
+            <col style="width:9%">
+            <col style="width:12%">
+            <col style="width:10%">
+            <col style="width:7%">
+            <col style="width:12%">
+        </colgroup>
+        <tr>
+            <th>Sl No.</th>
+            <th>SSR No.</th>
+            <th>Particulars of Works</th>
+            <th>Times /<br>days</th>
+            <th>Quantity<br>Unit</th>
+            <th>Rate</th>
+            <th>Rate per</th>
+            <th>Amount</th>
+        </tr>
+        ${ssrRows}
+        <tr class="total-row">
+            <td colspan="7" class="total-label">Total Amount</td>
+            <td class="right">${formatCurrency(est.total_amount)}</td>
+        </tr>
+    </table>
+
+    <div class="cert-title">Certificates :-</div>
+    <div class="cert-line">(1) Certified that the rate adopted in this estimate are as per the Common SSR for the Year ${est.year || ""}</div>
+    <div class="cert-line">(2) Certified that the above estimate of work in not included in any previous estimate sanctioned.</div>
+    <div class="cert-line">(3) Certified that the above estimate of works has been included in the Sanctioned APO of the Year ${est.year || ""}</div>
+
+    
+
+    <div class="sign-row">
+        <div class="sign-box right">
+            <div>Range Forest Officer</div>
+            <div>${est.range_name || ""}</div>
+        </div>
+        <div class="tech-line">
+        The above estimate is technically scrutinised & all the operations provided in the above estimate are Counter signed for.
+    </div>
+        <div class="sign-box left">
+            <div>Assistant, Conservator of Forests</div>
+            <div>${est.division || ""} ${est.subdivision || ""}</div>
+        </div>
+    </div>
+
+    <div class="sanction-line">
+        Sanctioned for Rs. ${formatCurrency(est.total_amount)} (${amountWords})
     </div>
 
 </div>
-
-        <table class="doc-table">
-    <colgroup>
-        <col style="width:5%;">
-        <col style="width:8%;">
-        <col style="width:27%;">
-        <col style="width:8%;">
-        <col style="width:6%;">
-        <col style="width:9%;">
-        <col style="width:8%;">
-        <col style="width:8%;">
-        <col style="width:15%;">
-    </colgroup>
-
-    <tr>
-        <th>Sl.No.</th>
-        <th>SSR.No.</th>
-        <th>Particulars of Works</th>
-        <th>Quantity</th>
-        <th>Unit</th>
-        <th>Rate</th>
-        <th>Rate Per</th>
-        <th>Times / Days</th>
-        <th>Amount</th>
-    </tr>
-    ${ssrRows}
-    <tr>
-        <td colspan="8" class="doc-total-label">Total Amount Rs.</td>
-        <td class="doc-total-value"><b>${formatCurrency(est.total_amount)}</b></td>
-    </tr>
-</table>
-
-        <div class="doc-cert">
-            <div>(1) Certified that the rate adopted in this estimate are as per the Common SSR for the Year ${est.year || ""}</div>
-            <div>(2) Certified that the above estimate of work is not included in any previous estimate sanctioned.</div>
-            <div><b>Certificates :-</b></div>
-            <div>(3) Certified that the above estimate of works has been included in the sanctioned APO of the Year ${est.year || ""}</div>
-            <div>The above estimate is technically scrutinised and all the operations provided in the above estimate are countersigned for.</div>
-            <div style="margin-top:8px;"><b>Sanctioned for Rs. ${formatCurrency(est.total_amount)}  (Rs. ${amountWords} ONLY.)</b></div>
-        </div>
-
-        <div class="doc-signatures">
-            <div>
-                <br><br>
-                <b>Range Forest Officer</b>
-            </div>
-            <div>
-                <br><br>
-                <b>Assistant Conservator of Forests</b>
-            </div>
-        </div>
-    `;
+`;
 }
 
 function numberToWordsIndian(num) {
@@ -2752,18 +3927,19 @@ function formatCurrency(value) {
 }
 
 function loadModifyEstimateList() {
-    const search = document.getElementById("modifyEstimateSearch")
-        ? document.getElementById("modifyEstimateSearch").value.trim()
-        : "";
-
+    const search = document.getElementById("modifyEstimateSearch")?.value.trim() || "";
+    const scheme_name = document.getElementById("modifySchemeFilter")?.value || "";
+    const month = document.getElementById("modifyMonthFilter")?.value || "";
+    const hoa_name = document.getElementById("modifyHoaFilter")?.value || "";
     const user_id = localStorage.getItem("user_id");
 
-    if (!user_id) {
-        alert("User not logged in");
-        return;
-    }
-
-    fetch("/get-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
+    fetch(
+        "/get-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&search=" + encodeURIComponent(search) +
+        "&scheme_name=" + encodeURIComponent(scheme_name) +
+        "&month=" + encodeURIComponent(month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("modifyEstimateTable");
@@ -2774,6 +3950,7 @@ function loadModifyEstimateList() {
                     <th>Work Name</th>
                     <th>Year</th>
                     <th>Estimate Type</th>
+                    <th>Scheme</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
@@ -2781,7 +3958,7 @@ function loadModifyEstimateList() {
 
             if (!data.success || !data.data || data.data.length === 0) {
                 const row = table.insertRow();
-                row.innerHTML = `<td colspan="6">No estimates found</td>`;
+                row.innerHTML = `<td colspan="7">No estimates found</td>`;
                 return;
             }
 
@@ -2791,11 +3968,12 @@ function loadModifyEstimateList() {
                 row.insertCell(1).innerText = item.work || "";
                 row.insertCell(2).innerText = item.year || "";
                 row.insertCell(3).innerText = item.estimate_type || "";
-                row.insertCell(4).innerText = item.created_at
+                row.insertCell(4).innerText = item.scheme_name || "";
+                row.insertCell(5).innerText = item.created_at
                     ? new Date(item.created_at).toLocaleDateString()
                     : "";
 
-                row.insertCell(5).innerHTML = `
+                row.insertCell(6).innerHTML = `
                     <button class="btn" type="button" onclick="editEstimate(${item.id})">Modify</button>
                 `;
             });
@@ -2820,7 +3998,7 @@ function editEstimate(id) {
                 alert(data.message || "Estimate not found");
                 return;
             }
-
+            
             const est = data.estimate;
             const items = data.ssrItems || [];
 
@@ -2853,6 +4031,27 @@ function editEstimate(id) {
             document.getElementById("editWorkingCircle").value = est.working_circle || "";
             document.getElementById("editTotalAmount").value = est.total_amount || "";
             document.getElementById("editBalanceAmount").value = est.balance_amount || "";
+
+            const trenchContainer = document.getElementById("editTrenchContainer");
+const seedlingContainer = document.getElementById("editSeedlingContainer");
+
+if (trenchContainer) trenchContainer.innerHTML = "";
+if (seedlingContainer) seedlingContainer.innerHTML = "";
+
+const trenches = parseJsonSafe(est.trenches);
+const seedlings = parseJsonSafe(est.seedlings);
+
+if (trenches.length > 0) {
+    trenches.forEach(t => addEditTrenchRow(t.count || "", t.size || ""));
+} else {
+    addEditTrenchRow();
+}
+
+if (seedlings.length > 0) {
+    seedlings.forEach(s => addEditSeedlingRow(s.count || "", s.size || ""));
+} else {
+    addEditSeedlingRow();
+}
 
             const table = document.getElementById("editSsrTable");
             table.innerHTML = `
@@ -2894,6 +4093,53 @@ function editEstimate(id) {
             console.log("EDIT ESTIMATE ERROR:", err);
             alert("Error opening estimate");
         });
+}
+function addEditTrenchRow(count = "", size = "") {
+    const container = document.getElementById("editTrenchContainer");
+    const row = document.createElement("div");
+    row.className = "multi-row";
+    row.innerHTML = `
+        <input placeholder="No of Pits / Trenches" value="${count}">
+        <input placeholder="Size of Pits / Trenches" value="${size}">
+        <button type="button" class="small-delete" onclick="this.parentElement.remove()">❌</button>
+    `;
+    container.appendChild(row);
+}
+
+function addEditSeedlingRow(count = "", size = "") {
+    const container = document.getElementById("editSeedlingContainer");
+    const row = document.createElement("div");
+    row.className = "multi-row";
+    row.innerHTML = `
+        <input placeholder="No of Seedlings" value="${count}">
+        <input placeholder="Size of Seedlings" value="${size}">
+        <button type="button" class="small-delete" onclick="this.parentElement.remove()">❌</button>
+    `;
+    container.appendChild(row);
+}
+
+function getEditTrenches() {
+    let arr = [];
+    document.querySelectorAll("#editTrenchContainer .multi-row").forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        arr.push({
+            count: inputs[0] ? inputs[0].value : "",
+            size: inputs[1] ? inputs[1].value : ""
+        });
+    });
+    return arr;
+}
+
+function getEditSeedlings() {
+    let arr = [];
+    document.querySelectorAll("#editSeedlingContainer .multi-row").forEach(row => {
+        const inputs = row.querySelectorAll("input");
+        arr.push({
+            count: inputs[0] ? inputs[0].value : "",
+            size: inputs[1] ? inputs[1].value : ""
+        });
+    });
+    return arr;
 }
 
 function updateEstimate() {
@@ -2941,8 +4187,8 @@ function updateEstimate() {
         working_circle: document.getElementById("editWorkingCircle").value,
         total_amount: document.getElementById("editTotalAmount").value,
         balance_amount: document.getElementById("editBalanceAmount").value,
-        trenches: [],
-        seedlings: [],
+        trenches: getEditTrenches(),
+        seedlings: getEditSeedlings(),
         ssrItems: []
     };
 
@@ -2977,6 +4223,12 @@ function closeModifyEstimateForm() {
         box.style.display = "none";
     }
 
+    const trenchContainer = document.getElementById("editTrenchContainer");
+if (trenchContainer) trenchContainer.innerHTML = "";
+
+const seedlingContainer = document.getElementById("editSeedlingContainer");
+if (seedlingContainer) seedlingContainer.innerHTML = "";
+
     const table = document.getElementById("editSsrTable");
     if (table) {
         table.innerHTML = "";
@@ -2986,22 +4238,35 @@ function closeModifyEstimateForm() {
     if (idBox) idBox.value = "";
 }
 
-function loadDeleteEstimateList() {
-    const search = document.getElementById("deleteEstimateSearch")
-        ? document.getElementById("deleteEstimateSearch").value.trim()
+function loadEstimateList() {
+    const search = document.getElementById("estimateSearch")
+        ? document.getElementById("estimateSearch").value.trim()
+        : "";
+
+    const scheme_name = document.getElementById("openSchemeFilter")
+        ? document.getElementById("openSchemeFilter").value
+        : "";
+
+    const month = document.getElementById("openMonthFilter")
+        ? document.getElementById("openMonthFilter").value
+        : "";
+
+    const hoa_name = document.getElementById("openHoaFilter")
+        ? document.getElementById("openHoaFilter").value
         : "";
 
     const user_id = localStorage.getItem("user_id");
 
-    if (!user_id) {
-        alert("User not logged in");
-        return;
-    }
-
-    fetch("/get-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
+    fetch(
+        "/get-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&search=" + encodeURIComponent(search) +
+        "&scheme_name=" + encodeURIComponent(scheme_name) +
+        "&month=" + encodeURIComponent(month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
         .then(res => res.json())
         .then(data => {
-            const table = document.getElementById("deleteEstimateTable");
+            const table = document.getElementById("openEstimateTable");
 
             table.innerHTML = `
                 <tr>
@@ -3009,6 +4274,7 @@ function loadDeleteEstimateList() {
                     <th>Work Name</th>
                     <th>Year</th>
                     <th>Estimate Type</th>
+                    <th>Scheme</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
@@ -3016,28 +4282,199 @@ function loadDeleteEstimateList() {
 
             if (!data.success || !data.data || data.data.length === 0) {
                 const row = table.insertRow();
-                row.innerHTML = `<td colspan="6">No estimates found</td>`;
+                row.innerHTML = `<td colspan="7">No estimates found</td>`;
                 return;
             }
 
             data.data.forEach(item => {
                 const row = table.insertRow();
+
                 row.insertCell(0).innerText = item.est_no || "";
                 row.insertCell(1).innerText = item.work || "";
                 row.insertCell(2).innerText = item.year || "";
                 row.insertCell(3).innerText = item.estimate_type || "";
-                row.insertCell(4).innerText = item.created_at
+                row.insertCell(4).innerText = item.scheme_name || "";
+                row.insertCell(5).innerText = item.created_at
                     ? new Date(item.created_at).toLocaleDateString()
                     : "";
 
-                row.insertCell(5).innerHTML = `
-                    <button class="btn" type="button" onclick="deleteEstimate(${item.id})">Delete</button>
+                row.insertCell(6).innerHTML = `
+                    <div style="display:flex; gap:6px; justify-content:center;">
+                        <button class="btn" type="button" onclick="openEstimateView(${item.id})">View</button>
+                        <button class="btn" type="button" onclick="printEstimate(${item.id})">Print</button>
+                    </div>
                 `;
             });
         })
         .catch(err => {
-            console.log("LOAD DELETE LIST ERROR:", err);
+            console.log("LOAD ESTIMATE LIST ERROR:", err);
         });
+}
+
+
+function loadEstimateForDuplicate() {
+    const input = document.getElementById("duplicate_est_no");
+    const scheme = document.getElementById("duplicate_scheme").value;
+    const user_id = localStorage.getItem("user_id");
+
+    if (!input) {
+        alert("Duplicate estimate input not found");
+        return;
+    }
+
+    const estNo = input.value.trim();
+
+    if (!estNo) {
+        alert("Enter Estimate No");
+        return;
+    }
+
+    fetch(`/get-estimate-by-est-no/${encodeURIComponent(estNo)}?user_id=${user_id}&scheme_name=${encodeURIComponent(scheme)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Estimate not found");
+                return;
+            }
+
+            const e = data.estimate;
+
+            document.getElementById("year").value = e.year || "";
+            document.getElementById("estimate_type").value = e.estimate_type || "";
+            document.getElementById("constituency").value = e.constituency || "";
+            document.getElementById("section").value = e.section || "";
+            document.getElementById("circle").value = e.circle || "";
+            document.getElementById("division").value = e.division || "";
+            document.getElementById("subdivision").value = e.subdivision || "";
+            document.getElementById("range_dropdown").value = e.range_name || "";
+            document.getElementById("taluk").value = e.taluk || "";
+            document.getElementById("work").value = e.work || "";
+            document.getElementById("head_of_account").value = e.head_of_account || "";
+            document.getElementById("location").value = e.location || "";
+            document.getElementById("extent").value = e.extent || "";
+            document.getElementById("model").value = e.model || "";
+            document.getElementById("vfc").value = e.vfc || "";
+            document.getElementById("brushWoodFence").value = e.brush_wood_fence || "";
+            document.getElementById("cptLength").value = e.cpt_length || "";
+            document.getElementById("bw").value = e.bw || "";
+            document.getElementById("sw").value = e.sw || "";
+            document.getElementById("assetId").value = e.asset_id || "";
+            document.getElementById("sanctionAuthority").value = e.sanction_authority || "";
+            document.getElementById("species").value = e.species || "";
+            document.getElementById("workingCircle").value = e.working_circle || "";
+            document.getElementById("totalAmount").value = e.total_amount || 0;
+            document.getElementById("balanceAmount").value = e.balance_amount || 0;
+
+            const schemeBox = document.getElementById("scheme_name");
+            if (schemeBox) {
+                schemeBox.value = e.scheme_name || scheme;
+            }
+
+            fetch(`/next-est-no?user_id=${user_id}&scheme_name=${encodeURIComponent(e.scheme_name || scheme)}`)
+                .then(res => res.json())
+                .then(noData => {
+                    document.getElementById("estNo").value = noData.est_no || "";
+                });
+
+            ssrItems = (data.ssrItems || []).map(item => ({
+                sr_no: item.sr_no || "",
+                description: item.description || "",
+                days: item.days || 0,
+                qty: item.qty || 0,
+                rate: item.rate || 0,
+                rate_per: item.rate_per || 0,
+                unit: item.unit || "",
+                amount: item.amount || 0
+            }));
+
+            if (typeof renderSSRTable === "function") {
+                renderSSRTable();
+            }
+
+            openPage("create");
+            alert("Estimate loaded for duplication. Edit and save as new estimate.");
+        })
+        .catch(err => {
+            console.log("LOAD DUPLICATE ESTIMATE ERROR:", err);
+            alert("Error loading estimate");
+        });
+}
+
+function renderSSRTable() {
+    const table = document.getElementById("ssrTable");
+    if (!table) return;
+
+    table.innerHTML = `
+        <tr>
+            <th>No</th>
+            <th>SSR</th>
+            <th>Description</th>
+            <th>Days</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Rate Per</th>
+            <th>Unit</th>
+            <th>Amount</th>
+            <th>Action</th>
+        </tr>
+    `;
+
+    if (!Array.isArray(ssrItems)) return;
+
+    ssrItems.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td><input value="${item.sr_no || ""}" onchange="ssrItems[${index}].sr_no=this.value"></td>
+            <td><input value="${item.description || ""}" onchange="ssrItems[${index}].description=this.value"></td>
+            <td><input value="${item.days || 0}" oninput="ssrItems[${index}].days=parseFloat(this.value)||0; updateSSRAmount(${index})"></td>
+            <td><input value="${item.qty || 0}" oninput="ssrItems[${index}].qty=parseFloat(this.value)||0; updateSSRAmount(${index})"></td>
+            <td><input value="${item.rate || 0}" oninput="ssrItems[${index}].rate=parseFloat(this.value)||0; updateSSRAmount(${index})"></td>
+            <td><input value="${item.rate_per || 0}" oninput="ssrItems[${index}].rate_per=parseFloat(this.value)||0; updateSSRAmount(${index})"></td>
+            <td><input value="${item.unit || ""}" onchange="ssrItems[${index}].unit=this.value"></td>
+            <td><input id="amount_${index}" value="${item.amount || 0}" readonly></td>
+            <td><button type="button" onclick="removeSSRRow(${index})">Delete</button></td>
+        `;
+
+        table.appendChild(row);
+    });
+
+    recalculateEstimateTotal();
+}
+
+function updateSSRAmount(index) {
+    const item = ssrItems[index];
+    const days = parseFloat(item.days) || 0;
+    const qty = parseFloat(item.qty) || 0;
+    const rate = parseFloat(item.rate) || 0;
+    const ratePer = parseFloat(item.rate_per) || 1;
+
+    item.amount = (days * qty * rate) / ratePer;
+
+    const amtInput = document.getElementById(`amount_${index}`);
+    if (amtInput) amtInput.value = item.amount.toFixed(2);
+
+    recalculateEstimateTotal();
+}
+
+function removeSSRRow(index) {
+    ssrItems.splice(index, 1);
+    renderSSRTable();
+}
+
+function recalculateEstimateTotal() {
+    let total = 0;
+
+    ssrItems.forEach(item => {
+        total += parseFloat(item.amount) || 0;
+    });
+
+    document.getElementById("totalAmount").value = total.toFixed(2);
+
+    // ✅ IMPORTANT
+    usedAmount = total;
+    updateBalance();
 }
 
 </script>

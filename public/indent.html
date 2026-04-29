@@ -721,6 +721,15 @@ html, body {
 
     <div class="indent-form">
         <div class="indent-row">
+    <label>Scheme</label>
+    <select id="indentScheme" onchange="loadIndentNumberOnly()">
+        <option value="">Select Scheme</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+</div>
+
+        <div class="indent-row">
             <label>Indent No</label>
             <input id="indentNo" class="readonly-field" readonly>
         </div>
@@ -749,7 +758,8 @@ html, body {
             <label>Head of Account</label>
             <select id="indentHoa" onchange="loadFilteredIndentSono(); loadIndentGrandTotal();"></select>
         </div>
-
+        
+        
         <div class="indent-row">
             <label>SONO</label>
             <select id="indentSono" onchange="loadIndentEstimateDetails()"></select>
@@ -985,6 +995,15 @@ html, body {
             <div id="sanction" class="page">
               <div class="box">
                  <div class="box-title">Sanction Estimate</div>
+                 <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+    <label style="font-weight: 600; color: #1b5e20;">Scheme</label>
+    <select id="sanctionSchemeFilter" onchange="loadUnsanctionedEstimates(); loadSanctionedEstimates();"
+            style="padding: 10px 12px; border: 1px solid #c8d3cc; border-radius: 8px; min-width: 180px;">
+        <option value="">All</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+</div>
 
                  <div class="two-box-layout">
                     <!-- LEFT BOX -->
@@ -1041,10 +1060,20 @@ html, body {
     <div class="box">
         <div class="box-title">Update SONO</div>
 
-        <div class="search-row">
-            <input id="updateSonoSearch" placeholder="Search Estimate No / Work / Sanction No" oninput="loadUpdateSonoList()">
-            <button class="btn" onclick="loadUpdateSonoList()">Search</button>
-        </div>
+        <div style="margin-bottom:15px; display:flex; gap:10px; flex-wrap:wrap;">
+    <select id="updateSonoSchemeFilter" onchange="loadUpdateSonoList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Scheme</option>
+        <option value="GENERAL">GENERAL</option>
+        <option value="CAMPA">CAMPA</option>
+    </select>
+
+    <input id="updateSonoMonthFilter" type="month" onchange="loadUpdateSonoList()"
+           style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+
+    <select id="updateSonoHoaFilter" onchange="loadUpdateSonoList()" style="padding:10px; border:1px solid #c8d3cc; border-radius:6px;">
+        <option value="">All Head of Account</option>
+    </select>
+</div>
 
         <table id="updateSonoTable">
             <tr>
@@ -1098,8 +1127,9 @@ function openPage(page, el) {
     }
 
     if (page === "updateSono") {
-        loadUpdateSonoList();
-    }
+    loadUpdateSonoHoaFilter();
+    loadUpdateSonoList();
+}
 
     if (page === "fundIndent") {
         console.log("Opening fundIndent");
@@ -1125,8 +1155,13 @@ function openPage(page, el) {
 function loadUnsanctionedEstimates() {
     const search = document.getElementById("unsanctionedSearch").value.trim();
     const user_id = localStorage.getItem("user_id");
+    const scheme_name = document.getElementById("sanctionSchemeFilter")?.value || "";
 
-    fetch("/get-unsanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
+    fetch(
+        "/get-unsanctioned-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&search=" + encodeURIComponent(search) +
+        "&scheme_name=" + encodeURIComponent(scheme_name)
+    )
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("unsanctionedTable");
@@ -1168,8 +1203,13 @@ function loadUnsanctionedEstimates() {
 function loadSanctionedEstimates() {
     const search = document.getElementById("sanctionedSearch").value.trim();
     const user_id = localStorage.getItem("user_id");
+    const scheme_name = document.getElementById("sanctionSchemeFilter")?.value || "";
 
-    fetch("/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
+    fetch(
+        "/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&search=" + encodeURIComponent(search) +
+        "&scheme_name=" + encodeURIComponent(scheme_name)
+    )
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("sanctionedTable");
@@ -1263,10 +1303,18 @@ function sanctionEstimate() {
 }
 
 function loadUpdateSonoList() {
-    const search = document.getElementById("updateSonoSearch").value.trim();
     const user_id = localStorage.getItem("user_id");
 
-    fetch("/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) + "&search=" + encodeURIComponent(search))
+    const scheme_name = document.getElementById("updateSonoSchemeFilter")?.value || "";
+    const month = document.getElementById("updateSonoMonthFilter")?.value || "";
+    const hoa_name = document.getElementById("updateSonoHoaFilter")?.value || "";
+
+    fetch(
+        "/get-sanctioned-estimates?user_id=" + encodeURIComponent(user_id) +
+        "&scheme_name=" + encodeURIComponent(scheme_name) +
+        "&month=" + encodeURIComponent(month) +
+        "&hoa_name=" + encodeURIComponent(hoa_name)
+    )
         .then(res => res.json())
         .then(data => {
             const table = document.getElementById("updateSonoTable");
@@ -1283,19 +1331,21 @@ function loadUpdateSonoList() {
 
             if (!data.success || !data.data || data.data.length === 0) {
                 const row = table.insertRow();
-                row.innerHTML = `<td colspan="5">No sanctioned estimates found</td>`;
+                row.innerHTML = `<td colspan="5">No records found</td>`;
                 return;
             }
 
             data.data.forEach(item => {
                 const row = table.insertRow();
+
                 row.insertCell(0).innerText = item.est_no || "";
                 row.insertCell(1).innerText = item.work || "";
                 row.insertCell(2).innerText = item.sanction_no || "";
                 row.insertCell(3).innerText = item.sanction_date || "";
+
                 row.insertCell(4).innerHTML = `
-                    <button class="btn" type="button"
-                        onclick="editSono(${item.estimate_id}, '${(item.sanction_no || '').replace(/'/g, "\\'")}', '${item.sanction_date || ''}')">
+                    <button class="btn"
+                        onclick="editSono(${item.estimate_id}, '${(item.sanction_no || "").replace(/'/g, "\\'")}', '${item.sanction_date || ""}')">
                         Edit
                     </button>
                 `;
@@ -1305,6 +1355,30 @@ function loadUpdateSonoList() {
             console.log("LOAD UPDATE SONO ERROR:", err);
         });
 }
+function loadUpdateSonoHoaFilter() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch("/get-hoa?user_id=" + encodeURIComponent(user_id))
+        .then(res => res.json())
+        .then(data => {
+            const dropdown = document.getElementById("updateSonoHoaFilter");
+            if (!dropdown) return;
+
+            dropdown.innerHTML = '<option value="">All Head of Account</option>';
+
+            (data.data || []).forEach(item => {
+                const option = document.createElement("option");
+                option.value = item.hoa_name;
+                option.textContent = item.hoa_name;
+                dropdown.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.log("LOAD UPDATE SONO HOA FILTER ERROR:", err);
+        });
+}
+
+
 function updateSono() {
     const user_id = localStorage.getItem("user_id");
 
@@ -1444,6 +1518,36 @@ function closeUpdateSonoForm() {
 }
 
 // CREATE INDENT
+function loadIndentNumberOnly() {
+    const user_id = localStorage.getItem("user_id");
+    const scheme_name = document.getElementById("indentScheme").value;
+
+    if (!scheme_name) {
+        document.getElementById("indentNo").value = "";
+        document.getElementById("indentGrandTotal").value = "0.00";
+        document.getElementById("indentGrandTotal").dataset.previous = "0";
+        return;
+    }
+
+    fetch(
+        "/get-indent-init-data?user_id=" +
+        encodeURIComponent(user_id) +
+        "&scheme_name=" +
+        encodeURIComponent(scheme_name)
+    )
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("indentNo").value = data.next_indent_no || 1;
+                document.getElementById("indentGrandTotal").value = data.grand_total || 0;
+                document.getElementById("indentGrandTotal").dataset.previous = data.grand_total || 0;
+            }
+        })
+        .catch(err => {
+            console.log("LOAD INDENT NUMBER ERROR:", err);
+        });
+}
+
 function loadIndentMonths() {
     const year = new Date().getFullYear();
     const months = [
@@ -1502,16 +1606,7 @@ function getMonthYearFromText(monthText) {
 function loadIndentInitData() {
     const user_id = localStorage.getItem("user_id");
 
-    fetch("/get-indent-init-data?user_id=" + user_id)
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById("indentNo").value = data.next_indent_no || 1;
-                document.getElementById("indentGrandTotal").value = data.grand_total || 0;
-            }
-        });
-
-    fetch("/get-indent-hoa?user_id=" + user_id)
+    fetch("/get-indent-hoa?user_id=" + encodeURIComponent(user_id))
         .then(res => res.json())
         .then(data => {
             const dropdown = document.getElementById("indentHoa");
@@ -1523,7 +1618,12 @@ function loadIndentInitData() {
                 option.textContent = item.hoa_name;
                 dropdown.appendChild(option);
             });
+        })
+        .catch(err => {
+            console.log("LOAD INDENT HOA ERROR:", err);
         });
+
+    loadIndentNumberOnly();
 }
 
 function loadFilteredIndentSono() {
@@ -1730,11 +1830,12 @@ function saveIndent() {
     const work_type = document.getElementById("indentWorkType").value;
     const indent_month = document.getElementById("indentMonth").value;
     const hoa_name = document.getElementById("indentHoa").value;
+    const scheme_name = document.getElementById("indentScheme").value;
 
     const total_amount = parseFloat(document.getElementById("indentEntryTotal").value || 0);
     const grand_total = parseFloat(document.getElementById("indentGrandTotal").value || 0);
 
-    if (!work_type || !indent_month || !hoa_name || !sanction_no) {
+    if (!work_type || !indent_month || !hoa_name || !sanction_no || !scheme_name) {
         alert("Please fill all required fields");
         return;
     }
@@ -1777,11 +1878,14 @@ function saveIndent() {
         work_type,
         indent_month,
         hoa_name,
+        scheme_name,
         total_amount,
         grand_total,
         user_id,
         ssrItems
     };
+
+    console.log("SAVE INDENT PAYLOAD:", payload);
 
     fetch("/save-indent-entry", {
         method: "POST",
@@ -1792,12 +1896,11 @@ function saveIndent() {
     .then(data => {
         if (data.success) {
             alert("Indent saved successfully");
-            loadIndentInitData();
-            loadIndentGrandTotal();
 
             document.getElementById("indentWorkType").value = "";
             document.getElementById("indentMonth").value = "";
             document.getElementById("indentHoa").value = "";
+            document.getElementById("indentScheme").value = "";
             document.getElementById("indentSono").innerHTML = '<option value="">Select SONO</option>';
             document.getElementById("indentEstimateTotal").value = "";
             document.getElementById("indentEntryTotal").value = "0.00";

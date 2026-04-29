@@ -1,0 +1,3564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voucher Management</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #eef5e8, #f8f6ef);
+        }
+
+        .voucher-page {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .voucher-sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #0f5d2f, #1f7a3b);
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.15);
+        }
+
+        .voucher-sidebar h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+
+        .voucher-sidebar button {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #e3a300;
+            color: #1f2d1f;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .voucher-sidebar button:hover {
+            background: #f2b72a;
+        }
+
+        .voucher-main {
+            flex: 1;
+            padding: 25px;
+        }
+
+        .voucher-header {
+            background: white;
+            border-left: 6px solid #1f5f3b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .voucher-card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .voucher-card h3 {
+            margin-top: 0;
+            color: #1f5f3b;
+        }
+
+        .voucher-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .voucher-row select,
+        .voucher-row input,
+        .voucher-row button {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            min-width: 180px;
+        }
+
+        .primary-btn {
+            background: #1f5f3b;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary-btn:hover {
+            background: #28794b;
+        }
+
+        .voucher-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .voucher-table th,
+        .voucher-table td {
+            border: 1px solid #d9d9d9;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .voucher-table th {
+            background: #e8f0e8;
+            color: #1f5f3b;
+        }
+
+        .voucher-section {
+            display: none;
+        }
+
+        #createVoucherSection {
+            display: block;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-box {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            min-width: 480px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        .deduction-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+}
+
+.deduction-field label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #1f5f3b;
+}
+#editableVoucherItemsTable input,
+#editableVoucherItemsTable textarea {
+    padding: 6px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+}
+
+/* print agreement */
+#printArea {
+    background: white;
+    color: #000;
+    padding: 14mm 12mm;
+    border: 1px solid #ccc;
+    min-height: 260mm;
+    width: 180mm;
+    margin: 0 auto;
+    box-sizing: border-box;
+    font-family: "Times New Roman", serif;
+}
+
+.print-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.print-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 6px;
+}
+
+.print-doc-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 2px;
+    letter-spacing: 0.3px;
+}
+
+.print-doc-subtitle {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.print-top-code {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 10px 0 12px 0;
+}
+
+.print-paragraph {
+    font-size: 15px;
+    line-height: 1.55;
+    text-align: justify;
+    margin-bottom: 10px;
+}
+
+.print-work-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0 10px 0;
+}
+
+.print-simple-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.print-simple-table th,
+.print-simple-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.print-simple-table th {
+    background: #efefef;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.left-text {
+    text-align: left;
+}
+
+.right-text {
+    text-align: right;
+}
+
+.print-location-line {
+    font-size: 14px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+}
+
+.print-total-line {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 8px;
+}
+
+.signature-block {
+    margin-top: 26px;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.signature-left {
+    text-align: left;
+}
+
+.signature-right {
+    text-align: right;
+}
+
+.print-top-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 6px 0 10px 0;
+}
+
+.print-signature-label {
+    font-weight: bold;
+    color: #000;
+}
+
+.print-agreement-line {
+    font-weight: normal;
+    color: #000;
+}
+
+.contractor-sign-gap {
+    margin-top: 40px;
+}
+
+.officer-gap {
+    margin-top: 30px;
+}
+.print-header-wrap {
+    position: relative;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-top: 6px;
+}
+
+.print-top-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.print-top-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.print-simple-table th.center-head {
+    text-align: center;
+}
+
+.print-particular-cell {
+    text-align: left;
+    line-height: 1.5;
+}
+
+.print-dcf-line {
+    font-weight: bold;
+}
+
+.print-dcf-place {
+    font-weight: bold;
+    margin-top: 0%;
+}
+.rfo-block {
+    display: inline-block;
+    text-align: center;
+    margin-top: 0%;
+}
+
+.rfo-title {
+    font-weight: bold;
+}
+
+.rfo-name {
+    font-weight: bold;
+    margin-top: 0;
+}
+.dcf-block {
+    display: inline-block;
+    text-align: center;
+    margin-top: 0%;
+}
+
+.dcf-title,
+.dcf-place {
+    font-weight: bold;
+    margin-top: 0%;
+}
+@page {
+    size: A4 portrait;
+    margin: 8mm;
+}
+
+@media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #printArea, #printArea * {
+        visibility: visible;
+    }
+
+    #printArea {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        min-height: auto;
+        border: none;
+        margin: 0;
+        padding: 8mm 7mm;
+        box-sizing: border-box;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+}
+
+/* print certificate */
+
+.print-cert-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.print-cert-line {
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+}
+
+.print-cert-block {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.7;
+    text-align: justify;
+}
+
+.print-cert-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.print-cert-footer div {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.print-cert-right {
+    text-align: right;
+}
+
+.print-cert-center {
+    text-align: center;
+}
+.cert-sign-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 28px;
+}
+
+
+
+.cert-sign-center-name {
+    display: inline-block;
+    text-align: center;
+    min-width: 180px;
+}
+
+.dcf-block
+.cert-top-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+
+.cert-para-start {
+    margin-top: 25px;
+    display: block;
+}
+
+.cert-gap {
+    height: 28px;
+    display: block;
+    width: 100%;
+}
+
+.print-cert-block {
+    font-size: 15px;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.cert-sign-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 28px;
+}
+
+.cert-sign-left,
+.cert-sign-right {
+    width: 42%;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.cert-sign-left {
+    text-align: left;
+}
+
+.cert-sign-right {
+    text-align: right;
+}
+
+.officer-block {
+    display: inline-block;
+    text-align: center;
+    min-width: 220px;
+}
+
+.officer-title {
+    font-weight: bold;
+}
+
+.officer-place {
+    font-weight: bold;
+    margin-top: 0.9px;
+    text-align: center;
+}
+
+.cert-top-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.cert-work-block {
+    margin-bottom: 10px;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+/* print memorandum */
+.memo-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 18px;
+    text-transform: uppercase;
+}
+.memo-box {
+    display: flex;
+    border: 2px solid #000;
+    margin-top: 18px;
+    width: 100%;
+    min-height: 500px;
+    box-sizing: border-box;
+}
+
+.memo-left-box {
+    width: 82%;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.memo-right-box {
+    width: 18%;
+    border-left: 2px solid #000;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.memo-line-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.memo-sub-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    margin-left: 40px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.memo-inline-amount {
+    min-width: 120px;
+    text-align: right;
+    display: inline-block;
+}
+
+.memo-balance-row {
+    text-align: center;
+    font-size: 17px;
+    margin: 8px 0 10px 0;
+}
+
+.memo-total-deduction-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 40px;
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+.memo-bottom-balance-row {
+    text-align: center;
+    font-size: 17px;
+    margin-top: 50px;
+    margin-bottom: 8px;
+}
+
+.memo-divider {
+    border-top: 2px solid #000;
+    margin: 10px -16px 10px -16px;
+}
+
+.memo-total-paid-bottom {
+    text-align: right;
+    font-size: 17px;
+    margin-top: 14px;
+    padding-right: 10px;
+}
+
+.memo-right-amount {
+    position: absolute;
+    right: 14px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.memo-right-amount.top {
+    top: 14px;
+}
+
+.memo-right-amount.top2 {
+    top: 94px;
+}
+
+.memo-right-amount.middle {
+    top: 405px;
+}
+
+.memo-right-amount.bottom1 {
+    top: 465px;
+}
+
+.memo-right-amount.bottom2 {
+    bottom: 14px;
+}
+
+
+.memo-sign-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 85px;
+}
+
+.memo-sign-left,
+.memo-sign-right {
+    width: 42%;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.memo-sign-left {
+    text-align: left;
+}
+
+.memo-sign-right {
+    text-align: right;
+}
+
+.memo-center-block {
+    display: inline-block;
+    text-align: center;
+    min-width: 200px;
+}
+/* print work abstract */
+.wa-top-work {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.wa-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.wa-meta {
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 10px;
+    line-height: 1.7;
+}
+
+.wa-schedule {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.wa-vtr {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.wa-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.wa-table th,
+.wa-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.wa-table th {
+    background: #efefef;
+}
+
+.wa-total-line {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+}
+
+.wa-words-line {
+    margin-top: 12px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.wa-passed-line {
+    margin-top: 14px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.wa-grand-total {
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: bold;
+    text-align: right;
+}
+
+/* SIGNATURE ROW */
+.wa-title-top {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.wa-title-main {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+.wa-work-line {
+    text-align: center;
+    font-size: 15px;
+    margin: 8px 0 10px 0;
+    font-weight: bold;
+}
+
+.wa-meta-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.wa-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.wa-table th,
+.wa-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    font-size: 14px;
+    vertical-align: top;
+}
+
+.wa-period {
+    font-size: 15px;
+    margin-top: 4px;
+    font-weight: bold;
+}
+
+.wa-words-left {
+    margin-top: 14px;
+    text-align: left;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.wa-words-right {
+    text-align: right;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.wa-gap-large {
+    height: 55px;
+}
+
+.wa-left-sign-wrap {
+    width: 100%;
+    text-align: left;
+}
+
+.wa-left-sign-block {
+    display: inline-block;
+    text-align: center;
+    min-width: 220px;
+}
+
+.wa-right-sign-wrap {
+    width: 100%;
+    text-align: right;
+}
+
+.wa-right-sign-block {
+    display: inline-block;
+    text-align: center;
+    min-width: 280px;
+}
+
+.wa-sign-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.wa-sign-sub {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* stamp print */
+.stamp-office-top {
+    text-align: right;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+.stamp-line {
+    font-size: 16px;
+    line-height: 1.9;
+    margin-bottom: 8px;
+}
+
+.stamp-words {
+    font-weight: bold;
+}
+
+.stamp-witness {
+    font-size: 15px;
+    line-height: 2.2;
+    margin-top: 18px;
+}
+
+.stamp-witness-line {
+    margin-top: 12px;
+}
+
+.stamp-gap-large {
+    height: 36px;
+}
+
+.stamp-sign-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.stamp-left,
+.stamp-right {
+    width: 42%;
+    font-size: 15px;
+}
+
+.stamp-left {
+    text-align: left;
+}
+
+.stamp-right {
+    text-align: right;
+}
+
+.stamp-right-block {
+    display: inline-block;
+    text-align: center;
+    min-width: 220px;
+}
+
+.stamp-sign-box {
+    width: 140px;
+    height: 42px;
+    border: 1px solid #000;
+    margin: 0 auto 8px auto;
+}
+
+.stamp-payment-block {
+    margin-top: 6px;
+}
+
+.stamp-right-align-block {
+    width: 100%;
+    text-align: right;
+    font-size: 15px;
+}
+.stamp-cent-align-block {
+    width: 100%;
+    text-align: center;
+    font-size: 15px;
+}
+
+.stamp-centered-under {
+    display: inline-block;
+    min-width: 145px;
+    text-align: center;
+    margin-top: 4px;
+}
+
+.stamp-right-note {
+    width: 100%;
+    text-align: left;
+    font-size: 15px;
+}
+
+.stamp-left-align-block {
+    width: 100%;
+    text-align: left;
+    font-size: 15px;
+}
+
+.stamp-centered-under-left {
+    display: inline-block;
+    min-width: 200px;
+    text-align: center;
+    margin-top: 4px;
+}
+
+/*month cashbook */
+.cashbook-card {
+    background: #ffffff;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    border-left: 6px solid #0b4f2f;
+    margin-bottom: 20px;
+}
+
+.cashbook-card h2 {
+    margin-bottom: 18px;
+    color: #0b4f2f;
+    font-size: 26px;
+}
+
+.filter-row {
+    display: flex;
+    gap: 18px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 220px;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #243b2e;
+}
+
+.form-group select {
+    padding: 11px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+    font-size: 15px;
+}
+
+/* CASHBOOK COMMON */
+.cashbook-print-area {
+    background: white;
+    padding: 10mm;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    font-family: "Times New Roman", serif;
+    color: #000;
+    box-sizing: border-box;
+}
+
+.cb-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cb-subtitle {
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.cb-line-flex {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.cb-left-line {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.cb-para {
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: justify;
+}
+
+/* MONTH CASHBOOK TABLE */
+.cb-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.cb-table th,
+.cb-table td {
+    border: 1px solid #000;
+    padding: 6px;
+    vertical-align: top;
+    font-size: 12px;
+}
+
+.cb-date {
+    width: 10%;
+    text-align: center;
+}
+
+.cb-vtr {
+    width: 8%;
+    text-align: center;
+}
+
+.cb-particulars {
+    width: 70%;
+}
+
+.cb-amount {
+    width: 12%;
+    text-align: right;
+}
+
+.cb-work-title {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.cb-item {
+    margin-top: 9px;
+    line-height: 1.4;
+}
+
+.cb-total {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* MINI ITEM TABLE */
+.cb-item-mini-table {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.cb-mini-head,
+.cb-mini-row {
+    display: grid;
+    grid-template-columns: 14% 14% 14% 14% 14%;
+    text-align: center;
+    font-size: 12px;
+    
+}
+
+.cb-mini-head {
+    font-weight: 250;
+    border-bottom: 1px dotted #777;
+    margin-top: 5px;
+}
+
+.cb-mini-row {
+    padding-top: 3px;
+}
+
+/* SIGN */
+.cb-footer {
+    margin-top: 45px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cb-sign {
+    text-align: center;
+    font-weight: bold;
+    min-width: 230px;
+}
+
+/* HEADWISE */
+.cb-headwise-page {
+    width: 198mm;
+    margin: 0 auto;
+    font-family: "Times New Roman", serif;
+    color: #000;
+}
+
+.cb-voucher-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+}
+
+.cb-voucher-table th,
+.cb-voucher-table td {
+    border: 1px solid #000;
+    padding: 5px;
+    font-size: 12px;
+    vertical-align: top;
+}
+
+.cb-item-block {
+    margin-top: 9px;
+    line-height: 1.35;
+}
+
+.cb-bill-total {
+    margin-top: 10px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.cb-final-total {
+    margin-top: 12px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.cb-words {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.cb-sign-right {
+    margin-top: 45px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.cb-sign-block {
+    display: inline-block;
+    min-width: 220px;
+    text-align: center;
+}
+
+/* PRINT */
+@page {
+    size: A4 portrait;
+    margin: 5mm;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    body.print-month-cashbook #monthCashbookPreview,
+    body.print-month-cashbook #monthCashbookPreview * {
+        visibility: visible;
+    }
+
+    body.print-headwise-cashbook #headwiseCashbookPreview,
+    body.print-headwise-cashbook #headwiseCashbookPreview * {
+        visibility: visible;
+    }
+
+    body.print-month-cashbook #monthCashbookPreview,
+    body.print-headwise-cashbook #headwiseCashbookPreview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 202mm;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-sizing: border-box;
+    }
+    .cb-headwise-page{
+        width: 202mm;
+        margin: 0;
+
+    }
+    body.print-classified-abstract #classifiedAbstractPreview,
+body.print-classified-abstract #classifiedAbstractPreview * {
+    visibility: visible;
+}
+
+body.print-classified-abstract #classifiedAbstractPreview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 202mm;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+}
+    </style>
+</head>
+<body>
+
+<div class="voucher-page">
+    <aside class="voucher-sidebar">
+        <h2>Voucher Module</h2>
+        <button onclick="showVoucherSection('createVoucherSection')">Create Voucher</button>
+        <button onclick="showVoucherSection('modifyVoucherSection')">Modify Voucher</button>
+        <button onclick="showVoucherSection('printVoucherSection')">Print Voucher</button>
+        <button onclick="showVoucherSection('cashbookSection')">Cashbook</button>
+        <button onclick="showVoucherSection('completionReportSection')">Completion Report</button>
+    </aside>
+
+    <main class="voucher-main">
+        <div class="voucher-header">
+            <h1>Forest Department Voucher Management System</h1>
+            <p><strong>Welcome.</strong> Here you can create, modify, print vouchers, maintain cashbook and generate completion reports.</p>
+        </div>
+
+        <div id="createVoucherSection" class="voucher-section">
+            <div class="voucher-card">
+                <h3>Create Voucher</h3>
+
+                <div class="voucher-row">
+                    <select id="voucher_scheme">
+                        <option value="">Select Scheme</option>
+                        <option value="GENERAL">GENERAL</option>
+                        <option value="CAMPA">CAMPA</option>
+                    </select>
+
+                    <select id="voucher_month">
+                        <option value="">Select Month</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+
+                    <select id="voucher_head">
+                        <option value="">Select Head</option>
+                    </select>
+
+                    <button class="primary-btn" onclick="loadVoucherIndents()">Load Indents</button>
+                </div>
+
+                <div id="voucher_indent_list"></div>
+            </div>
+        </div>
+
+        <div id="modifyVoucherSection" class="voucher-section">
+    <div class="voucher-card">
+        <h3>Modify Voucher</h3>
+
+        <div class="voucher-row">
+            <select id="modify_scheme">
+                <option value="">Select Scheme</option>
+                <option value="GENERAL">GENERAL</option>
+                <option value="CAMPA">CAMPA</option>
+            </select>
+
+            <select id="modify_month">
+                <option value="">Select Month</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+
+            <select id="modify_head">
+                <option value="">Select Head</option>
+            </select>
+
+            <button class="primary-btn" onclick="loadVouchersForModify()">Load Vouchers</button>
+        </div>
+
+        <div id="modify_voucher_list"></div>
+    </div>
+
+    <div class="voucher-card" id="modifyVoucherEditCard" style="display:none;">
+        <h3>Edit Voucher</h3>
+
+        <input type="hidden" id="edit_voucher_id">
+
+        <div class="voucher-row">
+            <div class="deduction-field">
+                <label>Voucher Number</label>
+                <input type="text" id="edit_voucher_no" readonly>
+            </div>
+
+            <div class="deduction-field">
+                <label>Contractor</label>
+                <select id="edit_contractor"></select>
+            </div>
+
+            <div class="deduction-field">
+                <label>Disbursement Date</label>
+                <input type="date" id="edit_disbursement_date">
+            </div>
+        </div>
+
+        <div class="voucher-row">
+            <div class="deduction-field">
+                <label>Gross Amount</label>
+                <input type="text" id="edit_gross_amount" readonly>
+            </div>
+
+            <div class="deduction-field">
+                <label>VAT %</label>
+                <input type="number" id="edit_vat_percent" step="0.01" value="0">
+            </div>
+
+            <div class="deduction-field">
+                <label>IT %</label>
+                <input type="number" id="edit_it_percent" step="0.01" value="0">
+            </div>
+
+            <div class="deduction-field">
+                <label>SC %</label>
+                <input type="number" id="edit_sc_percent" step="0.01" value="0">
+            </div>
+
+            <div class="deduction-field">
+                <label>ED %</label>
+                <input type="number" id="edit_ed_percent" step="0.01" value="0">
+            </div>
+
+            <div class="deduction-field">
+                <label>Other %</label>
+                <input type="number" id="edit_other_percent" step="0.01" value="0">
+            </div>
+        </div>
+
+        <div class="voucher-row">
+            <div class="deduction-field">
+                <label>Total Deduction</label>
+                <input type="text" id="edit_total_deduction" readonly>
+            </div>
+
+            <div class="deduction-field">
+                <label>Net Amount</label>
+                <input type="text" id="edit_net_amount" readonly>
+            </div>
+        </div>
+        <p id="voucher_limit_note" style="color:red; font-weight:bold;"></p>
+
+        <div class="voucher-card" style="margin-top:20px; padding:15px;">
+        <h3>Voucher SSR Items</h3>
+        <div id="modify_voucher_items_table"></div>
+        </div>
+
+        <div class="voucher-row">
+            <button class="primary-btn" onclick="updateVoucher()">Update Voucher</button>
+        </div>
+    </div>
+</div>
+
+        <div id="printVoucherSection" class="voucher-section">
+    <div class="voucher-card">
+        <h3>Print Voucher</h3>
+
+        <div class="voucher-row">
+            <select id="print_month">
+                <option value="">Select Month</option>
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+
+            <select id="print_head">
+                <option value="">Select Head</option>
+            </select>
+
+            <select id="print_indent_no">
+                <option value="">Select Indent No / SONO</option>
+            </select>
+
+            <button class="primary-btn" onclick="loadPrintIndentList()">Load Indents</button>
+        </div>
+
+        <div id="print_voucher_list"></div>
+    </div>
+
+    <div class="voucher-card" id="pieceWorkPreviewCard" style="display:none;">
+    <div class="voucher-row no-print">
+        <button class="primary-btn" onclick="printVoucherArea()">Print Current Document</button>
+    </div>
+
+    <div id="printArea"></div>
+    </div>
+</div>
+
+        <div id="cashbookSection" class="voucher-section">
+           <div class="cashbook-card">
+    <h2>Month Cashbook</h2>
+
+    <div class="filter-row">
+        <div class="form-group">
+            <label>Select Month</label>
+            <select id="cashbook_month">
+                <option value="">Select Month</option>
+                <option value="April">April - 2026</option>
+                <option value="May">May - 2026</option>
+                <option value="June">June - 2026</option>
+                <option value="July">July - 2026</option>
+                <option value="August">August - 2026</option>
+                <option value="September">September - 2026</option>
+                <option value="October">October - 2026</option>
+                <option value="November">November - 2026</option>
+                <option value="December">December - 2026</option>
+                <option value="January">January - 2027</option>
+                <option value="February">February - 2027</option>
+                <option value="March">March - 2027</option>
+            </select>
+        </div>
+
+             <button class="primary-btn" onclick="loadMonthCashbook()">Load Cashbook</button>
+             <button class="primary-btn" onclick="printCashbook()">Print Cashbook</button>
+         </div>
+    </div>
+
+    <div id="monthCashbookPreview" class="cashbook-print-area"> </div>
+
+    <div class="cashbook-card">
+    <h2>Head Wise Cashbook</h2>
+
+    <div class="filter-row">
+        <div class="form-group">
+            <label>Select Month</label>
+            <select id="headwise_month">
+                <option value="">Select Month</option>
+                <option value="April">April - 2026</option>
+                <option value="May">May - 2026</option>
+                <option value="June">June - 2026</option>
+                <option value="July">July - 2026</option>
+                <option value="August">August - 2026</option>
+                <option value="September">September - 2026</option>
+                <option value="October">October - 2026</option>
+                <option value="November">November - 2026</option>
+                <option value="December">December - 2026</option>
+                <option value="January">January - 2027</option>
+                <option value="February">February - 2027</option>
+                <option value="March">March - 2027</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Head</label>
+            <select id="headwise_head">
+                <option value="">Select Head</option>
+            </select>
+        </div>
+
+        <button class="primary-btn" onclick="loadHeadwiseCashbook()">Load Headwise Cashbook</button>
+        <button class="primary-btn" onclick="printHeadwiseCashbook()">Print Headwise Cashbook</button>
+    </div>
+</div>
+
+<div id="headwiseCashbookPreview" class="cashbook-print-area"></div>
+
+<div class="cashbook-card">
+    <h2>Classified Abstract</h2>
+
+    <div class="filter-row">
+        <div class="form-group">
+            <label>Select Month</label>
+            <select id="classified_month">
+                <option value="">Select Month</option>
+                <option value="April">April - 2026</option>
+                <option value="May">May - 2026</option>
+                <option value="June">June - 2026</option>
+                <option value="July">July - 2026</option>
+                <option value="August">August - 2026</option>
+                <option value="September">September - 2026</option>
+                <option value="October">October - 2026</option>
+                <option value="November">November - 2026</option>
+                <option value="December">December - 2026</option>
+                <option value="January">January - 2027</option>
+                <option value="February">February - 2027</option>
+                <option value="March">March - 2027</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Head</label>
+            <select id="classified_head">
+                <option value="">Select Head</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select SONO / Indent</label>
+            <select id="classified_indent">
+                <option value="">Select SONO</option>
+            </select>
+        </div>
+
+        <button class="primary-btn" onclick="loadClassifiedAbstract()">Load Classified Abstract</button>
+        <button class="primary-btn" onclick="printClassifiedAbstract()">Print Classified Abstract</button>
+    </div>
+</div>
+
+        <div id="classifiedAbstractPreview" class="cashbook-print-area"></div>
+</div>
+
+        <div id="completionReportSection" class="voucher-section">
+            <div class="voucher-card">
+                <h3>Completion Report</h3>
+                <p>Will build next.</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="contractorModal" class="modal">
+    <div class="modal-box">
+        <h3>Select Contractor & Date</h3>
+        <div class="voucher-row">
+            <select id="voucher_contractor">
+                <option value="">Select Contractor</option>
+            </select>
+            <input type="date" id="disbursement_date">
+        </div>
+        <div class="voucher-row">
+            <button class="primary-btn" onclick="openDeductionModal()">Next</button>
+            <button onclick="closeModal('contractorModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="deductionModal" class="modal">
+    <div class="modal-box">
+        <h3>Deduction Details</h3>
+
+        <div class="voucher-row">
+         <div class="deduction-field">
+             <label>VAT %</label>
+                 <input type="number" id="vat_percent" value="0" step="0.01">
+                </div>
+
+                 <div class="deduction-field">
+                 <label>IT %</label>
+                  <input type="number" id="it_percent" value="0" step="0.01">
+                 </div>
+
+                 <div class="deduction-field">
+                 <label>SC %</label>
+                 <input type="number" id="sc_percent" value="0" step="0.01">
+                 </div>
+
+                         <div class="deduction-field">
+                     <label>ED %</label>
+                 <input type="number" id="ed_percent" value="0" step="0.01">
+                    </div>
+
+                <div class="deduction-field">
+                     <label>Other %</label>
+                 <input type="number" id="other_percent" value="0" step="0.01">
+                     </div>
+            </div>
+        <div class="voucher-row">
+            <button class="primary-btn" onclick="createVoucher()">Create Voucher</button>
+            <button onclick="closeModal('deductionModal')">Cancel</button>
+        </div>
+    </div>
+</div>
+<div id="voucherSuccessModal" class="modal">
+    <div class="modal-box">
+        <h3>Voucher Created Successfully</h3>
+        <p>
+            Total Vouchers Created: 
+            <strong id="voucher_count_text">0</strong>
+        </p>
+
+        <div id="voucher_success_table"></div>
+
+        <div class="voucher-row" style="margin-top:15px;">
+            <button class="primary-btn" onclick="closeModal('voucherSuccessModal')">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedVoucherIndentId = null;
+let selectedVoucherIndentAmount = 0;
+                 // create voucher
+function showVoucherSection(sectionId) {
+    document.querySelectorAll(".voucher-section").forEach(sec => {
+        sec.style.display = "none";
+    });
+
+    document.getElementById(sectionId).style.display = "block";
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function selectVoucherIndent(indentId, amount) {
+    selectedVoucherIndentId = indentId;
+    selectedVoucherIndentAmount = amount;
+    document.getElementById("selected_indent_amount").innerText = parseFloat(amount).toFixed(2);
+}
+
+function loadVoucherHeads() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-indent-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const headSelect = document.getElementById("voucher_head");
+            headSelect.innerHTML = `<option value="">Select Head</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    headSelect.innerHTML += `<option value="${row.hoa_name}">${row.hoa_name}</option>`;
+                });
+            }
+        })
+        .catch(err => {
+            console.log("LOAD VOUCHER HEADS ERROR:", err);
+        });
+}
+
+function loadVoucherIndents() {
+    const user_id = localStorage.getItem("user_id");
+    const scheme_name = document.getElementById("voucher_scheme").value;
+    const month_name = document.getElementById("voucher_month").value;
+    const head_name = document.getElementById("voucher_head").value;
+
+    if (!scheme_name || !month_name || !head_name) {
+        alert("Please select scheme, month and head.");
+        return;
+    }
+
+    fetch(`/get-voucher-indents?user_id=${user_id}&scheme_name=${encodeURIComponent(scheme_name)}&month_name=${encodeURIComponent(month_name)}&head_name=${encodeURIComponent(head_name)}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+
+            if (data.success && data.indents.length > 0) {
+                html += `
+                    <table class="voucher-table">
+                        <tr>
+                            <th>Select</th>
+                            <th>Indent No</th>
+                            <th>SONO</th>
+                            <th>Total Amount</th>
+                        </tr>
+                `;
+
+                data.indents.forEach(row => {
+                    html += `
+                        <tr>
+                            <td><input type="radio" name="selected_indent" onclick="selectVoucherIndent(${row.id}, ${row.total_amount})"></td>
+                            <td>${row.indent_no}</td>
+                            <td>${row.sanction_no || ''}</td>
+                            <td>${parseFloat(row.total_amount).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                html += `</table>
+                    <div style="margin-top:15px;">
+                        <p><strong>Selected Indent Amount:</strong> <span id="selected_indent_amount">0.00</span></p>
+                        <button class="primary-btn" onclick="openContractorModal()">Continue</button>
+                    </div>`;
+            } else {
+                html = `<p>No indents found.</p>`;
+            }
+
+            document.getElementById("voucher_indent_list").innerHTML = html;
+        })
+        .catch(err => {
+            console.log("LOAD VOUCHER INDENTS ERROR:", err);
+            alert("Error loading indents");
+        });
+}
+
+function openContractorModal() {
+    if (!selectedVoucherIndentId) {
+        alert("Please select indent.");
+        return;
+    }
+
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-contractors?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const contractorSelect = document.getElementById("voucher_contractor");
+            contractorSelect.innerHTML = `<option value="">Select Contractor</option>`;
+
+            if (data.success && data.contractors) {
+                data.contractors.forEach(row => {
+                    contractorSelect.innerHTML += `<option value="${row.contractor_name}">${row.contractor_name}</option>`;
+                });
+            }
+
+            document.getElementById("contractorModal").style.display = "flex";
+        })
+        .catch(err => {
+            console.log("LOAD CONTRACTORS ERROR:", err);
+            alert("Error loading contractors");
+        });
+}
+
+function openDeductionModal() {
+    const contractor = document.getElementById("voucher_contractor").value;
+    const disbursement_date = document.getElementById("disbursement_date").value;
+
+    if (!contractor || !disbursement_date) {
+        alert("Please select contractor and date.");
+        return;
+    }
+
+    closeModal("contractorModal");
+    document.getElementById("deductionModal").style.display = "flex";
+}
+
+function createVoucher() {
+    const user_id = localStorage.getItem("user_id");
+
+    const payload = {
+        user_id,
+        scheme_name: document.getElementById("voucher_scheme").value,
+        month_name: document.getElementById("voucher_month").value,
+        head_name: document.getElementById("voucher_head").value,
+        indent_id: selectedVoucherIndentId,
+        contractor_name: document.getElementById("voucher_contractor").value,
+        disbursement_date: document.getElementById("disbursement_date").value,
+        vat_percent: document.getElementById("vat_percent").value || 0,
+        it_percent: document.getElementById("it_percent").value || 0,
+        sc_percent: document.getElementById("sc_percent").value || 0,
+        ed_percent: document.getElementById("ed_percent").value || 0,
+        other_percent: document.getElementById("other_percent").value || 0
+    };
+
+    fetch("/create-voucher", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+    closeModal("deductionModal");
+
+    document.getElementById("voucher_count_text").innerText = data.voucher_count || 0;
+
+    let tableHtml = `
+        <table class="voucher-table">
+            <tr>
+                <th>Voucher Number</th>
+                <th>Amount</th>
+            </tr>
+    `;
+
+    (data.vouchers || []).forEach(v => {
+        tableHtml += `
+            <tr>
+                <td>${v.voucher_no}</td>
+                <td>${parseFloat(v.amount).toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    tableHtml += `</table>`;
+
+    document.getElementById("voucher_success_table").innerHTML = tableHtml;
+    document.getElementById("voucherSuccessModal").style.display = "flex";
+
+    selectedVoucherIndentId = null;
+    selectedVoucherIndentAmount = 0;
+
+    loadVoucherIndents();
+} else {
+            alert(data.message || "Failed to create voucher");
+        }
+    })
+    .catch(err => {
+        console.log("CREATE VOUCHER ERROR:", err);
+        alert("Error creating voucher");
+    });
+}
+
+window.onload = function () {
+    loadVoucherHeads();
+    loadModifyHeads();
+    loadPrintHeads();
+    loadHeadwiseHeads();
+    loadClassifiedHeads();
+
+    document.getElementById("print_indent_no").addEventListener("change", loadPieceWorkVoucherList);
+};
+
+         // modify voucher
+function loadModifyHeads() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-indent-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const headSelect = document.getElementById("modify_head");
+            headSelect.innerHTML = `<option value="">Select Head</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    headSelect.innerHTML += `<option value="${row.hoa_name}">${row.hoa_name}</option>`;
+                });
+            }
+        })
+        .catch(err => {
+            console.log("LOAD MODIFY HEADS ERROR:", err);
+        });
+}
+
+function loadVouchersForModify() {
+    const user_id = localStorage.getItem("user_id");
+    const scheme_name = document.getElementById("modify_scheme").value;
+    const month_name = document.getElementById("modify_month").value;
+    const head_name = document.getElementById("modify_head").value;
+
+    if (!scheme_name || !month_name || !head_name) {
+        alert("Please select scheme, month and head.");
+        return;
+    }
+
+    fetch(`/get-vouchers-for-modify?user_id=${user_id}&scheme_name=${encodeURIComponent(scheme_name)}&month_name=${encodeURIComponent(month_name)}&head_name=${encodeURIComponent(head_name)}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+
+            if (data.success && data.data.length > 0) {
+                html += `
+                    <table class="voucher-table">
+                        <tr>
+                            <th>Select</th>
+                            <th>Voucher No</th>
+                            <th>Indent No</th>
+                            <th>SONO</th>
+                            <th>Contractor</th>
+                            <th>Gross Amount</th>
+                            <th>Net Amount</th>
+                        </tr>
+                `;
+
+                data.data.forEach(row => {
+                    html += `
+                        <tr>
+                            <td><button class="primary-btn" onclick="editVoucher(${row.id})">Edit</button></td>
+                            <td>${row.voucher_no}</td>
+                            <td>${row.indent_no || ''}</td>
+                            <td>${row.sono || ''}</td>
+                            <td>${row.contractor_name || ''}</td>
+                            <td>${parseFloat(row.gross_amount || 0).toFixed(2)}</td>
+                            <td>${parseFloat(row.net_amount || 0).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                html += `</table>`;
+            } else {
+                html = `<p>No vouchers found.</p>`;
+            }
+
+            document.getElementById("modify_voucher_list").innerHTML = html;
+            document.getElementById("modifyVoucherEditCard").style.display = "none";
+        })
+        .catch(err => {
+            console.log("LOAD MODIFY VOUCHERS ERROR:", err);
+            alert("Error loading vouchers");
+        });
+}
+
+function editVoucher(voucherId) {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-contractors?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(contractorData => {
+            return fetch(`/get-voucher-with-items/${voucherId}?user_id=${user_id}`)
+                .then(res => res.json())
+                .then(voucherData => {
+                    if (!voucherData.success) {
+                        alert(voucherData.message || "Voucher not found");
+                        return;
+                    }
+
+                    const contractorSelect = document.getElementById("edit_contractor");
+                    contractorSelect.innerHTML = `<option value="">Select Contractor</option>`;
+
+                    if (contractorData.success && contractorData.contractors) {
+                        contractorData.contractors.forEach(row => {
+                            contractorSelect.innerHTML += `<option value="${row.contractor_name}">${row.contractor_name}</option>`;
+                        });
+                    }
+
+                    const v = voucherData.voucher;
+
+                    document.getElementById("edit_voucher_id").value = v.id;
+                    document.getElementById("edit_voucher_no").value = v.voucher_no || "";
+                    document.getElementById("edit_contractor").value = v.contractor_name || "";
+                    document.getElementById("edit_disbursement_date").value = v.disbursement_date ? String(v.disbursement_date).split("T")[0] : "";
+                    document.getElementById("edit_gross_amount").value = parseFloat(v.gross_amount || 0).toFixed(2);
+                    document.getElementById("edit_vat_percent").value = v.vat_percent || 0;
+                    document.getElementById("edit_it_percent").value = v.it_percent || 0;
+                    document.getElementById("edit_sc_percent").value = v.sc_percent || 0;
+                    document.getElementById("edit_ed_percent").value = v.ed_percent || 0;
+                    document.getElementById("edit_other_percent").value = v.other_percent || 0;
+                    document.getElementById("edit_total_deduction").value = parseFloat(v.total_deduction || 0).toFixed(2);
+                    document.getElementById("edit_net_amount").value = parseFloat(v.net_amount || 0).toFixed(2);
+
+                    renderVoucherItemsTable(voucherData.items || []);
+                    document.getElementById("modifyVoucherEditCard").style.display = "block";
+
+                    calculateModifiedVoucherTotals();
+                });
+        })
+        .catch(err => {
+            console.log("EDIT VOUCHER ERROR:", err);
+            alert("Error loading voucher");
+        });
+}
+
+function calculateModifiedVoucherTotals() {
+    const gross = parseFloat(document.getElementById("edit_gross_amount").value || 0);
+    const vatP = parseFloat(document.getElementById("edit_vat_percent").value || 0);
+    const itP = parseFloat(document.getElementById("edit_it_percent").value || 0);
+    const scP = parseFloat(document.getElementById("edit_sc_percent").value || 0);
+    const edP = parseFloat(document.getElementById("edit_ed_percent").value || 0);
+    const otherP = parseFloat(document.getElementById("edit_other_percent").value || 0);
+
+    const vat = gross * vatP / 100;
+    const it = gross * itP / 100;
+    const sc = gross * scP / 100;
+    const ed = gross * edP / 100;
+    const other = gross * otherP / 100;
+
+    const totalDeduction = vat + it + sc + ed + other;
+    const netAmount = gross - totalDeduction;
+
+    document.getElementById("edit_total_deduction").value = totalDeduction.toFixed(2);
+    document.getElementById("edit_net_amount").value = netAmount.toFixed(2);
+}
+
+document.addEventListener("input", function (e) {
+    const deductionIds = [
+        "edit_vat_percent",
+        "edit_it_percent",
+        "edit_sc_percent",
+        "edit_ed_percent",
+        "edit_other_percent"
+    ];
+
+    if (deductionIds.includes(e.target.id)) {
+        calculateModifiedVoucherTotals();
+    }
+
+    if (e.target.classList.contains("item-voucher-amount")) {
+        recalculateVoucherGrossFromItems();
+    }
+});
+
+function updateVoucher() {
+    const voucherId = document.getElementById("edit_voucher_id").value;
+    const user_id = localStorage.getItem("user_id");
+    const items = getEditedVoucherItems();
+
+    const grossAmount = parseFloat(document.getElementById("edit_gross_amount").value || 0);
+
+    if (grossAmount > 100000) {
+        alert("Voucher total cannot exceed 1 lakh.");
+        return;
+    }
+
+    const payload = {
+        user_id,
+        contractor_name: document.getElementById("edit_contractor").value,
+        disbursement_date: document.getElementById("edit_disbursement_date").value,
+        vat_percent: document.getElementById("edit_vat_percent").value || 0,
+        it_percent: document.getElementById("edit_it_percent").value || 0,
+        sc_percent: document.getElementById("edit_sc_percent").value || 0,
+        ed_percent: document.getElementById("edit_ed_percent").value || 0,
+        other_percent: document.getElementById("edit_other_percent").value || 0,
+        items
+    };
+
+    if (!payload.contractor_name || !payload.disbursement_date) {
+        alert("Please select contractor and disbursement date.");
+        return;
+    }
+
+    fetch(`/update-voucher-full/${voucherId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Voucher updated successfully");
+            loadVouchersForModify();
+            document.getElementById("modifyVoucherEditCard").style.display = "none";
+        } else {
+            alert(data.message || "Failed to update voucher");
+        }
+    })
+    .catch(err => {
+        console.log("UPDATE FULL VOUCHER FRONTEND ERROR:", err);
+        alert("Error updating voucher");
+    });
+}
+
+function renderVoucherItemsTable(items) {
+    let html = "";
+
+    if (!items || items.length === 0) {
+        html = "<p>No voucher items found.</p>";
+        document.getElementById("modify_voucher_items_table").innerHTML = html;
+        return;
+    }
+
+    html += `
+        <table class="voucher-table" id="editableVoucherItemsTable">
+            <tr>
+                <th>Sr No</th>
+                <th>Particulars</th>
+                <th>Qty</th>
+                <th>Unit</th>
+                <th>Rate</th>
+                <th>Original Amount</th>
+                <th>Voucher Amount</th>
+                <th>ACF Date</th>
+                <th>NB No</th>
+                <th>Page No</th>
+                <th>POW</th>
+                <th>RFO Date</th>
+                <th>Wages From</th>
+                <th>Wages</th>
+            </tr>
+    `;
+
+    items.forEach((item, index) => {
+    html += `
+        <tr class="voucher-item-row">
+            <td>
+                <input type="hidden" class="item-indent-item-id" value="${item.indent_item_id || ''}">
+                <input type="hidden" class="item-rate-per" value="${item.rate_per || 0}">
+                <input type="hidden" class="item-times-days" value="${item.times_days || 0}">
+                <input type="hidden" class="item-row-id" value="${item.id || ''}">
+                <input type="text" class="item-sr-no" value="${item.sr_no || ''}" style="width:70px;">
+            </td>
+
+            <td>
+                <textarea class="item-particulars" rows="2" style="width:220px;">${item.particulars || ''}</textarea>
+            </td>
+
+            <td>
+                <input type="number" class="item-qty" value="${item.qty || 0}" step="0.01" style="width:80px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-unit" value="${item.unit || ''}" style="width:70px;">
+            </td>
+
+            <td>
+                <input type="number" class="item-rate" value="${item.rate || 0}" step="0.01" style="width:90px;">
+            </td>
+
+            <td>
+                <input type="number" class="item-original-amount" value="${item.original_amount || 0}" step="0.01" style="width:110px;">
+            </td>
+
+            <td>
+                <input type="number" class="item-voucher-amount" value="${item.voucher_split_amount || 0}" step="0.01" style="width:110px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-acf-date" value="${item.acf_date || ''}" style="width:100px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-nb-no" value="${item.nb_no || ''}" style="width:90px;">
+            </td>
+
+            <td>
+                 <input type="text" class="item-page-no" value="${item.page_no || ''}" style="width:90px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-pow" value="${item.pow || ''}" style="width:90px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-rfo-date" value="${item.rfo_date || ''}" style="width:100px;">
+            </td>
+
+            <td>
+                <input type="text" class="item-wages-from" value="${item.wages_from || ''}" style="width:100px;">
+            </td>
+
+            <td>
+                <input type="number" class="item-wages" value="${item.wages || 0}" step="0.01" style="width:90px;">
+            </td>
+        </tr>
+    `;
+});
+
+    html += `</table>`;
+
+    document.getElementById("modify_voucher_items_table").innerHTML = html;
+}
+
+function recalculateVoucherGrossFromItems() {
+    const rows = document.querySelectorAll(".voucher-item-row");
+    let gross = 0;
+
+    rows.forEach(row => {
+        const amountInput = row.querySelector(".item-voucher-amount");
+        gross += parseFloat(amountInput.value || 0);
+    });
+
+    document.getElementById("edit_gross_amount").value = gross.toFixed(2);
+    calculateModifiedVoucherTotals();
+
+    const note = document.getElementById("voucher_limit_note");
+
+    if (gross > 100000) {
+        document.getElementById("edit_gross_amount").style.border = "2px solid red";
+        note.innerText = "Voucher total cannot exceed 1 lakh.";
+    } else {
+        document.getElementById("edit_gross_amount").style.border = "";
+        note.innerText = "";
+    }
+}
+
+function getEditedVoucherItems() {
+    const rows = document.querySelectorAll(".voucher-item-row");
+    const items = [];
+
+    rows.forEach(row => {
+        items.push({
+            indent_item_id: row.querySelector(".item-indent-item-id")?.value || null,
+            sr_no: row.querySelector(".item-sr-no")?.value || "",
+            particulars: row.querySelector(".item-particulars")?.value || "",
+            qty: parseFloat(row.querySelector(".item-qty")?.value || 0),
+            days: 0,
+            unit: row.querySelector(".item-unit")?.value || "",
+            rate: parseFloat(row.querySelector(".item-rate")?.value || 0),
+            rate_per: parseFloat(row.querySelector(".item-rate-per")?.value || 0),
+            original_amount: parseFloat(row.querySelector(".item-original-amount")?.value || 0),
+            voucher_split_amount: parseFloat(row.querySelector(".item-voucher-amount")?.value || 0),
+            acf_date: row.querySelector(".item-acf-date")?.value || "",
+            nb_no: row.querySelector(".item-nb-no")?.value || "",
+            page_no: row.querySelector(".item-page-no")?.value || "",
+            pow: row.querySelector(".item-pow")?.value || "",
+            rfo_date: row.querySelector(".item-rfo-date")?.value || "",
+            wages_from: row.querySelector(".item-wages-from")?.value || "",
+            wages: parseFloat(row.querySelector(".item-wages")?.value || 0),
+            times_days: parseFloat(row.querySelector(".item-times-days")?.value || 0)
+        });
+    });
+
+    return items;
+}
+
+// print voucher
+
+function loadPrintHeads() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-indent-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const headSelect = document.getElementById("print_head");
+            headSelect.innerHTML = `<option value="">Select Head</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    headSelect.innerHTML += `<option value="${row.hoa_name}">${row.hoa_name}</option>`;
+                });
+            }
+        })
+        .catch(err => {
+            console.log("LOAD PRINT HEADS ERROR:", err);
+        });
+}
+
+function loadPrintIndentList() {
+    const user_id = localStorage.getItem("user_id");
+    const month_name = document.getElementById("print_month").value;
+    const head_name = document.getElementById("print_head").value;
+
+    if (!month_name || !head_name) {
+        alert("Please select month and head.");
+        return;
+    }
+
+    fetch(`/get-print-indent-list?user_id=${user_id}&month_name=${encodeURIComponent(month_name)}&head_name=${encodeURIComponent(head_name)}`)
+        .then(res => res.json())
+        .then(data => {
+            const indentSelect = document.getElementById("print_indent_no");
+            indentSelect.innerHTML = `<option value="">Select Indent No / SONO</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    indentSelect.innerHTML += `<option value="${row.id}">Indent ${row.indent_no} - SONO ${row.sanction_no || ''}</option>`;
+                });
+            }
+
+            if (data.success && data.data && data.data.length > 0) {
+                loadPieceWorkVoucherList();
+            } else {
+                document.getElementById("print_voucher_list").innerHTML = `<p>No printed vouchers found for this filter.</p>`;
+            }
+        })
+        .catch(err => {
+            console.log("LOAD PRINT INDENT LIST ERROR:", err);
+            alert("Error loading indent list");
+        });
+}
+
+function loadPieceWorkVoucherList() {
+    const user_id = localStorage.getItem("user_id");
+    const indent_id = document.getElementById("print_indent_no").value;
+
+    if (!indent_id) {
+        document.getElementById("print_voucher_list").innerHTML = "";
+        return;
+    }
+
+    fetch(`/get-piece-work-vouchers?user_id=${user_id}&indent_id=${indent_id}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+
+            if (data.success && data.data.length > 0) {
+                html += `
+                    <table class="voucher-table">
+                        <tr>
+                            <th>Select</th>
+                            <th>VTR No</th>
+                            <th>Contractor</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                        </tr>
+                `;
+
+                data.data.forEach(row => {
+                    html += `
+                        <tr>
+ <td>
+    <button class="primary-btn" onclick="previewPieceWorkAgreement(${row.id})">Piece Work</button>
+    <button class="primary-btn" onclick="previewContractCertificate(${row.id})" style="margin-top:5px;">Contract Certificate</button>
+    <button class="primary-btn" onclick="previewMemorandumOfPayment(${row.id})" style="margin-top:5px;">Memorandum</button>
+    <button class="primary-btn" onclick="previewWorkAbstract(${row.id})" style="margin-top:5px;">Work Abstract</button>
+    <button class="primary-btn" onclick="previewStampPage(${row.id})" style="margin-top:5px;">Stamp</button>
+</td>
+                            <td>${row.voucher_no}</td>
+                            <td>${row.contractor_name || ""}</td>
+                            <td>${row.disbursement_date ? String(row.disbursement_date).split("T")[0] : ""}</td>
+                            <td>${parseFloat(row.gross_amount || 0).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                html += `</table>`;
+            } else {
+                html = `<p>No vouchers found for selected indent.</p>`;
+            }
+
+            document.getElementById("print_voucher_list").innerHTML = html;
+            document.getElementById("pieceWorkPreviewCard").style.display = "none";
+        })
+        .catch(err => {
+            console.log("LOAD PIECE WORK VOUCHERS ERROR:", err);
+            alert("Error loading vouchers");
+        });
+}
+              
+             //print piece of agreement
+function formatRunningYear(text, indentMonthValue = "") {
+    const source = `${text || ""} ${indentMonthValue || ""}`;
+
+    let match = source.match(/(20\d{2})\s*-\s*(20\d{2})/);
+    if (match) {
+        return `${match[1]}-${match[2].slice(-2)}`;
+    }
+
+    match = source.match(/(20\d{2})\s*to\s*(20\d{2})/i);
+    if (match) {
+        return `${match[1]}-${match[2].slice(-2)}`;
+    }
+
+    match = source.match(/(20\d{2})\s*(20\d{2})/);
+    if (match) {
+        return `${match[1]}-${match[2].slice(-2)}`;
+    }
+
+    const currentYear = new Date().getFullYear();
+    return `${currentYear}-${String(currentYear + 1).slice(-2)}`;
+}
+
+function previewPieceWorkAgreement(voucherId) {
+    selectedVoucherId = voucherId;
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-piece-work-agreement/${voucherId}?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("PIECE WORK RESPONSE:", data);
+
+            if (!data.success || !data.data) {
+                alert(data.message || "Piece Work data not found");
+                return;
+            }
+
+            renderPieceWorkAgreement(data.data);
+            document.getElementById("pieceWorkPreviewCard").style.display = "block";
+        })
+        .catch(err => {
+            console.log("PREVIEW PIECE WORK ERROR:", err);
+            alert("Error loading Piece Work Agreement");
+        });
+}
+
+function renderPieceWorkAgreement(d) {
+     console.log("PIECE WORK DATA:", d);
+    const workName = d.estimate_work || d.work_type || "";
+    const runningYear = formatRunningYear(workName, d.indent_month || "");
+    const rangeName = d.range_name || d.estimate_range_name || "";
+    const divisionName = d.division || d.estimate_division || "";
+    const subDivisionName = d.sub_division || d.estimate_subdivision || "";
+    const contractorName = d.contractor_name || "";
+   const amount = parseFloat(
+    Number(d.rounded_gross_amount) > 0 
+        ? d.rounded_gross_amount 
+        : d.gross_amount
+).toFixed(2);
+    const location = d.location || "-";
+    const extent = d.extent || "-";
+
+    const html = `
+        <div class="print-header-wrap">
+            <div class="print-top-left">PARA-125</div>
+            <div class="print-top-right">FAC-84</div>
+
+            <img src="/logo.png" alt="Forest Department Logo" class="print-logo">
+            <div class="print-doc-title">KARNATAKA FOREST DEPARTMENT</div>
+            <div class="print-doc-subtitle">PIECE WORK AGREEMENT</div>
+        </div>
+     
+        <div class="print-paragraph">
+            I <strong>${contractorName}</strong> of Forest Contractor do hereby agree to execute the under mentioned piece work in accordance with the conditions noted below in consideration of the payment being made for the quality of the work executed at S.S.R of <strong>${runningYear}</strong> when any materials for the work are provided by the Government, such materials and the rates to be paid for them shall be as provided in the schedule.
+        </div>
+
+        <div class="print-paragraph">
+            The rules and orders regarding Forestry/Civil Works have been read by me and I agree to carryout Forestry/Civil works in full conformity with the rules and orders and to hold myself responsible for the proper observance.
+        </div>
+
+        <div class="print-work-name">
+            Name of the work: ${workName}
+        </div>
+
+        <table class="print-simple-table">
+            <tr>
+                <th style="width:12%;" class="center-text">Sl.No</th>
+                <th class="center-head">Particulars of work</th>
+                <th style="width:22%;" class="right-text">Amount</th>
+            </tr>
+            <tr>
+                <td class="center-text">1</td>
+                <td class="print-particular-cell">
+                    ${workName}<br>
+                    <strong>Location</strong> ${location}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <strong>Extent:</strong> ${extent}
+                </td>
+                <td class="right-text">${amount}</td>
+            </tr>
+        </table>
+
+        <div class="print-total-line">Total Amount : ${amount}</div>
+
+        <div class="contractor-sign-gap"></div>
+
+        <div class="signature-block signature-right">
+            <div class="print-signature-label">Signature of the Contractor</div>
+        </div>
+
+        <div class="officer-gap"></div>
+
+        <div class="signature-block signature-left">
+    <div class="rfo-block">
+        <div class="rfo-title">Range Forest Officer</div>
+        <div class="rfo-name">${rangeName}</div>
+    </div>
+</div>
+
+        <div class="officer-gap"></div>
+
+        <div class="signature-block signature-right">
+            <div class="print-agreement-line">"The above agreement is hereby accepted by me on behalf of the Governor of Karnataka"</div>
+        </div>
+
+        <div class="officer-gap"></div>
+
+       <div class="signature-block signature-right">
+    <div class="dcf-block">
+        <div class="dcf-title">Deputy Conservator of Forests</div>
+        <div class="dcf-place">${divisionName} Division,${subDivisionName}</div>
+    </div>
+</div>
+    `;
+
+    document.getElementById("printArea").innerHTML = html;
+}
+
+function printVoucherArea() {
+    window.print();
+}
+
+            // print certificate
+function previewContractCertificate(voucherId) {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-contractor-certificate/${voucherId}?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Certificate data not found");
+                return;
+            }
+
+            renderContractCertificate(data.data);
+            document.getElementById("pieceWorkPreviewCard").style.display = "block";
+        })
+        .catch(err => {
+            console.log("PREVIEW CONTRACT CERTIFICATE ERROR:", err);
+            alert("Error loading contract certificate");
+        });
+}
+
+function formatRunningYearFromDate(dateStr) {
+    if (!dateStr) return "";
+
+    const d = new Date(dateStr);
+    if (isNaN(d)) return "";
+
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+
+    let startYear, endYear;
+
+    if (month >= 4) {
+        startYear = year;
+        endYear = year + 1;
+    } else {
+        startYear = year - 1;
+        endYear = year;
+    }
+
+    return `${startYear}-${String(endYear).slice(-2)}`;
+}
+
+function formatDateLong(dateStr) {
+    if (!dateStr) return "";
+
+    const d = new Date(dateStr);
+    if (isNaN(d)) return "";
+
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = d.toLocaleString("en-IN", { month: "short" });
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+}
+
+function renderContractCertificate(d) {
+    const displayDate = formatDateLong(d.disbursement_date);
+    const runningYear = formatRunningYearFromDate(d.disbursement_date);
+    const workName = d.estimate_work || "";
+    const workLine = `Estimate for ${workName} during ${runningYear}`;
+    const contractorName = d.contractor_name || "";
+    const headName = d.head_name || d.hoa_name || "";
+    const rangeName = d.range_name || d.estimate_range_name || "";
+    const divisionName = d.division || d.estimate_division || "";
+    const subDivisionName = d.sub_division || d.estimate_subdivision || "";
+    const nbNo = d.nb_no || "";
+    const pageNo = d.page_no || "";
+    const acfDate = d.acf_date || "N/A";
+
+    const html = `
+        <div class="print-cert-title">CONTRACT CERTIFICATE</div>
+
+        <div class="cert-top-line">
+            <div><strong>No:-</strong> ________ / ${runningYear}</div>
+            <div><strong>Date:</strong> ${displayDate}</div>
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Bill Received No.:</strong> ____________
+            &nbsp;&nbsp;&nbsp;
+            <strong>Dated:</strong> ${displayDate}
+            &nbsp;&nbsp;&nbsp;
+            <strong>Cash Book:</strong> ____________
+            &nbsp;&nbsp;&nbsp;
+            <strong>Vr. No:</strong> ${d.voucher_no || ""}
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Sanction Order No:-</strong> ${d.sanction_no || ""}
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Head of Account:-</strong> ${headName}
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Name of the work (as per sanctioned estimate):</strong>
+        </div>
+
+        <div class="cert-work-block">
+            ${workLine}
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Name of the Contractor and full address :-</strong> ${contractorName}
+        </div>
+
+        <div class="print-cert-line">
+            <strong>Reference to agreement No:-</strong> ........................................
+            &nbsp;&nbsp;&nbsp;
+            <strong>Date:-</strong> ........................................
+        </div>
+
+        <div class="cert-gap"></div>
+
+        <div class="print-cert-block">
+            Certified that the measurement were taken by me on C.M DATE: ${acfDate} on and recorded on PAGE NO: ${pageNo || "........"} of FNB/MB: ${nbNo || "........"} and that the work is satisfactorily executed.
+        </div>
+
+        <div class="cert-gap"></div>
+
+        <div class="cert-sign-row">
+            <div class="cert-sign-left">
+                <div class="officer-block">
+                    <div class="officer-title">Contractor Signature</div>
+                </div>
+            </div>
+
+            <div class="cert-sign-right">
+                <div class="officer-block">
+                    <div class="officer-title">Range Forest Officer</div>
+                    <div class="officer-place">${rangeName}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cert-gap"></div>
+
+        <div class="print-cert-block">
+            Certified that the measurements were checked by ACF ${divisionName}${subDivisionName ? ` ${subDivisionName}` : ""} on C.M DATE: ${acfDate} and found correct. The work is satisfactorily executed.
+             
+         </div>
+
+        <div class="cert-gap"></div>
+
+        <div class="print-cert-block">
+            Certified that the quantities of Materials shown in column 3 of account I have been actually brought to site of the work and contractor has not previously received any advance on this security. These materials are not of an imperishable nature and are all required by the contractor for immediate use on the work in connection with items for which rates for finished works have been agreed upon. A formal agreement signed and executed by the contractor is recorded in the division office.
+        </div>
+
+        <div class="cert-gap"></div>
+
+        <div class="cert-sign-row">
+            <div class="cert-sign-left">
+                <div class="officer-block">
+                    <div class="officer-title">Range Forest Officer</div>
+                    <div class="officer-place">${rangeName}</div>
+                </div>
+            </div>
+
+            <div class="cert-sign-right">
+                <div class="officer-block">
+                    <div class="officer-title">Assistant Conservator of Forests</div>
+                    <div class="officer-place">${divisionName} Division,${subDivisionName ? ` ${subDivisionName}` : ""}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("printArea").innerHTML = html;
+}
+
+            // print  memorandum
+
+function previewMemorandumOfPayment(voucherId) {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-memorandum-of-payment/${voucherId}?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Memorandum data not found");
+                return;
+            }
+
+            renderMemorandumOfPayment(data.data);
+            document.getElementById("pieceWorkPreviewCard").style.display = "block";
+        })
+        .catch(err => {
+            console.log("PREVIEW MEMORANDUM ERROR:", err);
+            alert("Error loading memorandum");
+        });
+}
+
+function renderMemorandumOfPayment(d) {
+    console.log("PIECE WORK DATA:", d);
+   const grossAmount = parseFloat(
+    Number(d.rounded_gross_amount) > 0 
+        ? d.rounded_gross_amount 
+        : d.gross_amount
+).toFixed(2);
+const exactGrossAmount = parseFloat(d.gross_amount || 0).toFixed(2);
+const roundOff = parseFloat(d.round_off || 0).toFixed(2);
+    const totalDeduction = parseFloat(d.total_deduction || 0).toFixed(2);
+   const netAmount = parseFloat(
+    Number(d.rounded_gross_amount) > 0 
+        ? (d.rounded_gross_amount - (d.total_deduction || 0))
+        : d.net_amount
+).toFixed(2);
+
+    const vatPercent = parseFloat(d.vat_percent || 0).toFixed(2);
+    const vatAmount = parseFloat(d.vat_amount || 0).toFixed(2);
+
+    const itPercent = parseFloat(d.it_percent || 0).toFixed(2);
+    const itAmount = parseFloat(d.it_amount || 0).toFixed(2);
+
+    const scPercent = parseFloat(d.sc_percent || 0).toFixed(2);
+    const scAmount = parseFloat(d.sc_amount || 0).toFixed(2);
+
+    const edPercent = parseFloat(d.ed_percent || 0).toFixed(2);
+    const edAmount = parseFloat(d.ed_amount || 0).toFixed(2);
+
+    const otherPercent = parseFloat(d.other_percent || 0).toFixed(2);
+    const otherAmount = parseFloat(d.other_amount || 0).toFixed(2);
+
+    const rangeName = d.range_name || d.estimate_range_name || "";
+
+    const html = `
+        <div class="memo-title">MEMORANDUM OF PAYMENT</div>
+
+        <div class="memo-box">
+            <div class="memo-left-box">
+                <div class="memo-line-row">
+                    <div>1) Total value of work done or supplies made as per Account within......</div>
+                </div>
+
+                <div class="memo-line-row">
+                    <div>2) Deduct amount to be held in reserve being .......</div>
+                    <div class="memo-inline-amount">0.00</div>
+                </div>
+
+                <div class="memo-balance-row">
+                    <strong>Balance</strong>
+                </div>
+
+                <div class="memo-divider"></div>
+
+                <div class="memo-line-row">
+                    <div>3) Deduct Payments:</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>a) Previous payment</div>
+                    <div class="memo-inline-amount">0.00</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>b) VAT ${vatPercent}%</div>
+                    <div class="memo-inline-amount">${vatAmount}</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>c) Income Tax ${itPercent}%</div>
+                    <div class="memo-inline-amount">${itAmount}</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>d) SC on IT ${scPercent}%</div>
+                    <div class="memo-inline-amount">${scAmount}</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>e) ED on IT + SC ${edPercent}%</div>
+                    <div class="memo-inline-amount">${edAmount}</div>
+                </div>
+
+                <div class="memo-sub-row">
+                    <div>f) Other ${otherPercent}%</div>
+                    <div class="memo-inline-amount">${otherAmount}</div>
+                </div>
+
+                <div class="memo-total-deduction-row">
+                    <strong>Total Deductions</strong>
+                    <strong class="memo-inline-amount">${totalDeduction}</strong>
+                </div>
+
+                <div class="memo-bottom-balance-row">
+                    <strong>Balance</strong>
+                </div>
+
+                <div class="memo-divider"></div>
+
+                <div class="memo-line-row">
+                    <div>4) Net amount due to Contractor</div>
+                </div>
+
+                <div class="memo-total-paid-bottom">
+                    <strong>Total Amount Paid:</strong>
+                </div>
+            </div>
+
+            <div class="memo-right-box">
+                <div class="memo-right-amount top">${grossAmount}</div>
+                <div class="memo-right-amount top2">${grossAmount}</div>
+                <div class="memo-right-amount middle">${netAmount}</div>
+                <div class="memo-right-amount bottom1">${netAmount}</div>
+                <div class="memo-right-amount bottom2">${grossAmount}</div>
+            </div>
+        </div>
+
+        <div class="memo-sign-row">
+            <div class="memo-sign-left">
+                <div class="memo-center-block">
+                    <div>Range Forest Officer</div>
+                    <div>${rangeName}</div>
+                </div>
+            </div>
+
+            <div class="memo-sign-right">
+                <div class="memo-center-block">
+                    <div>Contractor Signature</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("printArea").innerHTML = html;
+}
+
+            // print work abstract
+function numberToWordsIndian(num) {
+    const a = [
+        '', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE',
+        'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN',
+        'SEVENTEEN', 'EIGHTEEN', 'NINETEEN'
+    ];
+    const b = ['', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY'];
+
+    function inWords(n) {
+        if (n < 20) return a[n];
+        if (n < 100) return b[Math.floor(n / 10)] + (n % 10 ? '-' + a[n % 10] : '');
+        if (n < 1000) return a[Math.floor(n / 100)] + ' HUNDRED' + (n % 100 ? ' ' + inWords(n % 100) : '');
+        if (n < 100000) return inWords(Math.floor(n / 1000)) + ' THOUSAND' + (n % 1000 ? ' ' + inWords(n % 1000) : '');
+        if (n < 10000000) return inWords(Math.floor(n / 100000)) + ' LAKH' + (n % 100000 ? ' ' + inWords(n % 100000) : '');
+        return inWords(Math.floor(n / 10000000)) + ' CRORE' + (n % 10000000 ? ' ' + inWords(n % 10000000) : '');
+    }
+
+    const whole = Math.floor(Number(num || 0));
+    if (whole === 0) return 'ZERO ONLY';
+    return `${inWords(whole)} ONLY`;
+}
+
+function previewWorkAbstract(voucherId) {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-work-abstract/${voucherId}?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Work abstract data not found");
+                return;
+            }
+
+            renderWorkAbstract(data.header, data.items || []);
+            document.getElementById("pieceWorkPreviewCard").style.display = "block";
+        })
+        .catch(err => {
+            console.log("PREVIEW WORK ABSTRACT ERROR:", err);
+            alert("Error loading work abstract");
+        });
+}
+
+function formatDMY(value) {
+    if (!value) return "-";
+
+    const datePart = String(value).split("T")[0].split(" ")[0];
+    const parts = datePart.split("-");
+
+    if (parts.length !== 3) return "-";
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
+function renderWorkAbstract(header, items) {
+    const workName = header.estimate_work || "";
+    const rangeName = header.range_name || header.estimate_range_name || "";
+    const divisionName = header.division || header.estimate_division || "";
+    const subDivisionName = header.sub_division || header.estimate_subdivision || "";
+    const voucherNo = header.voucher_no || "";
+    const sono = header.sanction_no || "";
+
+    const totalAmount = parseFloat(header.rounded_gross_amount || header.gross_amount || 0).toFixed(2);
+    const amountWords = numberToWordsIndian(totalAmount);
+
+    let nbNo = "";
+    let pageNo = "";
+
+    if (items.length > 0) {
+        nbNo = items[0].nb_no || "";
+        pageNo = items[0].page_no || "";
+    }
+
+    let rows = "";
+
+    items.forEach((item, index) => {
+        rows += `
+            <tr>
+                <td class="center-text">${index + 1}</td>
+                <td class="left-text">
+                    ${item.particulars || ""}
+                    <div class="wa-period">(Period: ${item.pow || "-"})</div>
+                </td>
+                <td class="center-text" style="line-height:1.2;">
+                        <div>${item.qty || "-"}</div>
+                        <div style="font-size:11px;">${item.unit || ""}</div>
+                </td>
+                <td class="center-text">${parseFloat(item.rate || 0).toFixed(2)}</td>
+                <td class="right-text">${parseFloat(item.voucher_split_amount || 0).toFixed(2)}</td>
+                <td class="center-text">${formatDMY(item.acf_date)}</td>
+            </tr>
+        `;
+    });
+
+    const html = `
+        <div class="wa-title-top">SCHEDULE "A"</div>
+        <div class="wa-title-main">WORK ABSTRACT</div>
+
+        <div class="wa-work-line">
+            Estimate for ${workName} during ${formatRunningYearFromDate(header.disbursement_date)}
+        </div>
+
+        <div class="wa-meta-line">
+            <span><strong>SONO:</strong> ${sono}</span>
+            <span><strong>Vtr No:</strong> ${voucherNo}</span>
+            <span><strong>FNB/MB:</strong> ${nbNo}</span>
+            <span><strong>PAGE NO:</strong> ${pageNo}</span>
+        </div>
+
+        <table class="wa-table">
+            <tr>
+                <th style="width:3%;">Sl</th>
+                <th style="width:50%;">Particulars of Work</th>
+                <th style="width:9%;">Qty</th>
+                <th style="width:12%;">Rate</th>
+                <th style="width:12%;">Amount</th>
+                <th style="width:11%;">CM Date</th>
+            </tr>
+            ${rows}
+            <tr>
+                <td colspan="4" class="right-text"><strong>Grand Total</strong></td>
+                <td class="right-text"><strong>${totalAmount}</strong></td>
+                <td></td>
+            </tr>
+        </table>
+
+        <div class="wa-words-left">
+            RUPEES (IN WORDS) ${amountWords}
+        </div>
+
+        <div class="wa-gap-large"></div>
+
+        <div class="wa-left-sign-wrap">
+            <div class="wa-left-sign-block">
+                <div class="wa-sign-title">Range Forest Officer</div>
+                <div class="wa-sign-sub">${rangeName}</div>
+            </div>
+        </div>
+
+        <div class="wa-gap-large"></div>
+
+        <div class="wa-words-right">
+            RUPEES (IN WORDS) ${amountWords}
+        </div>
+
+        <div class="wa-gap-large"></div>
+
+        <div class="wa-right-sign-wrap">
+            <div class="wa-right-sign-block">
+                <div class="wa-sign-title">Deputy Conservator of Forests</div>
+                <div class="wa-sign-sub">${divisionName}${subDivisionName ? ` ${subDivisionName}` : ""}</div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("printArea").innerHTML = html;
+}
+
+            // print stamp
+
+function previewStampPage(voucherId) {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-stamp-page/${voucherId}?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert(data.message || "Stamp page data not found");
+                return;
+            }
+
+            renderStampPage(data.data);
+            document.getElementById("pieceWorkPreviewCard").style.display = "block";
+        })
+        .catch(err => {
+            console.log("PREVIEW STAMP PAGE ERROR:", err);
+            alert("Error loading stamp page");
+        });
+}
+
+function renderStampPage(d) {
+    console.log("PIECE WORK DATA:", d);
+    const grossAmount = parseFloat(
+    Number(d.rounded_gross_amount) > 0
+        ? d.rounded_gross_amount
+        : d.gross_amount
+            ).toFixed(2);
+    const amountWords = numberToWordsIndian(grossAmount);
+    const displayDate = formatDateLong(d.disbursement_date);
+    const rangeName = d.range_name || d.estimate_range_name || "";
+    const divisionName = d.division || d.estimate_division || "";
+    const subDivisionName = d.sub_division || d.estimate_subdivision || "";
+
+    const html = `
+        <div class="stamp-office-top">(For Use in the Office)</div>
+
+        <div class="stamp-line">
+            Received Rs. <strong>${grossAmount}</strong> in words
+            <span class="stamp-words">${amountWords}</span> by cash and by adjustment of payment as per memorandum.
+        </div>
+
+        <div class="stamp-line">
+            (in final settlement of all demands)
+        </div>
+
+        <div class="stamp-witness">
+            <div><strong>Witness:</strong></div>
+            <div class="stamp-witness-line">1) .............................................</div>
+            <div class="stamp-witness-line">2) .............................................</div>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        <div class="stamp-sign-row">
+            <div class="stamp-left">
+               .
+            </div>
+
+            <div class="stamp-right">
+                <div class="stamp-right-block">
+                    <div class="stamp-sign-box"></div>
+                    <div><strong>Signature of Contractor</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        <div class="stamp-payment-block">
+            <div class="stamp-line">
+                Paid by me vide Cheque No. __________________
+            </div>
+
+            <div class="stamp-line">
+                Dated:- __________________
+            </div>
+
+            <div class="stamp-line">
+                Cash Rs : <strong>${grossAmount}</strong>
+            </div>
+
+            <div class="stamp-line">
+                Dated : <strong>${displayDate}</strong>
+            </div>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        <div class="stamp-cent-align-block">
+            <div>Making Payment</div>
+            <div class="stamp-centered-under">${displayDate}</div>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        
+        <div class="stamp-right-align-block">
+            <div><strong>Range Forest Officer</strong></div>
+            <div class="stamp-centered-under"><strong>${rangeName}</strong></div>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        <div class="stamp-right-note">
+            <strong>PASSED FOR RS. ${amountWords}</strong>
+        </div>
+
+        <div class="stamp-gap-large"></div>
+
+        <div class="stamp-left-align-block">
+            <div><strong>Deputy Conservator of Forests</strong></div>
+            <div class="stamp-centered-under-left"><strong>${divisionName} Division, ${subDivisionName ? ` ${subDivisionName}` : ""}</strong></div>
+        </div>
+    `;
+
+    document.getElementById("printArea").innerHTML = html;
+}
+
+            // cashbook
+            // month cashbook
+function loadMonthCashbook() {
+    const user_id = localStorage.getItem("user_id");
+    const month = document.getElementById("cashbook_month").value;
+
+    if (!month) {
+        alert("Please select month");
+        return;
+    }
+
+    fetch(`/get-month-cashbook?user_id=${user_id}&month_name=${month}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Cashbook loading failed");
+                return;
+            }
+
+            renderMonthCashbook(data.data, month);
+        })
+        .catch(err => {
+            console.log("MONTH CASHBOOK FRONTEND ERROR:", err);
+            alert("Error loading month cashbook");
+        });
+}
+
+function renderMonthCashbook(vouchers, month) {
+    if (!vouchers || vouchers.length === 0) {
+        document.getElementById("monthCashbookPreview").innerHTML =
+            "<h2>No vouchers found for selected month</h2>";
+        return;
+    }
+    const rangeName = vouchers[0].range_name || vouchers[0].estimate_range_name || "";
+    let rows = "";
+    let grandTotal = 0;
+
+    vouchers.forEach(v => {
+        const voucherAmount = parseFloat(v.total_amount || 0);
+        grandTotal += voucherAmount;
+
+        let itemHtml = "";
+
+        v.items.forEach(item => {
+            itemHtml += `
+                <div class="cb-item">
+                    <div>${item.particulars || ""}</div>
+                    <div>Period of work: ${item.pow || "________"}</div>
+                    <div class="cb-item-mini-table">
+    <div class="cb-mini-head">
+        <span>Qty</span>
+        <span>Unit</span>
+        <span>Times/Days</span>
+        <span>Rate</span>
+        <span>Amount</span>
+    </div>
+
+    <div class="cb-mini-row">
+        <span>${item.qty || ""}</span>
+        <span>${item.unit || ""}</span>
+        <span>${item.times_days || item.days || "1"}</span>
+        <span>${parseFloat(item.rate || 0).toFixed(2)}</span>
+        <span><strong>${parseFloat(item.amount || 0).toFixed(2)}</strong></span>
+    </div>
+</div>
+                    <div>
+                        FNB/MB: ${item.nb_no || "______"}
+                        &nbsp;&nbsp;
+                        PAGE NO: ${item.page_no || "______"}
+                        &nbsp;&nbsp;
+                        C.M DATE: ${formatDMY(item.acf_date)}
+                    </div>
+                </div>
+            `;
+        });
+
+        rows += `
+            <tr>
+                <td class="cb-date">${formatDMY(v.date)}</td>
+                <td class="cb-vtr">${v.voucher_no}</td>
+                <td class="cb-particulars">
+                    <div>By amount paid to Sri: ${v.contractor || ""}</div>
+                    <div class="cb-work-title"><strong>${v.work_name || ""}</strong></div>
+                    <div>Towards carried out following works</div>
+                    <div>At: ${v.location || "--"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Extent: ${v.extent || "--"}</div>
+                    <div><strong>${v.sanction_no || ""}</strong> </div>
+                    ${itemHtml}
+                    <div class="cb-total">Total: ${voucherAmount.toFixed(2)}</div>
+                </td>
+                <td class="cb-amount"><strong>${voucherAmount.toFixed(2)}</strong></td>
+            </tr>
+        `;
+    });
+
+    const amountWords = numberToWordsIndian(grandTotal);
+
+    const html = `
+        <div class="cb-title">Cash Book For The Month Of ${month}</div>
+        <div class="cb-subtitle">Cash book of Range Forest Office ${rangeName}</div>
+        <table class="cb-table">
+            <tr>
+                <th class="cb-date">Date</th>
+                <th class="cb-vtr">Vr.No</th>
+                <th class="cb-particulars">Particulars</th>
+                <th class="cb-amount">Amount</th>
+            </tr>
+            ${rows}
+        </table>
+
+        <div class="cb-total">Cashbook Total Amount :- ${grandTotal.toFixed(2)}</div>
+        <div style="margin-top:15px;"><strong>RUPEES ${amountWords}</strong></div>
+
+        <div class="cb-footer">
+            <div></div>
+            <div class="cb-sign">
+                <div>Range Forest Officer</div>
+                <div>${rangeName}</div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("monthCashbookPreview").innerHTML = html;
+}
+
+
+function printCashbook() {
+    const content = document.getElementById("monthCashbookPreview").innerHTML;
+
+    if (!content.trim()) {
+        alert("Load cashbook first");
+        return;
+    }
+
+    document.body.classList.add("print-month-cashbook");
+    window.print();
+    document.body.classList.remove("print-month-cashbook");
+}
+
+            //headwise cashbook
+function loadHeadwiseHeads() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-indent-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const headSelect = document.getElementById("headwise_head");
+            headSelect.innerHTML = `<option value="">Select Head</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    headSelect.innerHTML += `<option value="${row.hoa_name}">${row.hoa_name}</option>`;
+                });
+            }
+        })
+        .catch(err => {
+            console.log("LOAD HEADWISE HEADS ERROR:", err);
+        });
+}
+
+function loadHeadwiseCashbook() {
+    const user_id = localStorage.getItem("user_id");
+    const month = document.getElementById("headwise_month").value;
+    const head = document.getElementById("headwise_head").value;
+
+    if (!month || !head) {
+        alert("Please select month and head");
+        return;
+    }
+
+    fetch(`/get-headwise-cashbook?user_id=${user_id}&month_name=${encodeURIComponent(month)}&head_name=${encodeURIComponent(head)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Headwise cashbook loading failed");
+                return;
+            }
+
+            renderHeadwiseCashbook(data.data, month, head);
+        })
+        .catch(err => {
+            console.log("HEADWISE CASHBOOK FRONTEND ERROR:", err);
+            alert("Error loading headwise cashbook");
+        });
+}
+
+function renderHeadwiseCashbook(vouchers, month, head) {
+    if (!vouchers || vouchers.length === 0) {
+        document.getElementById("headwiseCashbookPreview").innerHTML =
+            "<h3>No vouchers found for selected month and head</h3>";
+        return;
+    }
+
+    const rangeName = vouchers[0].range_name || vouchers[0].estimate_range_name || "";
+    const divisionName = vouchers[0].division || "";
+    const subDivisionName = vouchers[0].sub_division || "";
+    const circleName = vouchers[0].circle || "";
+    const runningYear = formatRunningYearFromDate(vouchers[0].date);
+
+    let grandTotal = 0;
+    let voucherTables = "";
+
+    vouchers.forEach((v, index) => {
+        const voucherAmount = parseFloat(v.total_amount || 0);
+        grandTotal += voucherAmount;
+
+        let itemRows = "";
+
+        (v.items || []).forEach(item => {
+            itemRows += `
+                <div class="cb-item-block">
+                    ${item.particulars || ""}<br>
+
+                    <strong>Period of work:</strong> ${item.pow || "________"}
+
+                    <div class="cb-mini-head">
+                        <span>Qty</span>
+                        <span>Unit</span>
+                        <span>Times/Days</span>
+                        <span>Rate</span>
+                        <span>Amount</span>
+                    </div>
+
+                    <div class="cb-mini-row">
+                        <span>${item.qty || ""}</span>
+                        <span>${item.unit || ""}</span>
+                        <span>${item.times_days || item.days || "1"}</span>
+                        <span>${parseFloat(item.rate || 0).toFixed(2)}</span>
+                        <span><strong>${parseFloat(item.amount || 0).toFixed(2)}</strong></span>
+                    </div>
+
+                    <div style="margin-top:5px;">
+                        FNB/MB: ${item.nb_no || "______"}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        PAGE NO: ${item.page_no || "______"}
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        C.M DATE: ${formatDMY(item.acf_date)}
+                    </div>
+                </div>
+            `;
+        });
+
+        voucherTables += `
+            <table class="cb-voucher-table">
+                <tr>
+                    <th style="width:8%;">Sl.No</th>
+                    <th style="width:8%;">Vr.No</th>
+                    <th style="width:72%;">Particulars</th>
+                    <th style="width:12%;">Amount</th>
+                </tr>
+
+                <tr>
+                    <td class="center-text">${index + 1}</td>
+                    <td class="center-text">${v.voucher_no || ""}</td>
+                    <td>
+                         By amount paid to Sri: ${v.contractor || ""}<br>
+                        <strong>${v.work_name || ""}</strong><br>
+                       
+                        Towards carried out following works<br>
+                        At: ${v.location || "--"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Extent: ${v.extent || "--"}<br>
+                        <strong>${v.sanction_no || ""}</strong> 
+
+                        ${itemRows}
+
+                        <div class="cb-bill-total">
+                            Bill Total: ${voucherAmount.toFixed(2)}
+                        </div>
+                    </td>
+                    <td class="right-text">
+                        <strong>${voucherAmount.toFixed(2)}</strong>
+                    </td>
+                </tr>
+            </table>
+        `;
+    });
+
+    const amountWords = numberToWordsIndian(grandTotal);
+
+    const html = `
+        <div class="cb-headwise-page">
+            <div style="text-align:center;">
+                <img src="/logo.png" style="width:60px; height:60px; object-fit:contain;">
+            </div>
+
+            <div class="cb-title">Classified Abstract</div>
+            <div class="cb-subtitle">FORM FAC - 76</div>
+
+            <div class="cb-line-flex">
+                <div><strong>Budget Head: ${head}</strong></div>
+                <div><strong>Range: ${rangeName}</strong></div>
+            </div>
+
+            <div class="cb-line-flex">
+                <div><strong>Para - 128</strong> </div>
+                <div> <strong>Month: ${month}</strong></div>
+            </div>
+
+            <div class="cb-left-line"><strong>Circle:${circleName}</strong></div>
+            <div class="cb-left-line"><strong>Division: ${divisionName} Division, ${subDivisionName}</strong></div>
+
+            <div class="cb-para">
+                Classified Abstract of <strong>${rangeName}</strong> Range expenditure during <strong>${month}  ${runningYear}</strong>.
+                The items in this abstract should be arranged in accordance with the prescribed Budget heads and sub Heads.
+            </div>
+
+            ${voucherTables}
+
+            <div class="cb-final-total">
+                Head Total Amount :- ${grandTotal.toFixed(2)}
+            </div>
+
+            <div class="cb-words">
+                RUPEES ${amountWords}
+            </div>
+
+            <div class="cb-sign-right">
+                <div class="cb-sign-block">
+                    <div>Range Forest Officer</div>
+                    <div>${rangeName}</div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById("headwiseCashbookPreview").innerHTML = html;
+}
+
+function printHeadwiseCashbook() {
+    const content = document.getElementById("headwiseCashbookPreview").innerHTML;
+
+    if (!content.trim()) {
+        alert("Load headwise cashbook first");
+        return;
+    }
+
+    document.body.classList.add("print-headwise-cashbook");
+    window.print();
+    document.body.classList.remove("print-headwise-cashbook");
+}
+
+//classified Abstract
+function loadClassifiedHeads() {
+    const user_id = localStorage.getItem("user_id");
+
+    fetch(`/get-indent-hoa?user_id=${user_id}`)
+        .then(res => res.json())
+        .then(data => {
+            const headSelect = document.getElementById("classified_head");
+            headSelect.innerHTML = `<option value="">Select Head</option>`;
+
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    headSelect.innerHTML += `<option value="${row.hoa_name}">${row.hoa_name}</option>`;
+                });
+            }
+        });
+}
+document.getElementById("classified_month").addEventListener("change", loadClassifiedIndentList);
+document.getElementById("classified_head").addEventListener("change", loadClassifiedIndentList);
+
+function loadClassifiedIndentList() {
+    const user_id = localStorage.getItem("user_id");
+    const month = document.getElementById("classified_month").value;
+    const head = document.getElementById("classified_head").value;
+
+    const indentSelect = document.getElementById("classified_indent");
+    indentSelect.innerHTML = `<option value="">Select SONO</option>`;
+
+    if (!month || !head) return;
+
+    fetch(`/get-print-indent-list?user_id=${user_id}&month_name=${encodeURIComponent(month)}&head_name=${encodeURIComponent(head)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.data) {
+                data.data.forEach(row => {
+                    indentSelect.innerHTML += `
+                        <option value="${row.indent_no}">
+                            Indent ${row.indent_no} - SONO ${row.sanction_no}
+                        </option>
+                    `;
+                });
+            }
+        });
+}
+
+function loadClassifiedAbstract() {
+    const user_id = localStorage.getItem("user_id");
+    const month = document.getElementById("classified_month").value;
+    const head = document.getElementById("classified_head").value;
+    const indent_no = document.getElementById("classified_indent").value;
+
+    if (!month || !head || !indent_no) {
+        alert("Please select month, head and SONO");
+        return;
+    }
+
+    fetch(`/get-classified-abstract?user_id=${user_id}&month=${encodeURIComponent(month)}&head=${encodeURIComponent(head)}&indent_no=${encodeURIComponent(indent_no)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Classified abstract loading failed");
+                return;
+            }
+
+            renderClassifiedAbstract(data.data, month, head);
+        })
+        .catch(err => {
+            console.log("CLASSIFIED ABSTRACT FRONTEND ERROR:", err);
+            alert("Error loading classified abstract");
+        });
+}
+
+function renderClassifiedAbstract(vouchers, month, head) {
+    renderHeadwiseCashbook(vouchers, month, head);
+
+    document.getElementById("classifiedAbstractPreview").innerHTML =
+        document.getElementById("headwiseCashbookPreview").innerHTML;
+
+    document.getElementById("headwiseCashbookPreview").innerHTML = "";
+}
+
+function printClassifiedAbstract() {
+    const content = document.getElementById("classifiedAbstractPreview").innerHTML;
+
+    if (!content.trim()) {
+        alert("Load classified abstract first");
+        return;
+    }
+
+    document.body.classList.add("print-classified-abstract");
+    window.print();
+    document.body.classList.remove("print-classified-abstract");
+}
+
+</script>
+
+</body>
+</html>
